@@ -79,6 +79,14 @@ This repository was created to:
 ## Recent Changes
 
 **November 19, 2025**: 
+- **Built conversion-focused landing page** at https://neurolint.dev/ to replace current site
+  - Problem-first messaging (hydration crashes, missing keys, React 19 migration, etc.)
+  - Before/after code examples showing real transformations
+  - 6 problem-focused sections instead of "7 layers" feature list
+  - Social proof, FAQ, and clear CTAs throughout
+  - Built with Vite 4 + React + Tailwind in `landing/` directory
+  - Running on port 5000 with workflow "Landing Page"
+  - Fixed React JSX parsing issue: Escaped curly braces in text content (key={item.id} → key=&#123;item.id&#125;)
 - Removed all authentication and paygate logic from the CLI. All 7 layers are now completely free and available without any API key or authentication.
 - Set up comprehensive automated testing with Jest:
   - **68 tests total**, all passing
