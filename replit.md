@@ -38,16 +38,16 @@ NeuroLint was born from frustration during development of Taxfy.co.za when over 
 
 The layer system is **progressive and safe** - each layer builds upon the previous ones:
 
-### Free Tier (No Authentication)
+### All Layers Are Now Free! (No Authentication Required)
 1. **Layer 1 - Configuration:** tsconfig.json, next.config.js, package.json optimization
 2. **Layer 2 - Patterns:** HTML entities, console.log removal, unused imports
-
-### Paid Tier (Requires API Key)
 3. **Layer 3 - Components:** React keys, accessibility, prop types
 4. **Layer 4 - Hydration:** SSR/hydration guards for localStorage, window, document
 5. **Layer 5 - Next.js:** App Router optimizations, "use client" directives
 6. **Layer 6 - Testing:** Error boundaries, test generation, quality improvements
 7. **Layer 7 - Adaptive:** Pattern learning and custom rule generation
+
+**NOTE:** All authentication and paygate logic has been removed. The CLI is now completely free to use with all layers available without any API key.
 
 ## How It Actually Works
 
@@ -69,6 +69,10 @@ This repository was created to:
 
 **Status:** Planning/experimental stage. Dashboard not yet built.
 
+## Recent Changes
+
+**November 19, 2025**: Removed all authentication and paygate logic from the CLI. All 7 layers are now completely free and available without any API key or authentication.
+
 ## User Preferences
 
 Preferred communication style: Simple, everyday language.
@@ -81,14 +85,13 @@ Preferred communication style: Simple, everyday language.
 # Install the published CLI
 npm install -g @neurolint/cli
 
-# Try free tier
+# Analyze your project
 neurolint analyze src/
-neurolint fix src/ --layers=1,2 --verbose
 
-# For paid features (layers 3-7)
-# Get API key from: https://app.neurolint.dev/dashboard
-neurolint login <your-api-key>
+# Fix all issues with all layers (completely free!)
 neurolint fix src/ --all-layers --verbose
+
+# No authentication needed - all layers are free!
 ```
 
 ## Documentation

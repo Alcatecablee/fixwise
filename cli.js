@@ -128,103 +128,13 @@ class AuthManager {
   }
 
   async checkUsage() {
-    if (!this.apiKey) {
-      // Free tier defaults per pricing update: unlimited fixes for layers 1-4
-      return { tier: 'free', canUseFixes: true, layers: [1, 2, 3, 4], usage: { current: 0, limit: -1 } };
-    }
-
-    // For authenticated users with enterprise plan, return enterprise access
-    if (this.userInfo && (this.userInfo.plan === 'enterprise' || this.userInfo.tier === 'enterprise')) {
-      return { 
-        tier: 'enterprise', 
-        canUseFixes: true, 
-        layers: [1, 2, 3, 4, 5, 6, 7], 
-        usage: { current: 0, limit: -1 } 
-      };
-    }
-
-    // For business plan users
-    if (this.userInfo && (this.userInfo.plan === 'business' || this.userInfo.tier === 'business')) {
-      return { 
-        tier: 'business', 
-        canUseFixes: true, 
-        layers: [1, 2, 3, 4, 5, 6, 7], 
-        usage: { current: 0, limit: -1 } 
-      };
-    }
-
-    // For professional plan users
-    if (this.userInfo && (this.userInfo.plan === 'professional' || this.userInfo.tier === 'professional')) {
-      return { 
-        tier: 'professional', 
-        canUseFixes: true, 
-        layers: [1, 2, 3, 4, 5, 6, 7], 
-        usage: { current: 0, limit: -1 } 
-      };
-    }
-
-    try {
-      const response = await this.makeRequest('/api/cli/usage', {
-        method: 'GET',
-        headers: {
-          'X-API-Key': this.apiKey
-        }
-      });
-
-      return response;
-    } catch (error) {
-      // Fallback to free tier on error
-      return { tier: 'free', canUseFixes: true, layers: [1, 2, 3, 4], usage: { current: 0, limit: -1 } };
-    }
+    // All layers are free - unlimited fixes for all layers
+    return { tier: 'free', canUseFixes: true, layers: [1, 2, 3, 4, 5, 6, 7], usage: { current: 0, limit: -1 } };
   }
 
   async canUseLayers(layers) {
-    if (!this.apiKey) {
-      // Allow free tier layers (1-4) without authentication
-      const restricted = layers.filter(l => l > 4);
-      return { allowed: restricted.length === 0, restrictedLayers: restricted, tier: 'free' };
-    }
-
-    // Check tier-specific layer access
-    if (this.userInfo) {
-      const tier = this.userInfo.plan || this.userInfo.tier;
-      
-      if (tier === 'free') {
-        // Free tier: Layers 1-4
-        const restricted = layers.filter(l => l > 4);
-        return { allowed: restricted.length === 0, restrictedLayers: restricted, tier };
-      } else if (tier === 'professional' || tier === 'business' || tier === 'enterprise') {
-        // Professional, Business, and Enterprise tiers: All layers (1-7)
-        return { allowed: true, restrictedLayers: [], tier };
-      }
-    }
-
-    try {
-      const response = await this.makeRequest('/api/analyze', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'X-API-Key': this.apiKey
-        },
-        body: JSON.stringify({
-          code: 'const test = "validation";',
-          filename: 'test.ts',
-          layers,
-          applyFixes: false,
-          metadata: { source: 'cli', layerCheck: true }
-        })
-      });
-
-      return {
-        allowed: !response.error,
-        restrictedLayers: response.restrictedLayers || [],
-        tier: response.tier || 'free'
-      };
-    } catch (error) {
-      // On error, assume only free tier layers allowed
-      const restricted = layers.filter(l => l > 4);
-      return { allowed: restricted.length === 0, restrictedLayers: restricted, tier: 'free' };
-    }
+    // All layers are free - no authentication required
+    return { allowed: true, restrictedLayers: [], tier: 'free' };
   }
 
   async makeRequest(endpoint, options) {
@@ -1104,53 +1014,13 @@ async function handleAnalyze(targetPath, options, spinner) {
 // Handle fix command
 async function handleFix(targetPath, options, spinner, startTime) {
   try {
-    // Check authentication and tier limits for fix operations
-    // Skip authentication check in development mode
-    const isDevelopment = process.env.NODE_ENV === 'development' || process.env.NEUROLINT_DEV === 'true';
-
-    // Determine requested layers; default unauthenticated to layers 1-2 per pricing update
+    // All layers are now free - no authentication checks needed
+    // Determine requested layers; default to all layers if not specified
     let requestedLayers = null;
     if (options.allLayers) {
       requestedLayers = [1, 2, 3, 4, 5, 6, 7];
     } else if (Array.isArray(options.layers) && options.layers.length > 0) {
       requestedLayers = options.layers;
-    }
-
-    if (!authManager.isAuthenticated() && !isDevelopment) {
-      if (!requestedLayers) {
-        // Default to free tier layers when none specified
-        options.layers = [1, 2];
-        requestedLayers = options.layers;
-      }
-      const freeAllowed = requestedLayers.every(l => l <= 2);
-      if (!freeAllowed && !options.dryRun) {
-        logError('Authentication required for selected layers');
-        console.log('Free tier allows fixes for layers 1-2 without authentication');
-        console.log('Run "neurolint login <api-key>" to enable higher layers');
-        console.log(`Get your API key from: ${API_BASE_URL}/dashboard`);
-        process.exit(1);
-      }
-      // else: allow free tier fixes to proceed
-    }
-
-    const usage = await authManager.checkUsage();
-    if (authManager.isAuthenticated() && !usage.canUseFixes && !isDevelopment) {
-      logError('Fix operations not available on your current plan');
-      console.log(`Current plan: ${usage.tier}`);
-      console.log(`Upgrade your plan at: ${API_BASE_URL}/pricing`);
-      process.exit(1);
-    }
-
-    // Check layer access if specific layers are requested
-    if (requestedLayers && requestedLayers.length > 0 && !isDevelopment && !options.dryRun) {
-      const layerAccess = await authManager.canUseLayers(requestedLayers);
-      if (!layerAccess.allowed) {
-        logError(`Layer access restricted on your current plan`);
-        console.log(`Restricted layers: ${layerAccess.restrictedLayers.join(', ')}`);
-        console.log(`Current plan: ${layerAccess.tier}`);
-        console.log(`Upgrade your plan at: ${API_BASE_URL}/pricing`);
-        process.exit(1);
-      }
     }
 
     const files = await getFiles(targetPath, options.include, options.exclude);
@@ -2838,96 +2708,30 @@ async function handleCommand(args) {
         await handleEncryption(args, options, spinner);
         break;
       case 'migrate-biome':
-        // Handle Biome migration command
-        // Check authentication
-        const isDevelopment = process.env.NODE_ENV === 'development' || process.env.NEUROLINT_DEV === 'true';
-        if (!authManager.isAuthenticated() && !isDevelopment) {
-          throw new Error('Authentication required for Biome migration. Please run: neurolint login <your-api-key>');
-        }
-        
+        // Handle Biome migration command - now free!
         // Import and use the Biome migration from fix-master
         const fixMaster = require('./fix-master.js');
         await fixMaster.handleBiomeMigrationCommand(args);
         break;
       case 'migrate-nextjs-15.5':
-        // Handle Next.js 15.5 migration command
-        // Check authentication
-        if (!authManager.isAuthenticated() && !isDevelopment) {
-          throw new Error('Authentication required for Next.js 15.5 migration. Please run: neurolint login <your-api-key>');
-        }
-        
+        // Handle Next.js 15.5 migration command - now free!
         // Import and use the Next.js 15.5 migration from fix-master
         const fixMasterNextJS = require('./fix-master.js');
         await fixMasterNextJS.handleMigrationCommand(args);
         break;
       case 'migrate-react19':
-        // Handle React 19 migration command
+        // Handle React 19 migration command - now free!
         if (!targetPath || targetPath === '.') {
           throw new Error('Path is required for React 19 migration command');
-        }
-        
-        // Check authentication
-        const isDevelopmentReact19 = process.env.NODE_ENV === 'development' || process.env.NEUROLINT_DEV === 'true';
-        if (!authManager.isAuthenticated() && !isDevelopmentReact19) {
-          throw new Error('Authentication required for React 19 migration. Please run: neurolint login <your-api-key>');
         }
         
         spinner.text = 'Running React 19 migration...';
         await handleReact19Migration(targetPath, options, spinner);
         break;
       case 'migrate':
-        // Handle migration command
+        // Handle migration command - now free!
         if (!targetPath || targetPath === '.') {
           throw new Error('Path is required for migration command');
-        }
-        
-        // Check authentication with better error handling
-        if (!authManager.isAuthenticated() && !isDevelopment) {
-          // Try to load config if auth manager is not initialized
-          try {
-            await authManager.loadConfig();
-            if (options.verbose) {
-              process.stdout.write(`[DEBUG] Loaded config. API Key: ${authManager.apiKey ? 'Present' : 'Missing'}\n`);
-            }
-          } catch (error) {
-            if (options.verbose) {
-              process.stdout.write(`[DEBUG] Config load failed: ${error.message}\n`);
-            }
-          }
-          
-          if (!authManager.isAuthenticated()) {
-            // For now, allow migration if user has logged in recently
-            const configPath = path.join(process.cwd(), CONFIG_FILE);
-            try {
-              const config = JSON.parse(await fs.readFile(configPath, 'utf8'));
-              if (!config.apiKey) {
-                throw new Error('Authentication required for migration service. Please run: neurolint login <your-api-key>');
-              }
-            } catch (error) {
-              throw new Error('Authentication required for migration service. Please run: neurolint login <your-api-key>');
-            }
-          }
-        }
-        
-        if (options.verbose) {
-          process.stdout.write(`[DEBUG] Authentication check passed. API Key: ${authManager.apiKey ? 'Present' : 'Missing'}\n`);
-        }
-        
-        // Check migration access with better error handling
-        try {
-          const migrationAccess = await checkMigrationAccess(authManager.apiKey);
-          if (!migrationAccess.hasAccess) {
-            throw new Error(`Migration service access required: ${migrationAccess.reason || 'Migration service requires enterprise access or approved quote'}`);
-          }
-        } catch (error) {
-          // If migration access check fails, allow it for development or if user is authenticated
-          if (isDevelopment || authManager.isAuthenticated()) {
-            if (verbose) {
-              process.stdout.write(`[WARNING] Migration access check failed, proceeding with authenticated user: ${error.message}\n`);
-            }
-          } else {
-            throw new Error(`Migration service access check failed: ${error.message}`);
-          }
         }
         
         // Parse migration-specific options
@@ -3210,49 +3014,7 @@ async function handleMigrationCommand() {
       process.exit(1);
     }
 
-    // Check if user has migration access
-    const isDevelopment = process.env.NODE_ENV === 'development' || process.env.NEUROLINT_DEV === 'true';
-    
-    // Try to load config if auth manager is not initialized
-    if (!authManager.isAuthenticated()) {
-      try {
-        await authManager.loadConfig();
-      } catch (error) {
-        // Ignore load errors
-      }
-    }
-    
-    if (!authManager.isAuthenticated() && !isDevelopment) {
-      console.error('Error: Authentication required for migration service');
-      console.error('Please run: neurolint login <your-api-key>');
-      process.exit(1);
-    }
-
-    // Check migration access with better error handling
-    try {
-      const migrationAccess = await checkMigrationAccess(authManager.apiKey);
-      if (!migrationAccess.hasAccess) {
-        console.error('Error: Migration service access required');
-        console.error(migrationAccess.reason || 'Migration service requires enterprise access or approved quote');
-        console.error('Contact: migration@neurolint.dev');
-        console.error('Request quote: https://app.neurolint.dev/migration-request');
-        process.exit(1);
-      }
-    } catch (error) {
-      // If migration access check fails, allow it for development or if user is authenticated
-      if (isDevelopment || authManager.isAuthenticated()) {
-        console.log('Warning: Migration access check failed, proceeding with authenticated user');
-      } else {
-        console.error('Error: Migration service access check failed');
-        console.error('Please run: neurolint login <your-api-key>');
-        process.exit(1);
-      }
-    }
-    
-    // For production readiness, allow migration if user is authenticated
-    if (authManager.isAuthenticated()) {
-      console.log('Proceeding with migration for authenticated user...');
-    }
+    // All migrations are now free - no authentication needed!
 
   // Parse migration options
   const options = {
@@ -3318,9 +3080,8 @@ Examples:
   neurolint migrate src/ --parallel=8 --verbose
 
 Requirements:
-  - Enterprise subscription or approved migration quote
-  - Valid API key with migration access
   - Project path with React/Next.js codebase
+  - All migration features are now free!
 
 Support:
   Contact: migration@neurolint.dev

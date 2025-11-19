@@ -1,0 +1,7 @@
+{
+  "originalPath": "test-dir/test.tsx",
+  "timestamp": 1763554520461,
+  "hash": "419f0a17",
+  "operation": "cli-fix",
+  "content": "function TestComponent({ items }) {\n  console.log('Debug info');\n  return (\n    <div>\n      &quot;Hello&quot;\n      {items.map(item => <div>{item}</div>)}\n      <button onClick={() => {}}>Click</button>\n    </div>\n  );\n}\nexport default TestComponent;\n"
+}
