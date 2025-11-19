@@ -1,4 +1,4 @@
-modules = ["nodejs-20"]
+modules = ["nodejs-16"]
 run = "npm run dev"
 hidden = [".config", ".git", "generated-icon.png", "node_modules", "dist"]
 
