@@ -56,6 +56,38 @@ class TransformationValidator {
     const validator = new TransformationValidator();
     return validator.validate('', code, filename);
   }
+
+  static async validateFile(filePath, originalCode, transformedCode) {
+    const fs = require('fs').promises;
+    const validator = new TransformationValidator();
+    
+    // If only filePath is provided, read the file
+    if (!originalCode && !transformedCode) {
+      try {
+        const code = await fs.readFile(filePath, 'utf8');
+        const result = validator.validate('', code, filePath);
+        return {
+          isValid: result.valid,
+          error: result.errors.length > 0 ? result.errors.join(', ') : null,
+          suggestion: result.errors.length > 0 ? 'Fix syntax errors in the file' : null
+        };
+      } catch (error) {
+        return {
+          isValid: false,
+          error: error.message,
+          suggestion: 'Ensure the file exists and is readable'
+        };
+      }
+    }
+    
+    // Otherwise validate the transformation
+    const result = validator.validate(originalCode, transformedCode, filePath);
+    return {
+      isValid: result.valid,
+      error: result.errors.length > 0 ? result.errors.join(', ') : null,
+      suggestion: result.errors.length > 0 ? 'Review the transformation' : null
+    };
+  }
 }
 
 module.exports = TransformationValidator;

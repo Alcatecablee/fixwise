@@ -1,0 +1,7 @@
+{
+  "originalPath": "test-project/src/pages/index.jsx",
+  "timestamp": 1763555218619,
+  "hash": "4e135a1c",
+  "operation": "cli-fix",
+  "content": "import BadComponent from '../components/BadComponent';\n\nexport default function Home() {\n  const items = [\n    { name: 'Item 1', title: 'Title 1' },\n    { name: 'Item 2', title: 'Title 2' },\n    { name: 'Item 3', title: 'Title 3' }\n  ];\n  \n  // Missing window check for hydration\n  const width = window.innerWidth;\n  \n  console.log('Home page loaded');\n  \n  return (\n    <div>\n      <h1>Home Page</h1>\n      <BadComponent items={items} />\n      <p>Window width: {width}</p>\n    </div>\n  );\n}\n"
+}
