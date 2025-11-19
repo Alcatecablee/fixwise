@@ -1,0 +1,7 @@
+{
+  "originalPath": "BadComponent.tsx",
+  "timestamp": 1763529490952,
+  "hash": "7706d322",
+  "operation": "layer-1",
+  "content": "import React from 'react';\nimport { useState } from 'react';\n\nfunction BadComponent() {\n  const [count, setCount] = useState(0);\n  const theme = localStorage.getItem('theme');\n  // [NeuroLint] Removed console.log: 'Rendering component'\n  \n  const items = ['item1', 'item2', 'item3'];\n  \n  return (\n    <div>\n      <h1>\"Hello World\"</h1>\n      <button onClick={() => setCount(count + 1)}>\n        Click me\n      </button>\n      <img src=\"/logo.png\" />\n      <div>Window width: {window.innerWidth}</div>\n      {items.map(item => (\n        <div>{item}</div>\n      ))}\n    </div>\n  );\n}\n\nexport default BadComponent;\n"
+}
