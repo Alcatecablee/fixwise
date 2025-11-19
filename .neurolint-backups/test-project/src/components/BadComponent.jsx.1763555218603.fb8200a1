@@ -1,7 +1,0 @@
-{
-  "originalPath": "test-project/src/components/BadComponent.jsx",
-  "timestamp": 1763555218603,
-  "hash": "fb8200a1",
-  "operation": "cli-fix",
-  "content": "import React from 'react';\n\n// This component has multiple issues that NeuroLint should detect:\n// - Missing keys in map\n// - console.log statements\n// - Hydration issues (localStorage access)\n// - Missing prop types\n\nexport default function BadComponent({ items }) {\n  console.log('Component rendering', items);\n  \n  // Hydration issue - accessing localStorage without checking\n  const savedData = localStorage.getItem('data');\n  \n  return (\n    <div>\n      <h1>Bad Component Example</h1>\n      {items.map(item => (\n        <div>\n          <span>{item.name}</span>\n        </div>\n      ))}\n      \n      {items.map((item, index) => {\n        console.log('Rendering item:', item);\n        return (\n          <li>\n            {item.title}\n          </li>\n        );\n      })}\n      \n      <p>Saved data: {savedData}</p>\n    </div>\n  );\n}\n"
-}

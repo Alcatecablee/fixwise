@@ -1,7 +1,0 @@
-{
-  "originalPath": "__tests__/fixtures/sample.js",
-  "timestamp": 1763569753134,
-  "hash": "c72a85f8",
-  "operation": "layer-1",
-  "content": "console.log(\"This should be removed by layer 2\");\n\nfunction Component() {\n  const items = [1, 2, 3];\n  return items.map(item => <div>{item}</div>);\n}\n\nif (typeof window !== 'undefined') {\n  const width = window.innerWidth;\n}\n\nexport default Component;\n"
-}

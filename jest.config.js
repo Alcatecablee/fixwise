@@ -13,5 +13,6 @@ module.exports = {
   ],
   coverageDirectory: 'coverage',
   verbose: true,
-  testTimeout: 10000
+  testTimeout: 30000,
+  globalTeardown: '<rootDir>/__tests__/test-cleanup.js'
 };

@@ -1,7 +1,0 @@
-{
-  "originalPath": "__tests__/fixtures/complex-component.jsx",
-  "timestamp": 1763569718147,
-  "hash": "f53c5606",
-  "operation": "cli-fix",
-  "content": "import React from 'react';\n\n// Component with multiple issues for comprehensive testing\nconst ComplexComponent = ({ items, title }) => {\n  // Issue: Direct window access without SSR guard\n  const width = window.innerWidth;\n\n  // Issue: localStorage without hydration check\n  const savedData = localStorage.getItem('data');\n\n  // Issue: console.log should be removed\n  console.log('Rendering ComplexComponent');\n\n  // Issue: Missing keys in map\n  return (\n    <div>\n      <h1>{title}</h1>\n      <ul>\n        {items.map(item => (\n          <li>{item.name}</li>\n        ))}\n      </ul>\n      <div style={{ width: width }}>\n        Responsive content\n      </div>\n    </div>\n  );\n};\n\nexport default ComplexComponent;\n"
-}

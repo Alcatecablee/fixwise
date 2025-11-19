@@ -1,7 +1,0 @@
-{
-  "originalPath": "test-sample/test.tsx",
-  "timestamp": 1763528624085,
-  "hash": "1f5dd9d1",
-  "operation": "cli-fix",
-  "content": "import { useState } from 'react';\n\nfunction TestComponent() {\n  const [count, setCount] = useState(0);\n  const data = localStorage.getItem('test');\n  \n  return (\n    <div>\n      <button onClick={() => setCount(count + 1)}>Count: {count}</button>\n      {['a', 'b', 'c'].map(item => <div>{item}</div>)}\n    </div>\n  );\n}\n"
-}
