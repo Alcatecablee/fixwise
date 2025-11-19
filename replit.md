@@ -12,7 +12,12 @@ This is a **test/experimental repository** for the NeuroLint CLI project. The fi
 - `fix-master.js` - Layer orchestrator (copied from main repo)
 - Supporting files: `ast-transformer.js`, `backup-manager.js`, `validator.js`, `selector.js`
 - `shared-core/` - Analytics, config, rule engine modules
-- `__tests__/` - Jest test suite with 61 automated tests
+- `__tests__/` - Jest test suite with 68 automated tests:
+  - CLI command tests (18 tests)
+  - AST transformer tests (16 tests)
+  - Backup manager tests (17 tests)
+  - Validator tests (17 tests)
+  - Test fixtures for integration testing
 - `jest.config.js` - Jest configuration for testing
 
 ### ❌ What DOES NOT EXIST:
@@ -75,7 +80,13 @@ This repository was created to:
 
 **November 19, 2025**: 
 - Removed all authentication and paygate logic from the CLI. All 7 layers are now completely free and available without any API key or authentication.
-- Set up automated testing with Jest (61 tests covering CLI commands, AST transformer, backup manager, and validator)
+- Set up comprehensive automated testing with Jest:
+  - **68 tests total**, all passing
+  - CLI tests with exact exit code assertions (0 for success, 1 for errors)
+  - Integration tests with real fixtures (sample.js, complex-component.jsx)
+  - Error handling tests with specific error message validation
+  - Backup manager tests including error scenarios
+  - AST transformer and validator comprehensive test coverage
 
 ## User Preferences
 
