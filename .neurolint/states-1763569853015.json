@@ -1,0 +1,43 @@
+{
+  "timestamp": 1763569853015,
+  "file": "/home/runner/workspace/__tests__/fixtures/sample.js",
+  "layers": [
+    {
+      "id": 1,
+      "name": "Configuration",
+      "success": true,
+      "changes": 0,
+      "warnings": [
+        "Single-file mode: Configuration suggestions only, no files modified"
+      ]
+    },
+    {
+      "id": 2,
+      "name": "Pattern Fixes",
+      "success": true,
+      "changes": 1,
+      "warnings": []
+    },
+    {
+      "id": 3,
+      "name": "Component Fixes",
+      "success": true,
+      "changes": 1,
+      "warnings": []
+    },
+    {
+      "id": 4,
+      "name": "Hydration Fixes",
+      "success": true,
+      "changes": 0,
+      "warnings": []
+    }
+  ],
+  "backups": [
+    ".neurolint-backups/__tests__/fixtures/sample.js.1763569853017.c72a85f8",
+    ".neurolint-backups/__tests__/fixtures/sample.js.1763569853024.c72a85f8",
+    ".neurolint-backups/__tests__/fixtures/sample.js.1763569853042.f7023a1e",
+    ".neurolint-backups/__tests__/fixtures/sample.js.1763569853064.c5fb08fa"
+  ],
+  "executionTime": 69.04816899999992
+}

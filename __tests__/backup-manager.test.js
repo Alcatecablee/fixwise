@@ -68,10 +68,25 @@ describe('BackupManager', () => {
   describe('Async Operations', () => {
     test('should initialize backup directory', async () => {
       await expect(backupManager.initialize()).resolves.not.toThrow();
+      expect(fsSync.existsSync(backupManager.backupDir)).toBe(true);
     });
 
     test('should handle initialization errors gracefully', async () => {
-      await expect(backupManager.initialize()).resolves.not.toThrow();
+      // Create a backup manager with a potentially problematic path
+      const restrictedManager = new BackupManager({ 
+        backupDir: '/root/.restricted-backups-test' 
+      });
+      // Should not throw, but may log error
+      await expect(restrictedManager.initialize()).resolves.not.toThrow();
+    });
+
+    test('should handle filesystem errors during backup', async () => {
+      const nonExistentFile = path.join(testDir, 'does-not-exist.js');
+      // Backup of non-existent file should be handled gracefully
+      if (typeof backupManager.backupFile === 'function') {
+        const result = await backupManager.backupFile(nonExistentFile);
+        expect(result).toBeDefined();
+      }
     });
   });
 

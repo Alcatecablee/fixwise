@@ -1,0 +1,7 @@
+{
+  "originalPath": "__tests__/fixtures/sample.js",
+  "timestamp": 1763569753190,
+  "hash": "c5fb08fa",
+  "operation": "layer-4",
+  "content": "// [NeuroLint] Removed console.log: \"This should be removed by layer 2\"\n\nfunction Component() {\n  const items = [1, 2, 3];\n  return items.map((item) => <div key={item.id || item}>{item}</div>);\n}\n\nif (typeof window !== 'undefined') {\n  const width = window.innerWidth;\n}\n\nexport default Component;"
+}
