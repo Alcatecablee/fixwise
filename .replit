@@ -33,12 +33,12 @@ args = "Demo CLI"
 name = "Demo CLI"
 author = "agent"
 
+[workflows.workflow.metadata]
+outputType = "console"
+
 [[workflows.workflow.tasks]]
 task = "shell.exec"
 args = "node cli.js --help"
-
-[workflows.workflow.metadata]
-outputType = "console"
 
 [agent]
 integrations = ["javascript_websocket:1.0.0", "javascript_mem_db:1.0.0"]
