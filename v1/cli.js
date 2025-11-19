@@ -2,7 +2,7 @@
 
 const fs = require('fs').promises;
 const path = require('path');
-const ora = require('ora');
+const ora = require('./simple-ora');
 const { performance } = require('perf_hooks');
 const https = require('https');
 
