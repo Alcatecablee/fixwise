@@ -26,8 +26,8 @@ NeuroLint uses a **7-Layer Architecture** to progressively fix and optimize code
 
 ```bash
 # Fork the repository on GitHub, then:
-git clone https://github.com/YOUR_USERNAME/neurolint-cli.git
-cd neurolint-cli
+git clone https://github.com/YOUR_USERNAME/Neurolint.git
+cd Neurolint
 ```
 
 ### 2. Install Dependencies

@@ -159,7 +159,7 @@ function Component({ items }) {
 
 We welcome contributions! NeuroLint is open source and community-driven.
 
-- **Found a bug?** [Open an issue](https://github.com/neurolint/neurolint-cli/issues)
+- **Found a bug?** [Open an issue](https://github.com/Alcatecablee/Neurolint/issues)
 - **Want to contribute?** Check out [CONTRIBUTING.md](./CONTRIBUTING.md)
 - **Have questions?** Start a discussion
 
@@ -199,7 +199,8 @@ NeuroLint is open source because:
 ## 🔗 Links
 
 - **NPM Package:** [@neurolint/cli](https://www.npmjs.com/package/@neurolint/cli)
-- **Issues:** [GitHub Issues](https://github.com/neurolint/neurolint-cli/issues)
+- **GitHub Repository:** [Alcatecablee/Neurolint](https://github.com/Alcatecablee/Neurolint)
+- **Issues:** [GitHub Issues](https://github.com/Alcatecablee/Neurolint/issues)
 - **Origin Story:** Built for [Taxfy.co.za](https://taxfy.co.za)
 
 ---
