@@ -1,0 +1,52 @@
+{
+  "timestamp": 1763555337978,
+  "file": "/home/runner/workspace/test-project/src/pages/index.jsx",
+  "layers": [
+    {
+      "id": 1,
+      "name": "Configuration",
+      "success": true,
+      "changes": 0,
+      "warnings": [
+        "Single-file mode: Configuration suggestions only, no files modified"
+      ]
+    },
+    {
+      "id": 2,
+      "name": "Pattern Fixes",
+      "success": true,
+      "changes": 2,
+      "warnings": []
+    },
+    {
+      "id": 3,
+      "name": "Component Fixes",
+      "success": true,
+      "changes": 0,
+      "warnings": []
+    },
+    {
+      "id": 4,
+      "name": "Hydration Fixes",
+      "success": true,
+      "changes": 0,
+      "warnings": []
+    },
+    {
+      "id": 5,
+      "name": "Next.js Fixes",
+      "success": true,
+      "changes": 1,
+      "warnings": []
+    },
+    {
+      "id": 7,
+      "name": "Adaptive Pattern Learning",
+      "success": true,
+      "changes": 1,
+      "warnings": []
+    }
+  ],
+  "backups": [],
+  "executionTime": 34.502523999999994
+}
