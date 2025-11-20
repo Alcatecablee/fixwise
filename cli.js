@@ -1800,6 +1800,11 @@ async function handleRules(options, spinner) {
     const ruleStore = new RuleStore();
     await ruleStore.load();
 
+    // Default to --list if no flag is provided
+    if (!options.list && !options.delete && !options.reset && !options.edit && !options.export && !options.import) {
+      options.list = true;
+    }
+
     if (options.list) {
       const rules = ruleStore.rules.map((rule, index) => ({
         id: index,
@@ -1810,6 +1815,14 @@ async function handleRules(options, spinner) {
         sourceLayer: rule.sourceLayer || 'Unknown',
         createdAt: rule.createdAt ? new Date(rule.createdAt).toISOString() : new Date().toISOString()
       }));
+
+      if (rules.length === 0) {
+        spinner.stop();
+        console.log('No learned rules yet. Rules will be created automatically as you use NeuroLint to fix code.');
+        console.log('Use "neurolint fix <path>" to analyze and fix code, which will generate learned rules.');
+        process.stdout.write('completed\n');
+        return;
+      }
 
       if (options.format === 'json' && options.output) {
         await fs.writeFile(options.output, JSON.stringify(rules, null, 2));
@@ -1860,8 +1873,6 @@ async function handleRules(options, spinner) {
       ruleStore.rules.push(...importedRules);
       await ruleStore.save();
       process.stdout.write(`Imported ${importedRules.length} rules from ${options.import}\n`);
-    } else {
-      throw new Error('Use --list, --delete, --reset, --edit, --export, or --import with rules');
     }
     
     // Stop spinner before outputting completion message
@@ -2083,7 +2094,7 @@ async function handleHealth(options, spinner) {
     // Initialize shared core for health check
     await sharedCore.core.initialize({ platform: 'cli' });
     
-    const configPath = path.join(process.cwd(), CONFIG_FILE);
+    const configPath = path.join(process.cwd(), '.neurolintrc');
     const ruleFile = path.join(process.cwd(), '.neurolint', 'learned-rules.json');
     const stateDir = path.join(process.cwd(), '.neurolint');
 
