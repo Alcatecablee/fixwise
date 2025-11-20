@@ -4025,21 +4025,21 @@ function displayComplexityReport(analysis, verbose = false) {
   if (analysis.nextjsFeatures.used.length > 0) {
     console.log('\nNext.js Features Used:');
     analysis.nextjsFeatures.used.forEach(feature => {
-      console.log(`  ✓ ${feature}`);
+      console.log(`  [+] ${feature}`);
     });
   }
   
   if (analysis.nextjsFeatures.unnecessary.length > 0) {
     console.log('\nUnnecessary Features Detected:');
     analysis.nextjsFeatures.unnecessary.forEach(feature => {
-      console.log(`  ⚠ ${feature}`);
+      console.log(`  [!] ${feature}`);
     });
   }
   
   if (analysis.recommendations.length > 0) {
     console.log('\nRecommendations:');
     analysis.recommendations.forEach((rec, i) => {
-      const icon = rec.type === 'warning' ? '⚠' : rec.type === 'optimization' ? '🔧' : '💡';
+      const icon = rec.type === 'warning' ? '[!]' : rec.type === 'optimization' ? '[*]' : '[i]';
       console.log(`  ${icon} ${rec.message}`);
       if (verbose) console.log(`     Action: ${rec.action}`);
     });

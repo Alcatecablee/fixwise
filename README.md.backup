@@ -10,16 +10,16 @@
 
 ---
 
-## The Problem
+## 🎯 The Problem
 
 Modern React/Next.js development is plagued with repetitive code issues:
-- Missing accessibility attributes
-- Hydration errors (`window is not defined`)
-- Outdated TypeScript/Next.js configurations
-- Inconsistent patterns across teams
-- Manual fixes that are time-consuming and error-prone
+- ❌ Missing accessibility attributes
+- ❌ Hydration errors (`window is not defined`)
+- ❌ Outdated TypeScript/Next.js configurations
+- ❌ Inconsistent patterns across teams
+- ❌ Manual fixes that are time-consuming and error-prone
 
-## The Solution
+## ✅ The Solution
 
 NeuroLint was born from frustration during development of [Taxfy.co.za](https://taxfy.co.za) when over **700 ESLint errors**, hydration bugs, and missing React keys appeared. Instead of manual fixes, an intelligent multi-layer system was created that reduced **600+ issues down to just 70** automatically.
 
@@ -27,13 +27,13 @@ NeuroLint was born from frustration during development of [Taxfy.co.za](https://
 
 ---
 
-## All 7 Layers Are Free!
+## 🆓 All 7 Layers Are Free!
 
 **No authentication. No API keys. Completely free and open source.**
 
 ---
 
-## New in v1.4.0
+## 🆕 New in v1.4.0
 
 - **Biome migration**: Handles missing package.json (creates minimal file or reports clearly)
 - **Middleware runtime**: Auto-adds `export const runtime = "nodejs"` to middleware files that need it
@@ -43,7 +43,7 @@ NeuroLint was born from frustration during development of [Taxfy.co.za](https://
 
 ---
 
-## Quick Demo
+## 🚀 Quick Demo
 
 **Before (Legacy React component):**
 ```tsx
@@ -103,7 +103,7 @@ neurolint --help
 
 ---
 
-## **TIP** What NeuroLint Fixes
+## 💡 What NeuroLint Fixes
 
 ### Layer 1: Configuration Modernization
 
@@ -343,7 +343,7 @@ const useCustomHook = () => {
 
 ---
 
-## **SYNC** Migration Features
+## 🔄 Migration Features
 
 ### React 19 & Next.js 15.5 Migration
 
@@ -384,7 +384,7 @@ neurolint fix ./src --all-layers --dry-run --verbose
 
 ---
 
-## **STATS** Complexity Management for Small Projects
+## 📊 Complexity Management for Small Projects
 
 **Problem:** Next.js complexity concerns for small projects - as discussed in [r/nextjs](https://www.reddit.com/r/nextjs/)
 
@@ -455,7 +455,7 @@ The `neurolint assess` command provides objective complexity scoring:
 
 ---
 
-## **READ** Usage Examples
+## 📖 Usage Examples
 
 ### Basic Codebase Modernization
 
@@ -503,7 +503,7 @@ neurolint rules --import=team-rules.json
 
 ---
 
-## **WIN** Real-World Use Cases
+## 🏆 Real-World Use Cases
 
 ### 1. Legacy React Migration
 **Scenario:** Upgrading from React 16 to React 18 with Next.js 13
@@ -583,7 +583,7 @@ neurolint migrate-biome ./src --verbose
 
 ---
 
-## **BUILD** Commands Reference
+## 🛠️ Commands Reference
 
 ### Core Commands
 
@@ -643,7 +643,7 @@ neurolint simplify [path]               # Simplify project (convert to React/min
 
 ---
 
-## **TOOL** Troubleshooting
+## 🔧 Troubleshooting
 
 ### Common Issues
 
@@ -677,7 +677,7 @@ neurolint health              # Check system status
 
 ---
 
-## **CODE** Tech Stack
+## 💻 Tech Stack
 
 - **AST Parsing:** `@babel/parser`, `@babel/traverse`, `@babel/types`
 - **Pattern Matching:** Custom rule engine (1,901 lines)
@@ -699,7 +699,7 @@ __tests__/                     → 170 automated tests
 
 ---
 
-## **DOCS** Documentation
+## 📚 Documentation
 
 - **[CLI Usage Guide](./CLI_USAGE.md)** - Complete command reference
 - **[Contributing Guidelines](./CONTRIBUTING.md)** - How to contribute
@@ -707,7 +707,7 @@ __tests__/                     → 170 automated tests
 
 ---
 
-## **CONTRIBUTE** Contributing
+## 🤝 Contributing
 
 We welcome contributions! NeuroLint is open source and community-driven.
 
@@ -719,7 +719,7 @@ See our [Code of Conduct](./CODE_OF_CONDUCT.md) for community guidelines.
 
 ---
 
-## **STAR** Why Open Source?
+## 🌟 Why Open Source?
 
 NeuroLint is open source because:
 - **Transparency:** See exactly what transformations are applied
@@ -730,7 +730,7 @@ NeuroLint is open source because:
 
 ---
 
-## **LINK** Links
+## 🔗 Links
 
 - **NPM Package:** [@neurolint/cli](https://www.npmjs.com/package/@neurolint/cli)
 - **GitHub Repository:** [Alcatecablee/Neurolint](https://github.com/Alcatecablee/Neurolint)
@@ -739,21 +739,21 @@ NeuroLint is open source because:
 
 ---
 
-## **FILE** License
+## 📄 License
 
 MIT License - see [LICENSE](./LICENSE) file for details.
 
 ---
 
-## **GOAL** Key Features Summary
+## 🎯 Key Features Summary
 
-*****50+ automatic code fixes** across 7 intelligent layers  
-*****Deterministic transformations** - no AI, no surprises  
-*****170 passing tests** - enterprise-grade reliability  
-*****Built-in backup system** - safe, reversible changes  
-*****Zero configuration** - works out of the box  
-*****100% free and open source** - no authentication required  
-*****Battle-tested** - reduced 700+ errors to 70 in production  
+✅ **50+ automatic code fixes** across 7 intelligent layers  
+✅ **Deterministic transformations** - no AI, no surprises  
+✅ **170 passing tests** - enterprise-grade reliability  
+✅ **Built-in backup system** - safe, reversible changes  
+✅ **Zero configuration** - works out of the box  
+✅ **100% free and open source** - no authentication required  
+✅ **Battle-tested** - reduced 700+ errors to 70 in production  
 
 ---
 

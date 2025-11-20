@@ -20,7 +20,7 @@ NeuroLint uses a **7-Layer Architecture** to progressively fix and optimize code
 
 ---
 
-## Getting Started
+## 🚀 Getting Started
 
 ### 1. Fork and Clone
 
@@ -53,7 +53,7 @@ All tests should pass before submitting a PR.
 
 ---
 
-## Project Structure
+## 🛠️ Project Structure
 
 ```
 neurolint-cli/
@@ -92,7 +92,7 @@ NeuroLint uses **AST (Abstract Syntax Tree) parsing** with Babel to:
 
 ---
 
-## Types of Contributions
+## 🔧 Types of Contributions
 
 ### 1. Bug Fixes
 
@@ -146,7 +146,7 @@ Help us reach 100% test coverage:
 
 ---
 
-## Pull Request Guidelines
+## ✅ Pull Request Guidelines
 
 ### Before Submitting
 
@@ -187,7 +187,7 @@ Help us reach 100% test coverage:
 
 ---
 
-## Code Style
+## 🧑‍💻 Code Style
 
 - Use existing code as a style guide
 - Keep functions focused and single-purpose
@@ -235,7 +235,7 @@ Steps:
 
 ---
 
-## Good First Issues
+## 🎯 Good First Issues
 
 Look for issues labeled `good-first-issue` – these are great for new contributors!
 
