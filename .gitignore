@@ -11,3 +11,23 @@ vite.config.ts.*
 *.neurolint-restore-tmp-*
 *.backup-*
 **/*.backup-*
+
+# Temporary files
+attached_assets/
+client/
+*.tmp
+*.log
+
+# IDE
+.vscode/
+.idea/
+
+# Environment
+.env
+.env.local
+
+# Testing
+coverage/
+
+# Build
+build/
