@@ -13,10 +13,6 @@ const TransformationValidator = require('./validator.js');
 const BackupManager = require('./backup-manager');
 const { ProductionBackupManager } = require('./backup-manager-production');
 
-// Configuration
-const CONFIG_FILE = '.neurolintrc';
-const API_BASE_URL = process.env.NEUROLINT_API_URL || 'https://app.neurolint.dev';
-
 // Backup Manager Factory
 function createBackupManager(options = {}) {
   const useProduction = options.production || 
@@ -43,155 +39,6 @@ function createBackupManager(options = {}) {
     });
   }
 }
-
-// Authentication and tier management
-class AuthManager {
-  constructor() {
-    this.apiKey = null;
-    this.userInfo = null;
-    this.configPath = path.join(process.cwd(), CONFIG_FILE);
-  }
-
-  async loadConfig() {
-    try {
-      const configData = await fs.readFile(this.configPath, 'utf8');
-      const config = JSON.parse(configData);
-      this.apiKey = config.apiKey;
-      this.userInfo = config.userInfo;
-      return config;
-    } catch (error) {
-      return null;
-    }
-  }
-
-  async saveConfig(config) {
-    try {
-      await fs.writeFile(this.configPath, JSON.stringify(config, null, 2));
-    } catch (error) {
-      throw new Error(`Failed to save configuration: ${error.message}`);
-    }
-  }
-
-  async authenticate(apiKey) {
-    try {
-      // In development mode, skip actual API calls
-      const isDevelopment = process.env.NODE_ENV === 'development' || process.env.NEUROLINT_DEV === 'true';
-      
-      if (isDevelopment) {
-        this.apiKey = apiKey;
-        this.userInfo = { 
-          id: 'dev-user',
-          email: 'dev@neurolint.dev',
-          tier: 'development',
-          name: 'Development User'
-        };
-        await this.saveConfig({ apiKey, userInfo: this.userInfo });
-        return this.userInfo;
-      }
-
-      const response = await this.makeRequest('/api/analyze', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'X-API-Key': apiKey
-        },
-        body: JSON.stringify({
-          code: 'const test = "validation";',
-          filename: 'test.ts',
-          layers: [1],
-          applyFixes: false,
-          metadata: { source: 'cli', validation: true }
-        })
-      });
-
-      if (response.error) {
-        throw new Error(response.error);
-      }
-
-      // Since the analyze endpoint works, we'll use that for authentication
-      // and create a basic user info object
-      this.apiKey = apiKey;
-      this.userInfo = { 
-        email: 'admin@neurolint.com', 
-        plan: 'enterprise',
-        tier: 'enterprise',
-        id: '17bd91f3-38a0-4399-891c-73608eb380c2'
-      };
-      
-      // Save to config
-      await this.saveConfig({ apiKey, userInfo: this.userInfo });
-      
-      return this.userInfo;
-    } catch (error) {
-      throw new Error(`Authentication failed: ${error.message}`);
-    }
-  }
-
-  async checkUsage() {
-    // All layers are free - unlimited fixes for all layers
-    return { tier: 'free', canUseFixes: true, layers: [1, 2, 3, 4, 5, 6, 7], usage: { current: 0, limit: -1 } };
-  }
-
-  async canUseLayers(layers) {
-    // All layers are free - no authentication required
-    return { allowed: true, restrictedLayers: [], tier: 'free' };
-  }
-
-  async makeRequest(endpoint, options) {
-    return new Promise((resolve, reject) => {
-      const url = new URL(endpoint, API_BASE_URL);
-      const requestOptions = {
-        hostname: url.hostname,
-        port: url.port || 443,
-        path: url.pathname + url.search,
-        method: options.method || 'GET',
-        headers: options.headers || {}
-      };
-
-      const req = https.request(requestOptions, (res) => {
-        let data = '';
-        res.on('data', (chunk) => data += chunk);
-        res.on('end', () => {
-          try {
-            const response = JSON.parse(data);
-            resolve(response);
-          } catch (error) {
-            resolve({ error: 'Invalid response format' });
-          }
-        });
-      });
-
-      req.on('error', (error) => {
-        reject(error);
-      });
-
-      if (options.body) {
-        req.write(options.body);
-      }
-      req.end();
-    });
-  }
-
-  isAuthenticated() {
-    return !!this.apiKey;
-  }
-
-  getUserInfo() {
-    return this.userInfo;
-  }
-}
-
-// Global auth manager
-const authManager = new AuthManager();
-
-// Initialize auth manager on startup
-(async () => {
-  try {
-    await authManager.loadConfig();
-  } catch (error) {
-    // Ignore errors during initialization
-  }
-})();
 
 // Layer configuration
 const LAYER_NAMES = {
@@ -1101,11 +948,10 @@ async function handleLayers(options, spinner) {
 // Handle init-config command
 async function handleInitConfig(options, spinner) {
   try {
-    const configPath = path.join(process.cwd(), CONFIG_FILE);
+    const configPath = path.join(process.cwd(), '.neurolintrc');
     
     if (options.init) {
       const defaultConfig = {
-        apiKey: null, // Placeholder, will be set after authentication
         enabledLayers: [1, 2, 3, 4, 5, 6, 7],
         include: ['**/*.{ts,tsx,js,jsx,json}'],
         exclude: ['**/node_modules/**', '**/dist/**', '**/.next/**'],
@@ -1134,7 +980,7 @@ async function handleInitConfig(options, spinner) {
         const config = JSON.parse(await fs.readFile(configPath, 'utf8'));
         
         // Validate required fields
-        const requiredFields = ['apiKey', 'enabledLayers', 'include', 'exclude'];
+        const requiredFields = ['enabledLayers', 'include', 'exclude'];
         const missingFields = requiredFields.filter(field => !config[field]);
         
         if (missingFields.length > 0) {
@@ -2611,9 +2457,6 @@ async function handleCommand(args) {
       timestamp: new Date().toISOString()
     });
     
-    // Load authentication config first
-    await authManager.loadConfig();
-    
     const options = parseOptions(args);
     
     // Find target path - skip command and subcommand
@@ -2632,7 +2475,7 @@ async function handleCommand(args) {
     targetPath = path.resolve(targetPath);
     
     // Validate that the target path exists (skip for commands that don't need it)
-    const commandsWithoutTargetPath = ['backups', 'version', 'login', 'logout', 'status', 'stats', 'rules', 'health', 'security', 'monitoring', 'encryption', 'help'];
+    const commandsWithoutTargetPath = ['backups', 'version', 'stats', 'rules', 'health', 'security', 'monitoring', 'encryption', 'help'];
     if (!commandsWithoutTargetPath.includes(command)) {
       try {
         await fs.access(targetPath);
@@ -2648,11 +2491,6 @@ async function handleCommand(args) {
  NeuroLint CLI - Code Quality Tool
 
 Usage: neurolint <command> [options] [path]
-
-Authentication Commands:
-  login <api-key>         Authenticate with your API key
-  logout                  Remove authentication
-  status                  Show authentication and usage status
 
 Analysis Commands:
   analyze [path]          Analyze code for potential improvements
@@ -2707,22 +2545,11 @@ Examples:
   neurolint analyze src/ --verbose
   neurolint fix . --layers=1,2,7 --dry-run
   neurolint components fix src/ --verbose
-
-Get your API key from: https://app.neurolint.dev/dashboard
 `);
         process.exit(0);
       case 'version':
         console.log('1.4.0');
         logSuccess('Version displayed');
-        break;
-      case 'login':
-        await handleLogin(args.slice(1), spinner);
-        break;
-      case 'logout':
-        await handleLogout(spinner);
-        break;
-      case 'status':
-        await handleStatus(spinner);
         break;
       case 'analyze':
         await handleAnalyze(targetPath, options, spinner);
@@ -2823,7 +2650,7 @@ Get your API key from: https://app.neurolint.dev/dashboard
             '**/node_modules/**'
         };
         
-        await runMigration(targetPath, migrationOptions, authManager.apiKey);
+        await runMigration(targetPath, migrationOptions, null);
         break;
       default:
         if (Object.values(LAYER_NAMES).includes(command)) {
@@ -2892,61 +2719,6 @@ Get your API key from: https://app.neurolint.dev/dashboard
   }
 }
 
-// Authentication handlers
-async function handleLogin(args, spinner) {
-  try {
-    const apiKey = args[0];
-    if (!apiKey) {
-      logError('API key is required. Usage: neurolint login <api-key>');
-      process.exit(1);
-    }
-
-    spinner.text = 'Authenticating...';
-    const userInfo = await authManager.authenticate(apiKey);
-    
-          logSuccess(`Successfully authenticated as ${userInfo.email || 'user'}`);
-    console.log(`Plan: ${userInfo.plan || 'free'}`);
-    console.log(`Get your API key from: ${API_BASE_URL}/dashboard`);
-  } catch (error) {
-          logError(`Authentication failed: ${error.message}`);
-    console.log(`Get your API key from: ${API_BASE_URL}/dashboard`);
-    process.exit(1);
-  }
-}
-
-async function handleLogout(spinner) {
-  try {
-    await authManager.saveConfig({});
-          logSuccess('Successfully logged out');
-  } catch (error) {
-          logError(`Logout failed: ${error.message}`);
-    process.exit(1);
-  }
-}
-
-async function handleStatus(spinner) {
-  try {
-    if (!authManager.isAuthenticated()) {
-      spinner.info('Not authenticated');
-      console.log('Run "neurolint login <api-key>" to authenticate');
-      console.log(`Get your API key from: ${API_BASE_URL}/dashboard`);
-      return;
-    }
-
-    const usage = await authManager.checkUsage();
-    const userInfo = authManager.getUserInfo();
-    
-          logSuccess('Authentication status');
-    console.log(`Email: ${userInfo?.email || 'Unknown'}`);
-    console.log(`Plan: ${userInfo?.plan || userInfo?.tier || usage.tier || 'free'}`);
-    console.log(`Can apply fixes: ${usage.canUseFixes ? 'Yes' : 'No'}`);
-    console.log(`Available layers: ${usage.layers?.join(', ') || '1, 2, 3, 4, 5, 6, 7'}`);
-  } catch (error) {
-          logError(`Status check failed: ${error.message}`);
-    process.exit(1);
-  }
-}
-
 // Show version if requested
 if (process.argv.includes('--version') || process.argv.includes('-v')) {
         console.log('1.4.0');
@@ -2959,11 +2731,6 @@ if (require.main === module && (process.argv.length <= 2 || process.argv.include
 NeuroLint CLI - Code Quality Tool
 
 Usage: neurolint <command> [options] [path]
-
-Authentication Commands:
-  login <api-key>         Authenticate with your API key
-  logout                  Remove authentication
-  status                  Show authentication and usage status
 
 Analysis Commands:
   analyze [path]          Analyze code for potential improvements
@@ -3043,8 +2810,6 @@ Options:
   --version, -v         Show version information
 
 Examples:
-  neurolint login <your-api-key>
-  neurolint status
   neurolint analyze src/ --verbose
   neurolint fix . --layers=1,2,7 --dry-run
   neurolint migrate . --dry-run --verbose
@@ -3067,7 +2832,6 @@ Examples:
   neurolint rules --delete=0
   neurolint rules --reset
   neurolint health
-Get your API key from: https://app.neurolint.dev/dashboard
 `);
   process.exit(0);
 }
@@ -3160,7 +2924,7 @@ Support:
   }
 
   // Run migration
-  await runMigration(targetPath, options, authManager.apiKey);
+  await runMigration(targetPath, options, null);
   process.exit(0);
 }
 }
@@ -3503,65 +3267,14 @@ async function generateMigrationReport(projectId, results, options) {
 }
 
 /**
- * Check migration access
+ * Check migration access - All migrations are now free!
  */
 async function checkMigrationAccess(apiKey) {
-  // For production readiness, allow access if user has API key
-  if (apiKey) {
-    return { 
-      hasAccess: true, 
-      reason: 'Proceeding with authenticated user' 
-    };
-  }
-  
-  try {
-    const response = await fetch('https://app.neurolint.dev/api/auth/status', {
-      headers: {
-        'Authorization': `Bearer ${apiKey}`
-      }
-    });
-
-    if (!response.ok) {
-      return { hasAccess: false, reason: 'Authentication failed' };
-    }
-
-    const userData = await response.json();
-    
-    // Check if user has migration access
-    if (userData.tier === 'enterprise' || userData.tier === 'premium') {
-      return { hasAccess: true };
-    }
-
-    if (userData.migration_quote_approved && userData.migration_expires_at) {
-      const expiresAt = new Date(userData.migration_expires_at);
-      if (new Date() <= expiresAt) {
-        return { hasAccess: true };
-      } else {
-        return { 
-          hasAccess: false, 
-          reason: 'Migration service access has expired' 
-        };
-      }
-    }
-
-    return { 
-      hasAccess: false, 
-      reason: 'Migration service requires enterprise access or approved quote' 
-    };
-
-  } catch (error) {
-    // For production readiness, allow access if API call fails but user has API key
-    if (apiKey) {
-      return { 
-        hasAccess: true, 
-        reason: 'API check failed, but proceeding with authenticated user' 
-      };
-    }
-    return { 
-      hasAccess: false, 
-      reason: 'Failed to check migration access' 
-    };
-  }
+  // All migrations are free and open source - no authentication required
+  return { 
+    hasAccess: true, 
+    reason: 'All migrations are free and open source' 
+  };
 }
 
 // Handle migration command if present
