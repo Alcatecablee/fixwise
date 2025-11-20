@@ -1834,6 +1834,13 @@ async function handleRules(options, spinner) {
       
       process.stdout.write(`Listed ${rules.length} rules\n`);
     } else if (options.delete !== undefined) {
+      if (ruleStore.rules.length === 0) {
+        spinner.stop();
+        console.log('No rules to delete. The rules list is empty.');
+        process.stdout.write('completed\n');
+        return;
+      }
+      
       const ruleId = parseInt(options.delete);
       if (isNaN(ruleId) || ruleId < 0 || ruleId >= ruleStore.rules.length) {
         throw new Error(`Invalid rule ID: ${options.delete}. Must be a number between 0 and ${ruleStore.rules.length - 1}`);
@@ -1853,6 +1860,13 @@ async function handleRules(options, spinner) {
       await ruleStore.save();
       process.stdout.write('Reset all rules\n');
     } else if (options.edit !== undefined) {
+      if (ruleStore.rules.length === 0) {
+        spinner.stop();
+        console.log('No rules to edit. The rules list is empty.');
+        process.stdout.write('completed\n');
+        return;
+      }
+      
       const ruleId = parseInt(options.edit);
       if (isNaN(ruleId) || ruleId < 0 || ruleId >= ruleStore.rules.length) {
         throw new Error(`Invalid rule ID: ${options.edit}. Must be a number between 0 and ${ruleStore.rules.length - 1}`);

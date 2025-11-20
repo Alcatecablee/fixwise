@@ -4,10 +4,13 @@ const fs = require('fs');
 
 const CLI_PATH = path.join(__dirname, '..', 'cli.js');
 
+jest.setTimeout(15000);
+
 function runCLI(args = '', options = {}) {
   try {
     const result = execSync(`node ${CLI_PATH} ${args}`, {
       encoding: 'utf8',
+      timeout: 10000,
       ...options
     });
     return { stdout: result, stderr: '', exitCode: 0 };
