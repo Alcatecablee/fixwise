@@ -1,0 +1,38 @@
+# Development files
+__tests__/
+landing/
+docs/
+.cache/
+.local/
+.git/
+.github/
+
+# Config files
+.replit
+.gitignore
+.neurolintrc
+vite.config.mjs
+tailwind.config.js
+postcss.config.js
+jest.config.cjs
+tsconfig.json
+
+# Documentation that's not needed in the package
+NPM_PUBLISH_GUIDE.md
+CODE_OF_CONDUCT.md
+CONTRIBUTING.md
+replit.md
+
+# Temporary files
+*.log
+*.tmp
+.DS_Store
+node_modules/
+.neurolint/
+.neurolint-backups/
+*.backup-*
+
+# Build artifacts
+dist/
+build/
+coverage/
