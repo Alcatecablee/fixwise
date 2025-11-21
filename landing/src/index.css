@@ -8,7 +8,7 @@
   }
 
   body {
-    @apply bg-background text-foreground;
+    @apply bg-enterprise-slate-950 text-enterprise-slate-50 font-sans antialiased;
   }
 
   :root {
@@ -37,5 +37,30 @@
     --chart-4: 280 65% 60%;
     --chart-5: 340 75% 55%;
     --radius: 0.5rem;
+  }
+}
+
+@layer components {
+  /* Enterprise card component */
+  .enterprise-card {
+    @apply bg-enterprise-slate-900/50 backdrop-blur-sm border border-enterprise-slate-800 rounded-2xl p-6 shadow-enterprise transition-all duration-300 hover:shadow-enterprise-lg hover:border-enterprise-slate-700;
+  }
+
+  /* Enterprise button */
+  .enterprise-btn-primary {
+    @apply px-8 py-4 bg-enterprise-blue-600 text-white font-semibold rounded-xl hover:bg-enterprise-blue-700 transition-all duration-200 shadow-lg hover:shadow-xl active:scale-95;
+  }
+
+  .enterprise-btn-secondary {
+    @apply px-8 py-4 bg-enterprise-slate-800 text-white font-semibold rounded-xl border border-enterprise-slate-700 hover:bg-enterprise-slate-700 transition-all duration-200 hover:shadow-lg active:scale-95;
+  }
+
+  /* Enterprise gradient backgrounds */
+  .enterprise-gradient-1 {
+    @apply bg-gradient-to-br from-enterprise-blue-600/20 to-enterprise-purple-600/20;
+  }
+
+  .enterprise-gradient-2 {
+    @apply bg-gradient-to-br from-enterprise-purple-600/10 to-enterprise-blue-600/10;
   }
 }
