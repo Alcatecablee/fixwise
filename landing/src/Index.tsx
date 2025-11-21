@@ -133,6 +133,30 @@ export default function Index() {
         <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-1/3 h-1/3 bg-gradient-to-r from-purple-500/10 to-pink-500/10 rounded-full blur-3xl"></div>
       </div>
 
+      {/* Navigation Header */}
+      <nav className="fixed top-0 w-full z-50 bg-black/50 backdrop-blur-lg border-b border-white/10">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center h-16">
+            <div className="flex items-center">
+              <span className="text-xl font-bold text-white">NeuroLint</span>
+            </div>
+            <div className="flex items-center space-x-6">
+              <a href="#faq" className="text-gray-300 hover:text-white transition-colors text-sm font-medium">
+                Help
+              </a>
+              <a 
+                href="https://www.npmjs.com/package/@neurolint/cli"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="px-5 py-2 bg-white text-black rounded-lg font-bold hover:bg-gray-100 transition-colors text-sm"
+              >
+                Install
+              </a>
+            </div>
+          </div>
+        </div>
+      </nav>
+
       {/* Hero Section */}
       <section
         className="min-h-screen flex items-center justify-center text-center px-4 py-16 relative"
@@ -167,52 +191,79 @@ export default function Index() {
             </p>
           </div>
 
-          <div className="flex flex-col sm:flex-row gap-4 md:gap-6 lg:gap-8 justify-center animate-slide-in-up animate-delay-700">
-                          <a
-                href="https://www.npmjs.com/package/@neurolint/cli"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="group relative px-6 md:px-8 lg:px-10 py-3 md:py-4 lg:py-5 bg-white text-black font-black rounded-lg md:rounded-xl lg:rounded-2xl hover:bg-gray-100 active:bg-gray-200 transition-all duration-300 cubic-bezier(0.4, 0, 0.2, 1) flex items-center justify-center gap-2 md:gap-3 text-base md:text-lg lg:text-xl shadow-2xl hover:shadow-white/30 hover:scale-105 active:scale-95 focus-visible:scale-105 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-white/30 focus-visible:ring-offset-4 focus-visible:ring-offset-black touch-manipulation interactive min-h-[48px] md:min-h-[56px]"
-                aria-label="Install NeuroLint CLI - 100% Free"
-              >
-                Install Free CLI
-                <svg
-                  className="w-4 h-4 md:w-5 md:h-5 lg:w-6 lg:h-6 group-hover:translate-x-1 group-focus-visible:translate-x-1 transition-transform duration-300"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                  aria-hidden="true"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={3}
-                    d="M13 7l5 5m0 0l-5 5m5-5H6"
-                  />
-                </svg>
-              </a>
+          {/* Install Command */}
+          <div className="mb-8 animate-slide-in-up animate-delay-700">
+            <div className="max-w-2xl mx-auto bg-black/60 border-2 border-white/20 rounded-2xl p-6 backdrop-blur-xl">
+              <code className="text-green-400 font-mono text-lg md:text-xl block text-center">
+                $ npm install -g @neurolint/cli
+              </code>
+            </div>
+          </div>
 
-                          <a
-                href="#comprehensive-demo"
-                className="group relative px-6 md:px-8 lg:px-10 py-3 md:py-4 lg:py-5 bg-black/60 text-white font-black rounded-lg md:rounded-xl lg:rounded-2xl border-2 border-black hover:bg-black/80 active:bg-black/90 transition-all duration-300 cubic-bezier(0.4, 0, 0.2, 1) flex items-center justify-center gap-2 md:gap-3 text-base md:text-lg lg:text-xl backdrop-blur-xl hover:scale-105 active:scale-95 focus-visible:scale-105 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-zinc-500/30 focus-visible:ring-offset-4 focus-visible:ring-offset-black touch-manipulation interactive min-h-[48px] md:min-h-[56px] shadow-lg"
-                aria-label="Try interactive demo"
+          {/* Badges */}
+          <div className="flex flex-wrap items-center justify-center gap-3 mb-8 animate-slide-in-up animate-delay-800">
+            <a 
+              href="https://github.com/Alcatecablee/Neurolint-CLI" 
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <img 
+                src="https://img.shields.io/github/stars/Alcatecablee/Neurolint-CLI?style=social" 
+                alt="GitHub stars"
+                className="h-5"
+              />
+            </a>
+            <a 
+              href="https://www.npmjs.com/package/@neurolint/cli" 
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <img 
+                src="https://img.shields.io/npm/v/@neurolint/cli.svg?style=flat-square&color=blue" 
+                alt="npm version"
+                className="h-5"
+              />
+            </a>
+            <a 
+              href="https://www.npmjs.com/package/@neurolint/cli" 
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <img 
+                src="https://img.shields.io/npm/dm/@neurolint/cli.svg?style=flat-square&color=green" 
+                alt="npm downloads"
+                className="h-5"
+              />
+            </a>
+            <img 
+              src="https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square" 
+              alt="MIT License"
+              className="h-5"
+            />
+          </div>
+
+          <div className="flex flex-col sm:flex-row gap-4 md:gap-6 lg:gap-8 justify-center animate-slide-in-up animate-delay-900">
+            <a
+              href="#comprehensive-demo"
+              className="group relative px-6 md:px-8 lg:px-10 py-3 md:py-4 lg:py-5 bg-white text-black font-black rounded-lg md:rounded-xl lg:rounded-2xl hover:bg-gray-100 active:bg-gray-200 transition-all duration-300 cubic-bezier(0.4, 0, 0.2, 1) flex items-center justify-center gap-2 md:gap-3 text-base md:text-lg lg:text-xl shadow-2xl hover:shadow-white/30 hover:scale-105 active:scale-95 focus-visible:scale-105 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-white/30 focus-visible:ring-offset-4 focus-visible:ring-offset-black touch-manipulation interactive min-h-[48px] md:min-h-[56px]"
+              aria-label="Try interactive demo"
+            >
+              Try Interactive Demo
+              <svg
+                className="w-4 h-4 md:w-5 md:h-5 lg:w-6 lg:h-6 group-hover:translate-y-1 group-focus-visible:translate-y-1 transition-transform duration-300"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                aria-hidden="true"
               >
-                Try Interactive Demo
-                <svg
-                  className="w-4 h-4 md:w-5 md:h-5 lg:w-6 lg:h-6 group-hover:translate-y-1 group-focus-visible:translate-y-1 transition-transform duration-300"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                  aria-hidden="true"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={3}
-                    d="M19 9l-7 7-7-7"
-                  />
-                </svg>
-              </a>
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={3}
+                  d="M19 9l-7 7-7-7"
+                />
+              </svg>
+            </a>
           </div>
         </div>
       </section>
