@@ -2841,7 +2841,7 @@ Examples:
 
 // Show version if requested
 if (process.argv.includes('--version') || process.argv.includes('-v')) {
-        console.log('1.4.0');
+  console.log('1.3.4');
   process.exit(0);
 }
 
