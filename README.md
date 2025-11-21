@@ -1194,7 +1194,6 @@ NeuroLint is open source because:
 - **Community** - Better rules through collaborative development
 - **Innovation** - Faster evolution with contributions
 - **No AI Black Box** - Deterministic, auditable transformations
-- **Free Forever** - No paywalls, authentication, or usage limits
 
 ---
 
