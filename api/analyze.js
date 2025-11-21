@@ -78,12 +78,19 @@ module.exports = async (req, res) => {
     const job = jobManager.createJob(code, options);
     console.log('[API] Job created:', job.id);
 
-    res.status(202).json({
+    // Send 202 Accepted response
+    const response = {
       success: true,
       jobId: job.id,
       status: job.status,
       message: 'Analysis started'
-    });
+    };
+
+    console.log('[API] Sending response:', response);
+
+    res.status(202)
+      .header('Content-Type', 'application/json')
+      .json(response);
 
     setImmediate(async () => {
       try {
