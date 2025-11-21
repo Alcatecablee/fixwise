@@ -188,42 +188,51 @@ export const neurolintAPI = {
     });
   },
 
-  async pollJobResult(jobId: string, maxAttempts = 60): Promise<AnalysisResult> {
+  async pollJobResult(jobId: string, maxAttempts = 120, pollInterval = 500): Promise<AnalysisResult> {
     for (let i = 0; i < maxAttempts; i++) {
       try {
-        const response = await fetch(`${API_BASE}/result/${jobId}`);
-        
+        const response = await fetch(`${API_BASE}/result/${jobId}`, {
+          signal: AbortSignal.timeout(10000) // 10 second timeout per request
+        });
+
         if (!response.ok) {
-          throw new Error('Failed to fetch job result');
+          if (response.status === 404) {
+            // Job not found yet, keep polling
+          } else {
+            throw new Error(`Failed to fetch job result: ${response.statusText}`);
+          }
+        } else {
+          const data = await response.json();
+
+          if (data.status === 'completed') {
+            return {
+              success: true,
+              analysis: {
+                recommendedLayers: data.result?.detectedIssues
+                  ? [...new Set(data.result.detectedIssues.map((i: any) => i.fixedByLayer))]
+                  : [],
+                detectedIssues: data.result?.detectedIssues || [],
+                confidence: (data.result?.detectedIssues?.length || 0) > 0 ? 0.9 : 1.0,
+                processingTime: data.result?.processingTime || 0,
+                analysisId: jobId
+              },
+              code: data.result?.transformedCode || undefined
+            };
+          } else if (data.status === 'failed') {
+            throw new Error(data.error || 'Analysis failed');
+          }
         }
-
-        const data = await response.json();
-
-        if (data.status === 'completed') {
-          return {
-            success: true,
-            analysis: {
-              recommendedLayers: [...new Set(data.result.detectedIssues.map((i: any) => i.fixedByLayer))],
-              detectedIssues: data.result.detectedIssues,
-              confidence: data.result.detectedIssues.length > 0 ? 0.9 : 1.0,
-              processingTime: data.result.processingTime,
-              analysisId: jobId
-            },
-            code: data.result.transformedCode
-          };
-        } else if (data.status === 'failed') {
-          throw new Error(data.error || 'Analysis failed');
-        }
-
-        await new Promise(resolve => setTimeout(resolve, 1000));
       } catch (error) {
         if (i === maxAttempts - 1) {
           throw error;
         }
       }
+
+      // Wait before polling again
+      await new Promise(resolve => setTimeout(resolve, pollInterval));
     }
 
-    throw new Error('Analysis timeout');
+    throw new Error('Analysis timeout - job did not complete in time');
   },
 
   async fixCode(options: FixOptions): Promise<FixResult> {
