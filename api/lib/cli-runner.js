@@ -142,7 +142,7 @@ class CLIRunner {
         'analyze',
         filePath,
         '--layers', layerId.toString(),
-        '--json'
+        '--format', 'json'
       ];
 
       const proc = spawn('node', args, {
