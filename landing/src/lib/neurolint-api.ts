@@ -65,48 +65,76 @@ const API_BASE = '/api';
 export const neurolintAPI = {
   async analyzeCode(options: AnalyzeOptions): Promise<AnalysisResult> {
     try {
+      const requestBody = {
+        code: options.code,
+        options: {
+          layers: options.layers || [1, 2, 3, 4, 5, 6, 7],
+          filename: options.filePath || 'demo.tsx',
+          ...options.options
+        }
+      };
+
+      console.log('[API] Sending analysis request to /api/analyze', {
+        codeLength: options.code.length,
+        layers: requestBody.options.layers
+      });
+
       const response = await fetch(`${API_BASE}/analyze`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          code: options.code,
-          options: {
-            layers: options.layers || [1, 2, 3, 4, 5, 6, 7],
-            filename: options.filePath || 'demo.tsx',
-            ...options.options
-          }
-        }),
+        body: JSON.stringify(requestBody),
       });
 
+      console.log('[API] Response status:', response.status, response.statusText);
+
       if (!response.ok) {
-        let errorMessage = 'Analysis failed';
+        let errorMessage = `Server returned ${response.status} ${response.statusText}`;
+        let errorDetail = '';
+
         try {
           const errorData = await response.json();
           errorMessage = errorData.message || errorData.error || errorMessage;
+          errorDetail = JSON.stringify(errorData);
         } catch (parseError) {
-          // If we can't parse the error response, use status text
-          errorMessage = response.statusText || 'Analysis failed';
+          try {
+            errorDetail = await response.text();
+          } catch (textError) {
+            errorDetail = 'Could not read response';
+          }
         }
+
+        console.error('[API] Error response:', { status: response.status, message: errorMessage, detail: errorDetail });
         throw new Error(errorMessage);
       }
 
       // Clone the response so we can read it safely
       const clonedResponse = response.clone();
-      const { jobId } = await clonedResponse.json();
+      let responseData;
+      try {
+        responseData = await clonedResponse.json();
+      } catch (parseError) {
+        console.error('[API] Failed to parse response JSON', parseError);
+        throw new Error('Invalid response from server');
+      }
+
+      const { jobId } = responseData;
 
       if (!jobId) {
+        console.error('[API] No jobId in response', responseData);
         throw new Error('No job ID returned from server');
       }
 
+      console.log('[API] Analysis job created:', jobId);
       return await this.streamJobProgress(jobId);
 
     } catch (error) {
-      console.error('Analysis error:', error);
+      const errorMsg = error instanceof Error ? error.message : 'Unknown error';
+      console.error('[API] Analysis error:', errorMsg, error);
       return {
         success: false,
-        error: error instanceof Error ? error.message : 'Unknown error'
+        error: errorMsg
       };
     }
   },
