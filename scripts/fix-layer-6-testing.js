@@ -82,6 +82,58 @@ async function transform(code, options = {}) {
       }
     }
 
+    // Next.js 16 & React 19: RSC (React Server Components) testing patterns
+    const isServerComponent = !code.includes("'use client'") && !code.includes('"use client"');
+    const isClientComponent = code.includes("'use client'") || code.includes('"use client"');
+    
+    if (isTestFile && isServerComponent && updatedCode.includes('async function')) {
+      // Server Component detected in test - add guidance
+      if (!updatedCode.includes('@testing-library/react')) {
+        warnings.push({
+          type: 'RSCTestingWarning',
+          message: 'Testing Server Components requires different approach - consider integration tests instead of unit tests',
+          location: null
+        });
+        
+        // Add RSC testing comment
+        updatedCode = `// ⚠️  React Server Component Testing:\n// - Use integration tests (Playwright/Cypress) instead of RTL\n// - Or mock fetch/database calls and test business logic separately\n// - Server Components cannot use traditional React testing tools\n\n${updatedCode}`;
+        changes.push({
+          type: 'RSCTestingGuidance',
+          description: 'Added React Server Component testing guidance',
+          location: { line: 1 }
+        });
+      }
+    }
+
+    // MSW (Mock Service Worker) compatibility check - breaks with Next.js App Router
+    if (isTestFile && (updatedCode.includes('msw') || updatedCode.includes('setupServer'))) {
+      if (updatedCode.includes('next') || filePath.includes('app/')) {
+        warnings.push({
+          type: 'MSWCompatibilityWarning',
+          message: 'MSW may not work properly with Next.js App Router due to Edge Runtime restrictions',
+          location: null
+        });
+        
+        // Add MSW alternative suggestion
+        updatedCode = `// ⚠️  MSW Compatibility Issue with Next.js App Router:\n// - MSW doesn't work in Edge Runtime\n// - Consider using fetch mocking: vi.mock('node:fetch') or jest.mock('node:fetch')\n// - Or use Next.js route handlers for API mocking\n\n${updatedCode}`;
+        changes.push({
+          type: 'MSWCompatibilityWarning',
+          description: 'Added MSW compatibility warning for App Router',
+          location: { line: 1 }
+        });
+      }
+    }
+
+    // Detect untested Server Components
+    if (!isTestFile && isServerComponent && updatedCode.includes('async function') && updatedCode.includes('export default')) {
+      const componentName = filePath ? path.basename(filePath, path.extname(filePath)) : 'Component';
+      changes.push({
+        type: 'UntestedServerComponent',
+        description: `Server Component '${componentName}' detected - consider adding integration tests`,
+        location: null
+      });
+    }
+
     // Add general testing suggestions for component files
     if (!isTestFile && updatedCode.includes('export default') && updatedCode.includes('function')) {
       changes.push({ 

@@ -82,6 +82,34 @@ This repository was created to:
 
 ## Recent Changes
 
+**November 21, 2025 PM - Version 1.5.0 Enhancement - Next.js 16 Auto-Migration & Community Features:**
+- **Enhanced Next.js 16 Migration (Auto-conversion, not just comments):**
+  - **Auto-add 'use cache' directive** to Server Components that fetch data or use database
+  - **Auto-convert sync params to async** - transforms `({ params })` to `async (props)` with `await props.params`
+  - **Auto-add await to cookies() and headers()** - no more manual async conversion needed
+  - **Ensure functions are async** when using await statements
+  - **Smart cacheLife integration** - automatically adds cacheLife import and updates revalidateTag calls
+  - **Detect and suggest updateTag()** for read-your-writes consistency patterns
+- **Enhanced Layer 6 (Testing) - RSC & Modern Testing Patterns:**
+  - **React Server Component testing guidance** - detects RSC tests and adds integration test recommendations
+  - **MSW compatibility warnings** - detects MSW usage with Next.js App Router and suggests alternatives (vi.mock, jest.mock, route handlers)
+  - **Untested Server Component detection** - identifies async Server Components without tests
+- **Router Complexity Assessor (neurolint assess-router):**
+  - **Complexity scoring (0-100)** - analyzes route count, middleware, API routes, Server/Client Components
+  - **Complexity levels** - Simple (0-30), Moderate (30-60), Complex (60-80), Enterprise (80+)
+  - **Smart recommendations** - suggests plain React for simple projects, App Router migration for mixed setups
+  - **Feature analysis** - detects SSR, SSG, middleware, API routes, Server Components
+- **React 19.2 Feature Detector (neurolint detect-react192):**
+  - **View Transitions detection** - finds manual animation code that could use React 19.2 View Transitions API
+  - **useEffectEvent opportunities** - detects useEffect with callbacks and exhaustive-deps issues
+  - **Activity component opportunities** - finds hidden components (display:none) that could maintain state
+  - **Code examples** - provides migration examples for each detected pattern
+- **CLI Integration:**
+  - Added `neurolint assess-router` command with verbose progress spinner
+  - Added `neurolint detect-react192` command with result summaries
+  - Updated help documentation for both commands
+- **Status:** All features implemented and working, ready for testing
+
 **November 21, 2025 - Version 1.4.0 Release - Next.js 16 Support:**
 - **Next.js 16 Migration Tool:**
   - Auto-rename middleware.ts → proxy.ts

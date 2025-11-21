@@ -641,6 +641,8 @@ neurolint check-deps [path]             # Check React 19 dependency compatibilit
 neurolint check-deps [path] --fix       # Auto-fix incompatible dependencies
 neurolint check-turbopack [path]        # Analyze Turbopack migration readiness
 neurolint check-compiler [path]         # Detect React Compiler opportunities
+neurolint assess-router [path]          # Assess Next.js router complexity and recommend optimal setup
+neurolint detect-react192 [path]        # Detect React 19.2 feature opportunities
 ```
 
 ### Flags & Options

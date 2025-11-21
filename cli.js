@@ -2624,6 +2624,8 @@ Analysis Commands:
   check-deps [path]      Check React 19 dependency compatibility (--fix to apply)
   check-turbopack [path] Analyze Turbopack migration compatibility
   check-compiler [path]  Detect React Compiler optimization opportunities
+  assess-router [path]   Assess Next.js router complexity and recommend optimal setup
+  detect-react192 [path] Detect React 19.2 feature opportunities (View Transitions, useEffectEvent)
   layers                  Display information about all layers
   validate [path]         Validate files without applying fixes
   init-tests [path]       Generate test files for components
@@ -2822,6 +2824,46 @@ Examples:
           console.log('\n✓ No manual memoization patterns detected.');
         }
         break;
+      case 'assess-router':
+        // Handle router complexity assessment
+        spinner.text = 'Assessing router complexity...';
+        const RouterComplexityAssessor = require('./scripts/router-complexity-assessor.js');
+        const routerAssessor = new RouterComplexityAssessor({ 
+          verbose: options.verbose, 
+          projectPath: targetPath 
+        });
+        const routerResult = await routerAssessor.assess();
+        
+        spinner.succeed('Router complexity assessment completed!');
+        
+        if (routerResult.level === 'Simple') {
+          console.log('\n💡 Tip: Your project may be over-engineered for its needs.');
+          console.log('Consider simplifying with: neurolint simplify ./src --target=react');
+        } else if (routerResult.level === 'Moderate') {
+          console.log('\n✓ Router complexity is appropriate for your project size.');
+        } else {
+          console.log('\n📊 Complex router setup detected - this is justified for your requirements.');
+        }
+        break;
+      case 'detect-react192':
+        // Handle React 19.2 feature detection
+        spinner.text = 'Detecting React 19.2 feature opportunities...';
+        const React192FeatureDetector = require('./scripts/react192-feature-detector.js');
+        const react192Detector = new React192FeatureDetector({ 
+          verbose: options.verbose, 
+          projectPath: targetPath 
+        });
+        const react192Result = await react192Detector.detect();
+        
+        spinner.succeed('React 19.2 feature detection completed!');
+        
+        if (react192Result.total > 0) {
+          console.log(`\n✨ Found ${react192Result.total} opportunities to use React 19.2 features!`);
+          console.log('Review the report above to modernize your codebase.');
+        } else {
+          console.log('\n✓ No React 19.2 feature opportunities detected.');
+        }
+        break;
       case 'migrate':
         // Handle migration command - now free!
         if (!targetPath || targetPath === '.') {
@@ -2943,6 +2985,8 @@ Analysis Commands:
   check-deps [path]      Check React 19 dependency compatibility (--fix to apply)
   check-turbopack [path] Analyze Turbopack migration compatibility
   check-compiler [path]  Detect React Compiler optimization opportunities
+  assess-router [path]   Assess Next.js router complexity and recommend optimal setup
+  detect-react192 [path] Detect React 19.2 feature opportunities (View Transitions, useEffectEvent)
   layers                  Display information about all layers
   validate [path]         Validate files without applying fixes
   init-tests [path]       Generate test files for components

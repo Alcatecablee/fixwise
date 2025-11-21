@@ -303,44 +303,57 @@ class NextJS16Migrator {
         let newContent = content;
         let modified = false;
 
-        // Detect unstable_cache usage and suggest migration
-        if (content.includes('unstable_cache')) {
-          // Add 'use cache' directive if not present
-          if (!newContent.includes("'use cache'") && !newContent.includes('"use cache"')) {
-            // Add at the top of the file (after imports)
-            const lines = newContent.split('\n');
-            let insertIndex = 0;
-            
-            // Find the last import statement
-            for (let i = 0; i < lines.length; i++) {
-              if (lines[i].trim().startsWith('import ') || lines[i].trim().startsWith('const ')) {
-                insertIndex = i + 1;
-              } else if (lines[i].trim() && !lines[i].trim().startsWith('//')) {
-                break;
-              }
-            }
-            
-            lines.splice(insertIndex, 0, '', "'use cache';", '');
-            newContent = lines.join('\n');
-            modified = true;
-          }
+        // 1. Auto-add 'use cache' to components that fetch data
+        const shouldAddUseCache = this.shouldAddUseCacheDirective(content);
+        if (shouldAddUseCache && !content.includes("'use cache'") && !content.includes('"use cache"')) {
+          newContent = this.addUseCacheDirective(newContent);
+          modified = true;
+          this.log(`Added 'use cache' directive to ${path.basename(filePath)}`, 'success');
+        }
 
-          // Add comment about migration
+        // 2. Replace unstable_cache with 'use cache' pattern
+        if (content.includes('unstable_cache')) {
           newContent = newContent.replace(
-            /unstable_cache/g,
-            'unstable_cache // TODO: Migrate to \'use cache\' directive for Next.js 16'
+            /unstable_cache\(/g,
+            '/* MIGRATED: Use "use cache" directive instead */ unstable_cache('
           );
           modified = true;
         }
 
-        // Update revalidateTag to use cacheLife
-        if (content.includes('revalidateTag') && !content.includes('cacheLife')) {
+        // 3. Add cacheLife recommendation (not modification to revalidateTag)
+        // revalidateTag() signature remains: revalidateTag(tag: string)
+        // cacheLife should be used in cache definition, not in revalidateTag call
+        if (content.includes('revalidateTag(') && !content.includes('cacheLife')) {
+          // Add comment recommending cacheLife usage at cache definition
           const cacheLifeComment = `
-// Next.js 16: Consider using cacheLife profiles with revalidateTag
-// Example: cacheLife('hours') for frequently changing data
+// Next.js 16: Consider using cacheLife() in your cache configuration
+// Example: 
+//   'use cache';
+//   export const revalidate = cacheLife('hours');
+//   
+// Then call: revalidateTag('your-tag')
 `;
-          newContent = cacheLifeComment + newContent;
-          modified = true;
+          if (!content.includes('Consider using cacheLife')) {
+            newContent = cacheLifeComment + newContent;
+            modified = true;
+          }
+        }
+
+        // 4. Add new Next.js 16 caching APIs (updateTag, refresh)
+        // Detect manual cache invalidation patterns and suggest updateTag
+        if (content.includes('fetch') && content.includes('POST') && !content.includes('updateTag')) {
+          const hasManualInvalidation = content.match(/(?:mutate|invalidate|refresh).*cache/i);
+          if (hasManualInvalidation) {
+            const updateTagComment = `
+// Next.js 16: Consider using updateTag() for read-your-writes consistency
+// import { updateTag } from 'next/cache'
+// updateTag('${path.basename(filePath, path.extname(filePath))}')
+`;
+            if (!content.includes('Consider using updateTag')) {
+              newContent = updateTagComment + newContent;
+              modified = true;
+            }
+          }
         }
 
         if (modified && !this.dryRun) {
@@ -363,6 +376,46 @@ class NextJS16Migrator {
   }
 
   /**
+   * Check if component should have 'use cache' directive
+   */
+  shouldAddUseCacheDirective(content) {
+    // Don't add to client components
+    if (content.includes("'use client'") || content.includes('"use client"')) {
+      return false;
+    }
+
+    // Add to components that fetch data
+    const hasFetch = content.includes('await fetch') || content.includes('fetch(');
+    const hasDatabase = content.match(/(?:prisma|db|database)\./i);
+    const hasAsyncComponent = content.match(/export\s+(?:default\s+)?async\s+function/);
+    
+    return hasFetch || hasDatabase || hasAsyncComponent;
+  }
+
+  /**
+   * Add 'use cache' directive to file
+   */
+  addUseCacheDirective(content) {
+    const lines = content.split('\n');
+    let insertIndex = 0;
+    
+    // Find position after imports
+    for (let i = 0; i < lines.length; i++) {
+      if (lines[i].trim().startsWith('import ') || 
+          lines[i].trim().startsWith('const ') ||
+          lines[i].trim().startsWith('type ') ||
+          lines[i].trim() === '') {
+        insertIndex = i + 1;
+      } else {
+        break;
+      }
+    }
+    
+    lines.splice(insertIndex, 0, '', "'use cache';", '');
+    return lines.join('\n');
+  }
+
+  /**
    * Update async request APIs (params, searchParams, cookies, headers)
    */
   async updateAsyncAPIs(projectPath) {
@@ -376,39 +429,41 @@ class NextJS16Migrator {
         let newContent = content;
         let modified = false;
 
-        // Check if file uses params or searchParams
-        const usesParams = content.includes('params:') || content.match(/{\s*params\s*}/);
-        const usesSearchParams = content.includes('searchParams:');
-
-        if (usesParams || usesSearchParams) {
-          // Add comment about async params
-          const asyncComment = `
-/**
- * Next.js 16: params and searchParams are now async in Server Components
- * Use: const { slug } = await params
- * or in Client Components: const params = use(props.params)
- */
-`;
-          
-          if (!content.includes('params and searchParams are now async')) {
-            newContent = asyncComment + newContent;
-            modified = true;
-          }
+        // 1. Auto-convert sync params destructuring to async
+        // Pattern: ({ params }) => { const { slug } = params }
+        // Convert to: async (props) => { const { slug } = await props.params }
+        if (content.match(/\(\s*{\s*params\s*(?:,\s*searchParams\s*)?\}\s*\)/)) {
+          newContent = this.convertSyncParamsToAsync(newContent);
+          modified = true;
+          this.log(`Converted sync params to async in ${path.basename(filePath)}`, 'success');
         }
 
-        // Check for cookies() and headers() without await
-        const cookiesMatch = content.match(/const\s+\w+\s*=\s*cookies\(\)/g);
-        const headersMatch = content.match(/const\s+\w+\s*=\s*headers\(\)/g);
+        // 2. Auto-add await to cookies() and headers()
+        // Pattern: const x = cookies()
+        // Convert to: const x = await cookies()
+        const cookiesMatch = content.match(/const\s+(\w+)\s*=\s*cookies\(\)/g);
+        if (cookiesMatch && !content.includes('await cookies()')) {
+          newContent = newContent.replace(
+            /const\s+(\w+)\s*=\s*cookies\(\)/g,
+            'const $1 = await cookies()'
+          );
+          modified = true;
+          this.log(`Added await to cookies() in ${path.basename(filePath)}`, 'success');
+        }
 
-        if (cookiesMatch || headersMatch) {
-          if (!content.includes('await cookies()') && !content.includes('await headers()')) {
-            const awaitComment = `
-// Next.js 16: cookies() and headers() are now async
-// Use: const cookieStore = await cookies()
-`;
-            newContent = awaitComment + newContent;
-            modified = true;
-          }
+        const headersMatch = content.match(/const\s+(\w+)\s*=\s*headers\(\)/g);
+        if (headersMatch && !content.includes('await headers()')) {
+          newContent = newContent.replace(
+            /const\s+(\w+)\s*=\s*headers\(\)/g,
+            'const $1 = await headers()'
+          );
+          modified = true;
+          this.log(`Added await to headers() in ${path.basename(filePath)}`, 'success');
+        }
+
+        // 3. Ensure function is async if using await
+        if (modified && newContent.includes('await') && !content.match(/export\s+(?:default\s+)?async\s+function/)) {
+          newContent = this.ensureFunctionIsAsync(newContent);
         }
 
         if (modified && !this.dryRun) {
@@ -416,13 +471,64 @@ class NextJS16Migrator {
           this.changes.push({
             type: 'async_api_update',
             file: filePath,
-            description: 'Added async API migration comments'
+            description: 'Converted params/searchParams/cookies/headers to async APIs'
           });
         }
       } catch (error) {
         continue;
       }
     }
+  }
+
+  /**
+   * Convert sync params destructuring to async
+   */
+  convertSyncParamsToAsync(content) {
+    // Pattern 1: Page component with params
+    // export default function Page({ params }) { const { id } = params }
+    // → export default async function Page(props) { const { id } = await props.params }
+    
+    let newContent = content;
+
+    // Convert ({ params }) to (props) and add async
+    newContent = newContent.replace(
+      /(export\s+default\s+)(function\s+(\w+))\s*\(\s*{\s*params\s*(,\s*searchParams\s*)?\}\s*\)/g,
+      '$1async $2(props)'
+    );
+
+    // Convert params usage inside function
+    // const { id } = params → const { id } = await props.params
+    newContent = newContent.replace(
+      /const\s+{([^}]+)}\s*=\s*params(?!\.)/g,
+      'const {$1} = await props.params'
+    );
+
+    // Convert searchParams usage
+    newContent = newContent.replace(
+      /const\s+{([^}]+)}\s*=\s*searchParams(?!\.)/g,
+      'const {$1} = await props.searchParams'
+    );
+
+    return newContent;
+  }
+
+  /**
+   * Ensure function is async
+   */
+  ensureFunctionIsAsync(content) {
+    // Add async to export default function if not present
+    let newContent = content.replace(
+      /export\s+default\s+function(?!\s+async)/g,
+      'export default async function'
+    );
+
+    // Add async to named exports
+    newContent = newContent.replace(
+      /export\s+function\s+(?!async)/g,
+      'export async function '
+    );
+
+    return newContent;
   }
 
   /**
