@@ -81,11 +81,24 @@ export const neurolintAPI = {
       });
 
       if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.message || 'Analysis failed');
+        let errorMessage = 'Analysis failed';
+        try {
+          const errorData = await response.json();
+          errorMessage = errorData.message || errorData.error || errorMessage;
+        } catch (parseError) {
+          // If we can't parse the error response, use status text
+          errorMessage = response.statusText || 'Analysis failed';
+        }
+        throw new Error(errorMessage);
       }
 
-      const { jobId } = await response.json();
+      // Clone the response so we can read it safely
+      const clonedResponse = response.clone();
+      const { jobId } = await clonedResponse.json();
+
+      if (!jobId) {
+        throw new Error('No job ID returned from server');
+      }
 
       return await this.streamJobProgress(jobId);
 
