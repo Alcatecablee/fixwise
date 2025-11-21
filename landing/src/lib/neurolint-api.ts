@@ -99,21 +99,27 @@ export const neurolintAPI = {
 
       if (!response.ok) {
         let errorMessage = `Server returned ${response.status} ${response.statusText}`;
-        let errorDetail = '';
+        let errorData: any = {};
 
         try {
-          const errorData = await response.json();
+          errorData = await response.json();
           errorMessage = errorData.message || errorData.error || errorMessage;
-          errorDetail = JSON.stringify(errorData);
         } catch (parseError) {
           try {
-            errorDetail = await response.text();
+            const textContent = await response.text();
+            console.error('[API] Error response text:', textContent);
+            errorData.rawResponse = textContent;
           } catch (textError) {
-            errorDetail = 'Could not read response';
+            errorData.rawResponse = 'Could not read response';
           }
         }
 
-        console.error('[API] Error response:', { status: response.status, message: errorMessage, detail: errorDetail });
+        console.error('[API] Error response details:', {
+          status: response.status,
+          statusText: response.statusText,
+          message: errorMessage,
+          data: errorData
+        });
         throw new Error(errorMessage);
       }
 
