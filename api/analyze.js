@@ -160,10 +160,21 @@ module.exports = async (req, res) => {
     });
 
   } catch (error) {
-    console.error('[API] Request handling error:', error);
-    res.status(500).json({
-      error: 'Internal server error',
-      message: error.message
-    });
+    console.error('[API] Request handling error:', error.message);
+    console.error('[API] Error stack:', error.stack);
+
+    // Don't send 500 errors without details
+    const statusCode = error.statusCode || 500;
+    const response = {
+      error: error.name || 'Internal server error',
+      message: error.message || 'An unexpected error occurred',
+      details: error.details || null
+    };
+
+    if (process.env.NODE_ENV !== 'production') {
+      response.stack = error.stack;
+    }
+
+    res.status(statusCode).json(response);
   }
 };
