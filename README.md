@@ -2,7 +2,7 @@
 
 > Deterministic code analysis and transformation tool for TypeScript, JavaScript, React, and Next.js projects.
 
-[![npm version](https://img.shields.io/npm/v/@neurolint/cli.svg)](https://www.npmjs.com/package/@neurolint/cli)
+[![npm version](https://img.shields.io/npm/v/neurolint-cli.svg)](https://www.npmjs.com/package/neurolint-cli)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](./LICENSE)
 [![Tests](https://img.shields.io/badge/tests-170%20passing-brightgreen.svg)](./__tests__)
 
