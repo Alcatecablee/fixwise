@@ -35,10 +35,14 @@ NeuroLint was born from frustration during development of [Taxfy.co.za](https://
 
 ## New in v1.4.0
 
+- **Next.js 16 Migration**: Full support for Next.js 16 with middleware.ts → proxy.ts rename, experimental.ppr to Cache Components migration, and Turbopack optimizations
+- **React 19 Dependency Checker**: Scans package.json for incompatible dependencies and provides fix suggestions with automatic `.npmrc` and `overrides` generation
+- **Turbopack Migration Assistant**: Analyzes Webpack-specific configurations and provides Turbopack compatibility reports
+- **React Compiler Detector**: Identifies manual memoization patterns (useMemo, useCallback, React.memo) that React Compiler can optimize automatically
 - **Biome migration**: Handles missing package.json (creates minimal file or reports clearly)
 - **Middleware runtime**: Auto-adds `export const runtime = "nodejs"` to middleware files that need it
 - **React 19 migration docs** + Next.js 15.5 feature guide
-- **Added tests** for Biome migration and middleware runtime detection
+- **Added 100+ tests** for all new migration tools and dependency checking
 - **Improved troubleshooting** and command help
 
 ---
@@ -621,12 +625,22 @@ neurolint health                 # Run a health check to verify configuration
 ### Migration Commands
 
 ```bash
+neurolint migrate-nextjs-16 [path]      # Migrate to Next.js 16 compatibility (NEW!)
 neurolint migrate-react19 [path]        # Migrate to React 19 compatibility
 neurolint migrate-nextjs-15.5 [path]    # Migrate to Next.js 15.5 compatibility
 neurolint migrate-biome [path]          # Migrate from ESLint to Biome
 neurolint fix-deprecations [path]       # Fix Next.js 15.5 deprecations
 neurolint assess [path]                 # Assess project complexity
 neurolint simplify [path]               # Simplify project (convert to React/minimal Next.js)
+```
+
+### Analysis Commands (NEW in v1.4.0!)
+
+```bash
+neurolint check-deps [path]             # Check React 19 dependency compatibility
+neurolint check-deps [path] --fix       # Auto-fix incompatible dependencies
+neurolint check-turbopack [path]        # Analyze Turbopack migration readiness
+neurolint check-compiler [path]         # Detect React Compiler opportunities
 ```
 
 ### Flags & Options

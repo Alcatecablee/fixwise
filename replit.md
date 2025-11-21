@@ -78,6 +78,39 @@ This repository was created to:
 
 ## Recent Changes
 
+**November 21, 2025 - Version 1.4.0 Release - Next.js 16 Support:**
+- **Next.js 16 Migration Tool:**
+  - Auto-rename middleware.ts → proxy.ts
+  - Migrate experimental.ppr to Cache Components model
+  - Update function exports from middleware to proxy
+  - Add Node.js runtime declarations
+  - Migrate old caching APIs to new Next.js 16 APIs
+- **React 19 Dependency Checker:**
+  - Scans package.json for incompatible dependencies
+  - Detects known issues with Radix UI, Ant Design, next-auth, react-is
+  - Provides automated fix commands
+  - Creates .npmrc with legacy-peer-deps
+  - Adds package.json overrides automatically
+- **Turbopack Migration Assistant:**
+  - Detects Webpack-specific configurations
+  - Identifies incompatible Webpack loaders and plugins
+  - Suggests Turbopack filesystem caching optimizations
+  - Provides compatibility reports with migration guidance
+- **React Compiler Detector:**
+  - Detects manual memoization patterns (useMemo, useCallback, React.memo)
+  - Identifies useRef for previous value tracking
+  - Analyzes complex dependency management
+  - Recommends React Compiler when beneficial
+  - Calculates potential bundle size and runtime savings
+- **New CLI Commands:**
+  - `neurolint migrate-nextjs-16` - Migrate to Next.js 16
+  - `neurolint check-deps` - Check React 19 dependency compatibility (with `--fix` flag)
+  - `neurolint check-turbopack` - Analyze Turbopack readiness
+  - `neurolint check-compiler` - Detect React Compiler opportunities
+- **100+ new tests** for all migration tools and dependency checking
+- Updated documentation with Next.js 16 features
+- Version bumped from 1.3.4 to 1.4.0
+
 **November 20, 2025 - Version 1.3.4 Release:**
 - **Professional appearance update - Removed all emojis:**
   - Removed all emojis from README.md, CLI_USAGE.md, CONTRIBUTING.md

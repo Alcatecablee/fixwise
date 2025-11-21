@@ -2617,9 +2617,13 @@ Analysis Commands:
   fix [path]             Fix code quality issues
   simplify [path]         Simplify project complexity (convert Next.js to React, etc.)
   migrate [path]         One-time migration service (enterprise)
+  migrate-nextjs-16 [path] Migrate project to Next.js 16 compatibility
   migrate-nextjs-15.5 [path] Migrate project to Next.js 15.5 compatibility
   migrate-react19 [path] Migrate project to React 19 compatibility
   migrate-biome [path]   Migrate from ESLint to Biome
+  check-deps [path]      Check React 19 dependency compatibility (--fix to apply)
+  check-turbopack [path] Analyze Turbopack migration compatibility
+  check-compiler [path]  Detect React Compiler optimization opportunities
   layers                  Display information about all layers
   validate [path]         Validate files without applying fixes
   init-tests [path]       Generate test files for components
@@ -2744,6 +2748,80 @@ Examples:
         spinner.text = 'Running React 19 migration...';
         await handleReact19Migration(targetPath, options, spinner);
         break;
+      case 'migrate-nextjs-16':
+        // Handle Next.js 16 migration command
+        spinner.text = 'Running Next.js 16 migration...';
+        const NextJS16Migrator = require('./scripts/migrate-nextjs-16.js');
+        const nextjs16Migrator = new NextJS16Migrator({ 
+          verbose: options.verbose, 
+          dryRun: options.dryRun 
+        });
+        const nextjs16Result = await nextjs16Migrator.migrate(targetPath);
+        
+        spinner.succeed('Next.js 16 migration completed!');
+        console.log(`\nApplied ${nextjs16Result.changes.length} changes`);
+        if (options.verbose) {
+          console.log(JSON.stringify(nextjs16Result.summary, null, 2));
+        }
+        break;
+      case 'check-deps':
+        // Handle React 19 dependency check command
+        spinner.text = 'Checking React 19 dependency compatibility...';
+        const React19DependencyChecker = require('./scripts/react19-dependency-checker.js');
+        const depChecker = new React19DependencyChecker({ 
+          verbose: options.verbose, 
+          projectPath: targetPath 
+        });
+        const depResult = await depChecker.check();
+        
+        spinner.succeed('Dependency check completed!');
+        
+        // Optionally apply fixes if --fix flag is present
+        if (args.includes('--fix')) {
+          await depChecker.applyFixes(depResult.fixes);
+          console.log('\nAutomatic fixes applied. Run npm install to update dependencies.');
+        }
+        break;
+      case 'check-turbopack':
+        // Handle Turbopack migration check command
+        spinner.text = 'Analyzing Turbopack compatibility...';
+        const TurbopackMigrationAssistant = require('./scripts/turbopack-migration-assistant.js');
+        const turbopackAssistant = new TurbopackMigrationAssistant({ 
+          verbose: options.verbose, 
+          projectPath: targetPath 
+        });
+        const turbopackResult = await turbopackAssistant.analyze();
+        
+        spinner.succeed('Turbopack analysis completed!');
+        
+        if (turbopackResult.compatible) {
+          console.log('\n✓ Project is Turbopack-ready! No blocking issues found.');
+        } else {
+          console.log(`\n⚠ Found ${turbopackResult.issues.length} compatibility issues.`);
+          console.log('Review the report above for migration guidance.');
+        }
+        break;
+      case 'check-compiler':
+        // Handle React Compiler check command
+        spinner.text = 'Analyzing React Compiler opportunities...';
+        const ReactCompilerDetector = require('./scripts/react-compiler-detector.js');
+        const compilerDetector = new ReactCompilerDetector({ 
+          verbose: options.verbose, 
+          projectPath: targetPath 
+        });
+        const compilerResult = await compilerDetector.analyze();
+        
+        spinner.succeed('React Compiler analysis completed!');
+        
+        if (compilerResult.recommendCompiler) {
+          console.log('\n🎯 Strong recommendation: Enable React Compiler');
+          console.log(`Found ${compilerResult.totalFindings} opportunities for optimization.`);
+        } else if (compilerResult.totalFindings > 0) {
+          console.log(`\n💡 React Compiler could simplify ${compilerResult.totalFindings} manual optimizations.`);
+        } else {
+          console.log('\n✓ No manual memoization patterns detected.');
+        }
+        break;
       case 'migrate':
         // Handle migration command - now free!
         if (!targetPath || targetPath === '.') {
@@ -2858,9 +2936,13 @@ Analysis Commands:
   fix [path]             Fix code quality issues
   simplify [path]         Simplify project complexity (convert Next.js to React, etc.)
   migrate [path]         One-time migration service (enterprise)
+  migrate-nextjs-16 [path] Migrate project to Next.js 16 compatibility
   migrate-nextjs-15.5 [path] Migrate project to Next.js 15.5 compatibility
   migrate-react19 [path] Migrate project to React 19 compatibility
   migrate-biome [path]   Migrate from ESLint to Biome
+  check-deps [path]      Check React 19 dependency compatibility (--fix to apply)
+  check-turbopack [path] Analyze Turbopack migration compatibility
+  check-compiler [path]  Detect React Compiler optimization opportunities
   layers                  Display information about all layers
   validate [path]         Validate files without applying fixes
   init-tests [path]       Generate test files for components
