@@ -28,7 +28,9 @@
     "test": "jest",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
-    "test:verbose": "jest --verbose"
+    "test:verbose": "jest --verbose",
+    "type-check": "tsc --noEmit",
+    "build:analyze": "ANALYZE=true next build"
   },
   "dependencies": {
     "@babel/generator": "^7.28.5",
