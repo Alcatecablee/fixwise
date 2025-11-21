@@ -10,10 +10,6 @@
 
 **NeuroLint uses deterministic, rule-based transformations (NOT AI) to automatically fix 50+ code issues across 7 intelligent layers.**
 
-Born from real-world frustration on [Taxfy.co.za](https://taxfy.co.za), where **700+ errors were reduced to 70** using automated AST-based fixes. No LLM hallucinations, no unpredictable rewrites—just precise, repeatable transformations.
-
----
-
 ## Table of Contents
 
 - [The Problem](#the-problem)
