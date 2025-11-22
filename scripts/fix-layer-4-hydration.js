@@ -33,6 +33,7 @@ async function isRegularFile(filePath) {
 
 /**
  * Check if a node is already wrapped in SSR guard
+ * Only accepts guards with !== operator and "undefined" literal
  */
 function isAlreadyGuarded(path, guardType = 'window') {
   let parent = path.parentPath;
@@ -43,8 +44,10 @@ function isAlreadyGuarded(path, guardType = 'window') {
     if (t.isConditionalExpression(parent.node)) {
       const test = parent.node.test;
       if (t.isBinaryExpression(test) && 
+          test.operator === '!==' &&
           t.isUnaryExpression(test.left) && 
-          test.left.operator === 'typeof') {
+          test.left.operator === 'typeof' &&
+          t.isStringLiteral(test.right, { value: 'undefined' })) {
         
         const arg = test.left.argument;
         if (t.isIdentifier(arg)) {
@@ -58,8 +61,10 @@ function isAlreadyGuarded(path, guardType = 'window') {
     if (t.isIfStatement(parent.node)) {
       const test = parent.node.test;
       if (t.isBinaryExpression(test) && 
+          test.operator === '!==' &&
           t.isUnaryExpression(test.left) && 
-          test.left.operator === 'typeof') {
+          test.left.operator === 'typeof' &&
+          t.isStringLiteral(test.right, { value: 'undefined' })) {
         
         const arg = test.left.argument;
         if (t.isIdentifier(arg)) {
@@ -247,9 +252,21 @@ async function transform(code, options = {}) {
                     t.cloneNode(statementPath.node.expression, /*deep*/ true, /*withoutLoc*/ false)
                   );
                   
-                  // Attach only trailing comments to the new statement inside the block
-                  if (originalTrailing) {
-                    newStatement.trailingComments = originalTrailing;
+                  // Preserve trailing comments intelligently
+                  if (originalTrailing && originalTrailing.length > 0) {
+                    if (statementPath.node.loc) {
+                      // With location data, preserve same-line comments
+                      const statementEndLine = statementPath.node.loc.end.line;
+                      const sameLineComments = originalTrailing.filter(comment => 
+                        comment.loc && comment.loc.start.line === statementEndLine
+                      );
+                      if (sameLineComments.length > 0) {
+                        newStatement.trailingComments = sameLineComments;
+                      }
+                    } else {
+                      // Without location data, preserve all trailing comments (safe fallback)
+                      newStatement.trailingComments = originalTrailing;
+                    }
                   }
                   
                   // Wrap the entire statement in if (typeof window !== "undefined")
@@ -262,7 +279,7 @@ async function transform(code, options = {}) {
                     t.blockStatement([newStatement])
                   );
                   
-                  // Attach only leading comments to the if statement
+                  // Attach leading comments to the if statement
                   if (originalLeading) {
                     ifStatement.leadingComments = originalLeading;
                   }
@@ -357,9 +374,21 @@ async function transform(code, options = {}) {
                     t.cloneNode(statementPath.node.expression, /*deep*/ true, /*withoutLoc*/ false)
                   );
                   
-                  // Attach only trailing comments to the new statement inside the block
-                  if (originalTrailing) {
-                    newStatement.trailingComments = originalTrailing;
+                  // Preserve trailing comments intelligently
+                  if (originalTrailing && originalTrailing.length > 0) {
+                    if (statementPath.node.loc) {
+                      // With location data, preserve same-line comments
+                      const statementEndLine = statementPath.node.loc.end.line;
+                      const sameLineComments = originalTrailing.filter(comment => 
+                        comment.loc && comment.loc.start.line === statementEndLine
+                      );
+                      if (sameLineComments.length > 0) {
+                        newStatement.trailingComments = sameLineComments;
+                      }
+                    } else {
+                      // Without location data, preserve all trailing comments (safe fallback)
+                      newStatement.trailingComments = originalTrailing;
+                    }
                   }
                   
                   // Wrap the entire statement in if (typeof document !== "undefined")
@@ -372,7 +401,7 @@ async function transform(code, options = {}) {
                     t.blockStatement([newStatement])
                   );
                   
-                  // Attach only leading comments to the if statement
+                  // Attach leading comments to the if statement
                   if (originalLeading) {
                     ifStatement.leadingComments = originalLeading;
                   }
@@ -458,9 +487,15 @@ async function transform(code, options = {}) {
                 t.cloneNode(statementPath.node.expression, /*deep*/ true, /*withoutLoc*/ false)
               );
               
-              // Attach only trailing comments to the new statement inside the block
-              if (originalTrailing) {
-                newStatement.trailingComments = originalTrailing;
+              // Preserve same-line trailing comments only
+              if (originalTrailing && originalTrailing.length > 0 && statementPath.node.loc) {
+                const statementEndLine = statementPath.node.loc.end.line;
+                const sameLineComments = originalTrailing.filter(comment => 
+                  comment.loc && comment.loc.start.line === statementEndLine
+                );
+                if (sameLineComments.length > 0) {
+                  newStatement.trailingComments = sameLineComments;
+                }
               }
               
               // Wrap in if (typeof global !== "undefined")
@@ -473,7 +508,7 @@ async function transform(code, options = {}) {
                 t.blockStatement([newStatement])
               );
               
-              // Attach only leading comments to the if statement
+              // Attach leading comments to the if statement
               if (originalLeading) {
                 ifStatement.leadingComments = originalLeading;
               }
@@ -534,9 +569,15 @@ async function transform(code, options = {}) {
                 t.cloneNode(statementPath.node.expression, /*deep*/ true, /*withoutLoc*/ false)
               );
               
-              // Attach only trailing comments to the new statement inside the block
-              if (originalTrailing) {
-                newStatement.trailingComments = originalTrailing;
+              // Preserve same-line trailing comments only
+              if (originalTrailing && originalTrailing.length > 0 && statementPath.node.loc) {
+                const statementEndLine = statementPath.node.loc.end.line;
+                const sameLineComments = originalTrailing.filter(comment => 
+                  comment.loc && comment.loc.start.line === statementEndLine
+                );
+                if (sameLineComments.length > 0) {
+                  newStatement.trailingComments = sameLineComments;
+                }
               }
               
               // Wrap in if (typeof global !== "undefined")
@@ -549,7 +590,7 @@ async function transform(code, options = {}) {
                 t.blockStatement([newStatement])
               );
               
-              // Attach only leading comments to the if statement
+              // Attach leading comments to the if statement
               if (originalLeading) {
                 ifStatement.leadingComments = originalLeading;
               }
