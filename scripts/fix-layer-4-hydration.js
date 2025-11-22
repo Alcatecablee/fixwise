@@ -238,11 +238,19 @@ async function transform(code, options = {}) {
                 }
                 
                 if (statementPath && t.isExpressionStatement(statementPath.node)) {
-                  // Clone and clean the statement
-                  const clonedStatement = t.cloneNode(statementPath.node, /*deep*/ true, /*withoutLoc*/ false);
-                  delete clonedStatement.leadingComments;
-                  delete clonedStatement.trailingComments;
-                  delete clonedStatement.innerComments;
+                  // Preserve comments from original
+                  const originalLeading = statementPath.node.leadingComments;
+                  const originalTrailing = statementPath.node.trailingComments;
+                  
+                  // Create a fresh expression statement (not cloned) to avoid comment issues
+                  const newStatement = t.expressionStatement(
+                    t.cloneNode(statementPath.node.expression, /*deep*/ true, /*withoutLoc*/ false)
+                  );
+                  
+                  // Attach only trailing comments to the new statement inside the block
+                  if (originalTrailing) {
+                    newStatement.trailingComments = originalTrailing;
+                  }
                   
                   // Wrap the entire statement in if (typeof window !== "undefined")
                   const ifStatement = t.ifStatement(
@@ -251,8 +259,13 @@ async function transform(code, options = {}) {
                       t.unaryExpression('typeof', t.identifier('window'), true),
                       t.stringLiteral('undefined')
                     ),
-                    t.blockStatement([clonedStatement])
+                    t.blockStatement([newStatement])
                   );
+                  
+                  // Attach only leading comments to the if statement
+                  if (originalLeading) {
+                    ifStatement.leadingComments = originalLeading;
+                  }
                   
                   statementPath.replaceWith(ifStatement);
                   
@@ -335,11 +348,19 @@ async function transform(code, options = {}) {
                 }
                 
                 if (statementPath && t.isExpressionStatement(statementPath.node)) {
-                  // Clone and clean the statement
-                  const clonedStatement = t.cloneNode(statementPath.node, /*deep*/ true, /*withoutLoc*/ false);
-                  delete clonedStatement.leadingComments;
-                  delete clonedStatement.trailingComments;
-                  delete clonedStatement.innerComments;
+                  // Preserve comments from original
+                  const originalLeading = statementPath.node.leadingComments;
+                  const originalTrailing = statementPath.node.trailingComments;
+                  
+                  // Create a fresh expression statement (not cloned) to avoid comment issues
+                  const newStatement = t.expressionStatement(
+                    t.cloneNode(statementPath.node.expression, /*deep*/ true, /*withoutLoc*/ false)
+                  );
+                  
+                  // Attach only trailing comments to the new statement inside the block
+                  if (originalTrailing) {
+                    newStatement.trailingComments = originalTrailing;
+                  }
                   
                   // Wrap the entire statement in if (typeof document !== "undefined")
                   const ifStatement = t.ifStatement(
@@ -348,8 +369,13 @@ async function transform(code, options = {}) {
                       t.unaryExpression('typeof', t.identifier('document'), true),
                       t.stringLiteral('undefined')
                     ),
-                    t.blockStatement([clonedStatement])
+                    t.blockStatement([newStatement])
                   );
+                  
+                  // Attach only leading comments to the if statement
+                  if (originalLeading) {
+                    ifStatement.leadingComments = originalLeading;
+                  }
                   
                   statementPath.replaceWith(ifStatement);
                   
@@ -423,13 +449,19 @@ async function transform(code, options = {}) {
             }
             
             if (statementPath && t.isExpressionStatement(statementPath.node)) {
-              // Clone the statement to avoid mutation issues
-              const clonedStatement = t.cloneNode(statementPath.node, /*deep*/ true, /*withoutLoc*/ false);
+              // Preserve comments from original
+              const originalLeading = statementPath.node.leadingComments;
+              const originalTrailing = statementPath.node.trailingComments;
               
-              // Remove comments from cloned statement to avoid duplication
-              delete clonedStatement.leadingComments;
-              delete clonedStatement.trailingComments;
-              delete clonedStatement.innerComments;
+              // Create a fresh expression statement (not cloned) to avoid comment issues
+              const newStatement = t.expressionStatement(
+                t.cloneNode(statementPath.node.expression, /*deep*/ true, /*withoutLoc*/ false)
+              );
+              
+              // Attach only trailing comments to the new statement inside the block
+              if (originalTrailing) {
+                newStatement.trailingComments = originalTrailing;
+              }
               
               // Wrap in if (typeof global !== "undefined")
               const ifStatement = t.ifStatement(
@@ -438,8 +470,13 @@ async function transform(code, options = {}) {
                   t.unaryExpression('typeof', t.identifier(globalName), true),
                   t.stringLiteral('undefined')
                 ),
-                t.blockStatement([clonedStatement])
+                t.blockStatement([newStatement])
               );
+              
+              // Attach only leading comments to the if statement
+              if (originalLeading) {
+                ifStatement.leadingComments = originalLeading;
+              }
               
               statementPath.replaceWith(ifStatement);
               statementPath.skip(); // Skip the newly created if statement to prevent re-visiting
@@ -488,13 +525,19 @@ async function transform(code, options = {}) {
             }
             
             if (statementPath && t.isExpressionStatement(statementPath.node)) {
-              // Clone the statement
-              const clonedStatement = t.cloneNode(statementPath.node, /*deep*/ true, /*withoutLoc*/ false);
+              // Preserve comments from original
+              const originalLeading = statementPath.node.leadingComments;
+              const originalTrailing = statementPath.node.trailingComments;
               
-              // Remove comments from cloned statement to avoid duplication
-              delete clonedStatement.leadingComments;
-              delete clonedStatement.trailingComments;
-              delete clonedStatement.innerComments;
+              // Create a fresh expression statement (not cloned) to avoid comment issues
+              const newStatement = t.expressionStatement(
+                t.cloneNode(statementPath.node.expression, /*deep*/ true, /*withoutLoc*/ false)
+              );
+              
+              // Attach only trailing comments to the new statement inside the block
+              if (originalTrailing) {
+                newStatement.trailingComments = originalTrailing;
+              }
               
               // Wrap in if (typeof global !== "undefined")
               const ifStatement = t.ifStatement(
@@ -503,8 +546,13 @@ async function transform(code, options = {}) {
                   t.unaryExpression('typeof', t.identifier(globalName), true),
                   t.stringLiteral('undefined')
                 ),
-                t.blockStatement([clonedStatement])
+                t.blockStatement([newStatement])
               );
+              
+              // Attach only leading comments to the if statement
+              if (originalLeading) {
+                ifStatement.leadingComments = originalLeading;
+              }
               
               statementPath.replaceWith(ifStatement);
               
