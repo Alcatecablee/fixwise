@@ -73,6 +73,47 @@ const faqData: FAQItem[] = [
       "minutes not hours",
     ],
   },
+  {
+    question: "What are the system requirements?",
+    answer:
+      "NeuroLint requires Node.js 16+ and npm 7+ (Node.js 18+ recommended). Works on macOS, Linux, and Windows. Supports CI/CD environments including GitHub Actions, GitLab CI, CircleCI, and Jenkins. Compatible with monorepos, turborepo, and nx workspaces.",
+    keywords: [
+      "Node.js",
+      "npm",
+      "macOS",
+      "Linux",
+      "Windows",
+      "CI/CD",
+      "monorepo",
+      "prerequisites",
+    ],
+  },
+  {
+    question: "How do backups and rollbacks work?",
+    answer:
+      "Before making any changes, NeuroLint automatically creates timestamped backups in .neurolint-backups/. Each backup includes all modified files. To restore, run 'neurolint restore' and select the backup timestamp. Backups are never modified or deleted automatically - you have full control.",
+    keywords: [
+      "backup",
+      "restore",
+      "rollback",
+      "safety",
+      "undo changes",
+      "recovery",
+    ],
+  },
+  {
+    question: "Does NeuroLint collect any data or require telemetry?",
+    answer:
+      "No. NeuroLint runs 100% locally on your machine. Zero telemetry, zero analytics, zero data collection. Your code never leaves your computer. Works completely offline. No API keys, accounts, or internet connection required after installation.",
+    keywords: [
+      "privacy",
+      "telemetry",
+      "offline",
+      "local",
+      "security",
+      "no tracking",
+    ],
+  },
 ];
 
 const FAQItem: React.FC<{
@@ -189,24 +230,25 @@ export const FAQSection: React.FC = () => {
           <div className="mt-16 text-center">
             <div className="p-8 bg-zinc-900/40 border border-zinc-800/50 rounded-2xl backdrop-blur-sm">
               <h3 className="text-xl font-semibold text-white mb-4">
-                Still have questions?
+                Need more help?
               </h3>
               <p className="text-zinc-400 mb-6">
-                Our team is here to help you get the most out of NeuroLint.
-                Reach out for personalized assistance.
+                Check out our comprehensive documentation or reach out for support.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <a
-                  href="mailto:clievemakazhu@gmail.com"
+                  href="https://github.com/Alcatecablee/Neurolint-CLI/blob/main/CLI_USAGE.md"
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="inline-flex items-center px-6 py-3 bg-white text-black font-semibold rounded-xl hover:bg-gray-100 transition-colors"
                 >
-                  Contact Support
+                  View Documentation
                 </a>
                 <a
-                  href="/docs"
+                  href="mailto:clievemakazhu@gmail.com"
                   className="inline-flex items-center px-6 py-3 bg-zinc-800 text-white font-semibold rounded-xl border border-zinc-700 hover:bg-zinc-700 transition-colors"
                 >
-                  View Documentation
+                  Email Support
                 </a>
               </div>
             </div>
