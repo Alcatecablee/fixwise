@@ -443,16 +443,22 @@ class ASTTransformer {
 
   /**
    * Layer 5: Next.js App Router Fixes (AST-based)
+   * Implements 'use client' directives, ReactDOM.render/hydrate migrations, and Next.js optimizations
    */
   transformNextJS(code, options = {}) {
     const changes = [];
+    let needsCreateRootImport = false;
+    let needsHydrateRootImport = false;
+    let hasReactDOMClientImport = false;
     
     try {
       const visitors = {
-        // Add 'use client' directive for components with hooks
+        // Consolidated Program visitor for directives and imports
         Program(path) {
           let hasClientHooks = false;
           let hasUseClient = false;
+          let hasReactImport = false;
+          let hasReactHooks = false;
           
           // Check for existing 'use client' directive
           path.node.directives.forEach(directive => {
@@ -461,12 +467,34 @@ class ASTTransformer {
             }
           });
           
-          // Check for client-side hooks
+          // Check for existing React import
+          path.node.body.forEach(node => {
+            if (t.isImportDeclaration(node)) {
+              if (t.isStringLiteral(node.source, { value: 'react' })) {
+                hasReactImport = true;
+              }
+              if (node.source.value === 'react-dom/client') {
+                hasReactDOMClientImport = true;
+              }
+            }
+          });
+          
+          // Check for client-side hooks and React usage
           path.traverse({
             CallExpression(callPath) {
               if (t.isIdentifier(callPath.node.callee)) {
-                const hookNames = ['useState', 'useEffect', 'useCallback', 'useMemo', 'useRef'];
+                const hookNames = ['useState', 'useEffect', 'useCallback', 'useMemo', 'useRef', 'useContext', 'useReducer', 'useLayoutEffect'];
                 if (hookNames.includes(callPath.node.callee.name)) {
+                  hasClientHooks = true;
+                  hasReactHooks = true;
+                }
+              }
+            },
+            MemberExpression(memberPath) {
+              // Detect browser-only APIs that require 'use client'
+              if (t.isIdentifier(memberPath.node.object)) {
+                const browserAPIs = ['window', 'document', 'localStorage', 'sessionStorage', 'navigator'];
+                if (browserAPIs.includes(memberPath.node.object.name)) {
                   hasClientHooks = true;
                 }
               }
@@ -482,7 +510,100 @@ class ASTTransformer {
             changes.push({
               type: 'Program',
               location: path.node.loc,
-              description: 'Added use client directive'
+              description: 'Added use client directive for hooks/browser APIs'
+            });
+          }
+          
+          // Add React import if needed
+          if (hasReactHooks && !hasReactImport) {
+            const reactImport = t.importDeclaration(
+              [t.importDefaultSpecifier(t.identifier('React'))],
+              t.stringLiteral('react')
+            );
+            
+            // Insert at the beginning
+            path.node.body.unshift(reactImport);
+            path.node._changed = true;
+            path.node._changeDescription = 'Added React import';
+            changes.push({
+              type: 'Program',
+              location: path.node.loc,
+              description: 'Added React import for hooks'
+            });
+          }
+        },
+
+        // Convert ReactDOM.render to createRoot (React 19)
+        CallExpression(path) {
+          // ReactDOM.render(<App />, container) -> createRoot(container).render(<App />)
+          if (t.isMemberExpression(path.node.callee) &&
+              t.isIdentifier(path.node.callee.object, { name: 'ReactDOM' }) &&
+              t.isIdentifier(path.node.callee.property, { name: 'render' })) {
+            
+            const [element, container] = path.node.arguments;
+            if (!element || !container) return;
+            
+            // Create: const root = createRoot(container);
+            const rootDeclaration = t.variableDeclaration('const', [
+              t.variableDeclarator(
+                t.identifier('root'),
+                t.callExpression(t.identifier('createRoot'), [container])
+              )
+            ]);
+            
+            // Create: root.render(element);
+            const renderCall = t.expressionStatement(
+              t.callExpression(
+                t.memberExpression(t.identifier('root'), t.identifier('render')),
+                [element]
+              )
+            );
+            
+            // Replace the expression statement containing the call
+            const statement = path.findParent(p => p.isExpressionStatement());
+            if (statement) {
+              statement.replaceWithMultiple([rootDeclaration, renderCall]);
+              needsCreateRootImport = true;
+              changes.push({
+                type: 'CallExpression',
+                location: path.node.loc,
+                description: 'Converted ReactDOM.render to createRoot().render()'
+              });
+            }
+          }
+          
+          // ReactDOM.hydrate(<App />, container) -> hydrateRoot(container, <App />)
+          if (t.isMemberExpression(path.node.callee) &&
+              t.isIdentifier(path.node.callee.object, { name: 'ReactDOM' }) &&
+              t.isIdentifier(path.node.callee.property, { name: 'hydrate' })) {
+            
+            const [element, container] = path.node.arguments;
+            if (!element || !container) return;
+            
+            // Create: hydrateRoot(container, element);
+            // Note: parameter order is swapped from hydrate!
+            const hydrateCall = t.callExpression(
+              t.identifier('hydrateRoot'),
+              [container, element]
+            );
+            
+            path.replaceWith(hydrateCall);
+            needsHydrateRootImport = true;
+            changes.push({
+              type: 'CallExpression',
+              location: path.node.loc,
+              description: 'Converted ReactDOM.hydrate to hydrateRoot()'
+            });
+          }
+          
+          // Detect ReactDOM.findDOMNode (removed in React 19)
+          if (t.isMemberExpression(path.node.callee) &&
+              t.isIdentifier(path.node.callee.object, { name: 'ReactDOM' }) &&
+              t.isIdentifier(path.node.callee.property, { name: 'findDOMNode' })) {
+            changes.push({
+              type: 'Warning',
+              location: path.node.loc,
+              description: 'findDOMNode() is removed in React 19 - use refs instead'
             });
           }
         },
@@ -511,50 +632,6 @@ class ASTTransformer {
               type: 'ImportDeclaration',
               location: path.node.loc,
               description: 'Fixed malformed import statement'
-            });
-          }
-        },
-
-        // Add missing React imports
-        Program(path) {
-          let hasReactImport = false;
-          let hasReactHooks = false;
-          
-          // Check for existing React import
-          path.node.body.forEach(node => {
-            if (t.isImportDeclaration(node) && 
-                t.isStringLiteral(node.source, { value: 'react' })) {
-              hasReactImport = true;
-            }
-          });
-          
-          // Check for React hooks usage
-          path.traverse({
-            CallExpression(callPath) {
-              if (t.isIdentifier(callPath.node.callee)) {
-                const hookNames = ['useState', 'useEffect', 'useCallback', 'useMemo', 'useRef'];
-                if (hookNames.includes(callPath.node.callee.name)) {
-                  hasReactHooks = true;
-                }
-              }
-            }
-          });
-          
-          // Add React import if needed
-          if (hasReactHooks && !hasReactImport) {
-            const reactImport = t.importDeclaration(
-              [t.importDefaultSpecifier(t.identifier('React'))],
-              t.stringLiteral('react')
-            );
-            
-            // Insert at the beginning
-            path.node.body.unshift(reactImport);
-            path.node._changed = true;
-            path.node._changeDescription = 'Added React import';
-            changes.push({
-              type: 'Program',
-              location: path.node.loc,
-              description: 'Added React import'
             });
           }
         },
@@ -602,9 +679,31 @@ class ASTTransformer {
       };
 
       const result = this.transform(code, visitors, options);
+      let transformedCode = result.code;
+      
+      // Add react-dom/client imports if needed
+      if (needsCreateRootImport || needsHydrateRootImport) {
+        const importsToAdd = [];
+        if (needsCreateRootImport) importsToAdd.push('createRoot');
+        if (needsHydrateRootImport) importsToAdd.push('hydrateRoot');
+        
+        if (!hasReactDOMClientImport) {
+          // Add new import at the top
+          const importStatement = `import { ${importsToAdd.join(', ')} } from 'react-dom/client';\n`;
+          transformedCode = importStatement + transformedCode;
+        } else {
+          // Add to existing import
+          const importRegex = /import\s*{\s*([^}]+)\s*}\s*from\s*['"]react-dom\/client['"]/;
+          transformedCode = transformedCode.replace(importRegex, (match, imports) => {
+            const existingImports = imports.split(',').map(s => s.trim()).filter(Boolean);
+            const newImports = [...new Set([...existingImports, ...importsToAdd])];
+            return `import { ${newImports.join(', ')} } from 'react-dom/client'`;
+          });
+        }
+      }
       
       return {
-        code: result.code,
+        code: transformedCode,
         changes: changes,
         success: true
       };
