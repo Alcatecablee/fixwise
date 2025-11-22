@@ -50,7 +50,7 @@ export function LandingFooter() {
                   href="mailto:clievemakazhu@gmail.com"
                   className="text-zinc-400 hover:text-white transition-colors"
                 >
-                  clievemakazhu@gmail.com
+                  Email Us
                 </a>
               </li>
             </ul>
