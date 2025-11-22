@@ -147,9 +147,8 @@ export default function Index() {
       <nav className="fixed top-0 w-full z-50 bg-black/30 backdrop-blur-md border-b border-white/10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
-            <div className="flex items-center gap-2">
+            <div className="flex items-center">
               <img src="/logo.png" alt="NeuroLint" className="h-9" />
-              <span className="text-white font-bold text-xl">NeuroLint</span>
             </div>
             <div className="flex items-center gap-6">
               <a 
