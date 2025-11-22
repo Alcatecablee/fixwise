@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import { FAQSection } from "./FAQSection";
 import { ModalDemo } from "./components/ModalDemo";
+import { LayersDocSection } from "./components/LayersDocSection";
 import { LandingFooter } from "./LandingFooter";
 
 import {
@@ -510,6 +511,9 @@ export default function Index() {
           </div>
         </div>
       </section>
+
+      {/* Layers Documentation Section */}
+      <LayersDocSection />
 
       {/* How It Works Section - Simplified and moved up */}
       <section ref={howItWorksSectionRef} className="py-16 md:py-24 px-4" aria-labelledby="how-it-works-heading">
