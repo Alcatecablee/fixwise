@@ -775,63 +775,59 @@ class ASTTransformer {
       };
 
       const result = this.transform(code, visitors, options);
-      let transformedCode = result.code;
+      
+      // Reuse the AST from transform() to preserve all mutations
+      const ast = result.ast;
       
       // Add react-dom/client imports using AST manipulation (production-ready approach)
       if (needsCreateRootImport || needsHydrateRootImport) {
-        try {
-          const ast = this.parse(transformedCode);
-          const importsToAdd = [];
-          if (needsCreateRootImport) importsToAdd.push('createRoot');
-          if (needsHydrateRootImport) importsToAdd.push('hydrateRoot');
-          
-          let reactDOMClientImport = null;
-          let insertIndex = 0;
-          
-          // Find existing react-dom/client import
-          for (let i = 0; i < ast.program.body.length; i++) {
-            const node = ast.program.body[i];
-            if (t.isImportDeclaration(node) && node.source.value === 'react-dom/client') {
-              reactDOMClientImport = node;
-              break;
-            }
-            // Track insert position (after last import)
-            if (t.isImportDeclaration(node)) {
-              insertIndex = i + 1;
-            }
+        const importsToAdd = [];
+        if (needsCreateRootImport) importsToAdd.push('createRoot');
+        if (needsHydrateRootImport) importsToAdd.push('hydrateRoot');
+        
+        let reactDOMClientImport = null;
+        let insertIndex = 0;
+        
+        // Find existing react-dom/client import
+        for (let i = 0; i < ast.program.body.length; i++) {
+          const node = ast.program.body[i];
+          if (t.isImportDeclaration(node) && node.source.value === 'react-dom/client') {
+            reactDOMClientImport = node;
+            break;
           }
-          
-          if (reactDOMClientImport) {
-            // Add to existing import (deduplicate)
-            const existingImports = new Set(
-              reactDOMClientImport.specifiers
-                .filter(s => t.isImportSpecifier(s))
-                .map(s => s.imported.name)
-            );
-            
-            importsToAdd.forEach(importName => {
-              if (!existingImports.has(importName)) {
-                reactDOMClientImport.specifiers.push(
-                  t.importSpecifier(t.identifier(importName), t.identifier(importName))
-                );
-              }
-            });
-          } else {
-            // Create new import declaration
-            const newImport = t.importDeclaration(
-              importsToAdd.map(name => t.importSpecifier(t.identifier(name), t.identifier(name))),
-              t.stringLiteral('react-dom/client')
-            );
-            ast.program.body.splice(insertIndex, 0, newImport);
+          // Track insert position (after last import)
+          if (t.isImportDeclaration(node)) {
+            insertIndex = i + 1;
           }
+        }
+        
+        if (reactDOMClientImport) {
+          // Add to existing import (deduplicate)
+          const existingImports = new Set(
+            reactDOMClientImport.specifiers
+              .filter(s => t.isImportSpecifier(s))
+              .map(s => s.imported.name)
+          );
           
-          transformedCode = this.generateCode(ast, options).code;
-        } catch (error) {
-          // Fallback to string-based if AST manipulation fails
-          const importStatement = `import { ${importsToAdd.join(', ')} } from 'react-dom/client';\n`;
-          transformedCode = importStatement + transformedCode;
+          importsToAdd.forEach(importName => {
+            if (!existingImports.has(importName)) {
+              reactDOMClientImport.specifiers.push(
+                t.importSpecifier(t.identifier(importName), t.identifier(importName))
+              );
+            }
+          });
+        } else {
+          // Create new import declaration
+          const newImport = t.importDeclaration(
+            importsToAdd.map(name => t.importSpecifier(t.identifier(name), t.identifier(name))),
+            t.stringLiteral('react-dom/client')
+          );
+          ast.program.body.splice(insertIndex, 0, newImport);
         }
       }
+      
+      // Generate final code from the mutated AST
+      const transformedCode = this.generateCode(ast, options).code;
       
       return {
         code: transformedCode,
