@@ -1592,15 +1592,20 @@ async function transform(code, options = {}) {
       } catch {}
     }
 
-    // Step 4: Apply React 19 DOM API fixes using AST (replaces buggy regex approach)
+    // Step 4: Apply Layer 5 Next.js transformations using AST (includes 'use client', ReactDOM migrations, etc.)
     try {
       const transformer = new ASTTransformer();
       
-      // Convert ReactDOM.render and ReactDOM.hydrate using AST
-      const react19DOMResult = transformer.transformReact19DOM(updatedCode, { filename: filePath });
-      if (react19DOMResult.success) {
-        updatedCode = react19DOMResult.code;
-        react19DOMResult.changes.forEach(c => {
+      // Apply comprehensive Next.js transformations:
+      // - 'use client' directives for hooks/browser APIs
+      // - ReactDOM.render → createRoot 
+      // - ReactDOM.hydrate → hydrateRoot
+      // - Metadata conversion
+      // - React imports
+      const nextjsResult = transformer.transformNextJS(updatedCode, { filename: filePath });
+      if (nextjsResult.success) {
+        updatedCode = nextjsResult.code;
+        nextjsResult.changes.forEach(c => {
           changes.push(c);
           if (verbose) {
             process.stdout.write(`[INFO] ${c.description}\n`);
