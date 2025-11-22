@@ -299,12 +299,12 @@ export default function Index() {
           <div className="flex flex-col sm:flex-row gap-4 justify-center animate-slide-in-up animate-delay-900">
             <a
               href="#comprehensive-demo"
-              className="group relative px-8 md:px-10 py-3.5 md:py-4 bg-white text-black font-bold rounded-xl hover:bg-gray-100 active:bg-gray-200 transition-all duration-300 flex items-center justify-center gap-2 md:gap-3 text-base md:text-lg shadow-xl hover:shadow-2xl hover:scale-[1.02] active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50 focus-visible:ring-offset-2 focus-visible:ring-offset-black touch-manipulation min-h-[48px]"
-              aria-label="Try interactive demo"
+              className="group relative px-8 md:px-10 py-3.5 md:py-4 bg-white text-black font-bold rounded-xl hover:bg-gray-100 active:bg-gray-200 transition-all duration-300 ease-out flex items-center justify-center gap-2 md:gap-3 text-base md:text-lg shadow-xl hover:shadow-2xl hover:scale-[1.02] active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50 focus-visible:ring-offset-2 focus-visible:ring-offset-black touch-manipulation min-h-[48px]"
+              aria-label="Try interactive demo - scroll to demo section"
             >
               Try Interactive Demo
               <svg
-                className="w-5 h-5 group-hover:translate-y-0.5 transition-transform duration-300"
+                className="w-5 h-5 group-hover:translate-y-0.5 transition-transform duration-300 ease-out"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -512,21 +512,24 @@ export default function Index() {
       </section>
 
       {/* How It Works Section - Simplified and moved up */}
-      <section ref={howItWorksSectionRef} className="py-24 px-4">
+      <section ref={howItWorksSectionRef} className="py-16 md:py-24 px-4" aria-labelledby="how-it-works-heading">
         <div className="max-w-7xl mx-auto">
-          <div className={`text-center mb-20 transition-all duration-1000 transform ${
+          <div className={`text-center mb-16 md:mb-20 transition-all duration-700 ease-out transform ${
             howItWorksInView
               ? 'opacity-100 translate-y-0'
               : 'opacity-0 translate-y-20'
           }`}>
-            <h2 className={`text-5xl md:text-7xl font-black mb-8 tracking-tight text-white transition-all duration-1000 delay-200 transform ${
-              howItWorksInView
-                ? 'opacity-100 translate-y-0'
-                : 'opacity-0 translate-y-10'
-            }`}>
+            <h2 
+              id="how-it-works-heading"
+              className={`text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black mb-6 md:mb-8 tracking-tight text-white transition-all duration-700 delay-100 ease-out transform px-4 ${
+                howItWorksInView
+                  ? 'opacity-100 translate-y-0'
+                  : 'opacity-0 translate-y-10'
+              }`}
+            >
               One Command, Thousands of Fixes
             </h2>
-            <p className={`text-xl md:text-2xl text-gray-300 max-w-4xl mx-auto font-medium transition-all duration-1000 delay-400 transform ${
+            <p className={`text-lg sm:text-xl md:text-2xl text-gray-300 max-w-4xl mx-auto font-medium transition-all duration-700 delay-200 ease-out transform px-4 ${
               howItWorksInView
                 ? 'opacity-100 translate-y-0'
                 : 'opacity-0 translate-y-10'
@@ -556,20 +559,23 @@ export default function Index() {
                   "neurolint fix --all-layers - Apply automatic fixes with built-in backups. Rollback anytime if needed.",
               },
             ].map((item, index) => (
-              <div key={index} className={`group relative transition-all duration-1000 transform ${
-                howItWorksInView
-                  ? 'opacity-100 translate-y-0 scale-100'
-                  : 'opacity-0 translate-y-20 scale-95'
-              }`}
-              style={{ transitionDelay: `${(index * 200) + 600}ms` }}>
-                <div className="relative p-6 md:p-8 lg:p-10 bg-gradient-to-br from-white/5 to-white/2 backdrop-blur-xl border-2 border-black rounded-3xl transition-all duration-300 hover:bg-gradient-to-br hover:from-white/8 hover:to-white/4 min-h-[320px] md:h-[360px] lg:h-[320px] flex flex-col shadow-lg hover:shadow-xl">
-                  <div className="text-4xl md:text-5xl font-black text-white mb-4 md:mb-6 lg:mb-8">
+              <div 
+                key={index} 
+                className={`group relative transition-all duration-700 ease-out transform ${
+                  howItWorksInView
+                    ? 'opacity-100 translate-y-0 scale-100'
+                    : 'opacity-0 translate-y-20 scale-95'
+                }`}
+                style={{ transitionDelay: `${(index * 150) + 400}ms` }}
+              >
+                <div className="relative p-6 md:p-8 bg-gradient-to-br from-white/5 to-white/2 backdrop-blur-xl border-2 border-black rounded-2xl transition-all duration-300 ease-out hover:bg-gradient-to-br hover:from-white/8 hover:to-white/4 hover:border-white/20 min-h-[280px] sm:min-h-[320px] flex flex-col shadow-lg hover:shadow-2xl focus-within:ring-2 focus-within:ring-white/30 focus-within:ring-offset-2 focus-within:ring-offset-black">
+                  <div className="text-4xl md:text-5xl font-black text-white mb-3 md:mb-4" aria-hidden="true">
                     {item.step}
                   </div>
-                  <h3 className="text-xl md:text-2xl font-black mb-4 md:mb-6 text-white leading-tight">
+                  <h3 className="text-xl md:text-2xl font-bold mb-3 md:mb-4 text-white leading-tight">
                     {item.title}
                   </h3>
-                  <p className="text-zinc-300 leading-relaxed font-medium text-sm md:text-base lg:text-lg flex-grow overflow-hidden">
+                  <p className="text-gray-300 leading-relaxed font-medium text-sm md:text-base flex-grow">
                     {item.description}
                   </p>
                 </div>
@@ -591,26 +597,26 @@ export default function Index() {
       {/* Final CTA Section */}
       <section ref={finalCtaSectionRef} className="py-24 px-4">
         <div className="max-w-6xl mx-auto relative">
-          <div className={`relative bg-gradient-to-r from-zinc-800 to-black backdrop-blur-xl border-2 border-black rounded-3xl p-16 md:p-24 text-center transition-all duration-1000 transform shadow-lg ${
+          <div className={`relative bg-gradient-to-r from-zinc-800 to-black backdrop-blur-xl border-2 border-black rounded-3xl p-8 sm:p-12 md:p-16 lg:p-24 text-center transition-all duration-700 ease-out transform shadow-lg ${
             finalCtaSectionInView
               ? 'opacity-100 translate-y-0 scale-100'
               : 'opacity-0 translate-y-20 scale-95'
           }`}>
-            <h2 className={`text-5xl md:text-7xl font-black mb-8 tracking-tight text-white transition-all duration-1000 delay-200 transform ${
+            <h2 className={`text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-black mb-6 md:mb-8 tracking-tight text-white transition-all duration-700 delay-100 ease-out transform px-4 ${
               finalCtaSectionInView
                 ? 'opacity-100 translate-y-0'
                 : 'opacity-0 translate-y-10'
             }`}>
               Stop Shipping Bugs. Start Using NeuroLint.
             </h2>
-            <p className={`text-xl md:text-2xl text-gray-300 mb-16 max-w-4xl mx-auto font-medium transition-all duration-1000 delay-400 transform ${
+            <p className={`text-lg sm:text-xl md:text-2xl text-gray-300 mb-10 md:mb-16 max-w-4xl mx-auto font-medium transition-all duration-700 delay-200 ease-out transform px-4 ${
               finalCtaSectionInView
                 ? 'opacity-100 translate-y-0'
                 : 'opacity-0 translate-y-10'
             }`}>
               100% Free CLI. No registration required. Automatic backups included.
             </p>
-            <div className={`flex flex-col sm:flex-row gap-6 justify-center transition-all duration-1000 delay-600 transform ${
+            <div className={`flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center transition-all duration-700 delay-300 ease-out transform ${
               finalCtaSectionInView
                 ? 'opacity-100 translate-y-0'
                 : 'opacity-0 translate-y-20'
@@ -619,13 +625,15 @@ export default function Index() {
                 href="https://www.npmjs.com/package/@neurolint/cli"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="px-10 py-5 bg-white text-black font-black rounded-2xl hover:bg-gray-100 transition-all duration-300 text-lg shadow-2xl hover:scale-105"
+                className="px-8 sm:px-10 py-4 sm:py-5 bg-white text-black font-bold rounded-2xl hover:bg-gray-100 active:bg-gray-200 transition-all duration-300 ease-out text-base sm:text-lg shadow-2xl hover:shadow-white/20 hover:scale-[1.02] active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50 focus-visible:ring-offset-2 focus-visible:ring-offset-black min-h-[48px] touch-manipulation"
+                aria-label="Install NeuroLint CLI from npm"
               >
                 Install Free CLI
               </a>
               <a
                 href="#comprehensive-demo"
-                className="px-10 py-5 bg-black/60 text-white font-black rounded-2xl border-2 border-black hover:bg-black/80 transition-all duration-300 text-lg backdrop-blur-xl hover:scale-105 shadow-lg"
+                className="px-8 sm:px-10 py-4 sm:py-5 bg-black/60 text-white font-bold rounded-2xl border-2 border-white/20 hover:bg-black/80 hover:border-white/30 active:bg-black transition-all duration-300 ease-out text-base sm:text-lg backdrop-blur-xl hover:scale-[1.02] active:scale-[0.98] shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50 focus-visible:ring-offset-2 focus-visible:ring-offset-black min-h-[48px] touch-manipulation"
+                aria-label="Try interactive demo"
               >
                 Try Interactive Demo
               </a>
