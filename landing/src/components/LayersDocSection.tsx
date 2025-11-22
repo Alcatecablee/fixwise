@@ -524,9 +524,25 @@ export function LayersDocSection() {
           <h2 className="text-5xl md:text-7xl font-black mb-8 tracking-tight text-white">
             Explore Each Layer in Detail
           </h2>
-          <p className="text-xl md:text-2xl text-gray-300 max-w-4xl mx-auto font-medium">
+          <p className="text-xl md:text-2xl text-gray-300 max-w-4xl mx-auto font-medium mb-12">
             Deep dive into NeuroLint's 7-layer architecture. Each layer targets specific issues with surgical precision.
           </p>
+          
+          <div className="max-w-4xl mx-auto text-left space-y-6 mb-12">
+            <div>
+              <h3 className="text-2xl font-black text-white mb-3">Layers Overview</h3>
+              <p className="text-lg text-gray-300 leading-relaxed">
+                NeuroLint's 7-layer modernization system systematically transforms React/Next.js codebases. Each layer targets specific issues and can be run independently or as part of a complete modernization workflow.
+              </p>
+            </div>
+            
+            <div>
+              <h3 className="text-2xl font-black text-white mb-3">How the Layer System Works</h3>
+              <p className="text-lg text-gray-300 leading-relaxed">
+                The layer system is designed to be progressive and safe. Each layer builds upon the previous ones, ensuring that foundational issues are resolved before applying more complex transformations. You can run individual layers or multiple layers together based on your specific needs.
+              </p>
+            </div>
+          </div>
         </div>
 
         <div className="bg-white/5 backdrop-blur-xl rounded-3xl border-2 border-white/20 shadow-2xl overflow-hidden">
