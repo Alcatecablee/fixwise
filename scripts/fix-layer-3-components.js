@@ -120,17 +120,24 @@ function applyRegexFallbacks(input) {
 function convertForwardRefToDirectRef(code) {
   let transformedCode = code;
 
-  // forwardRef with TS generics
-  const tsPattern = /const\s+(\w+)\s*=\s*forwardRef<[^>]+>\s*\(\s*\(\s*(\w+)\s*,\s*(\w+)\s*\)\s*=>\s*\{/g;
-  transformedCode = transformedCode.replace(tsPattern, (m, name, propsParam, refParam) => `const ${name} = ({ ${refParam}, ...${propsParam} }: any) => {`);
+  // Match complete forwardRef patterns including the closing wrapper
+  // Pattern 1: forwardRef with TS generics - full component
+  const tsFullPattern = /const\s+(\w+)\s*=\s*forwardRef<[^>]+>\s*\(\s*\(\s*(\w+)\s*,\s*(\w+)\s*\)\s*=>\s*\{([\s\S]*?)\}\s*\)\s*;?/g;
+  transformedCode = transformedCode.replace(tsFullPattern, (match, name, propsParam, refParam, body) => {
+    return `const ${name} = ({ ${refParam}, ...${propsParam} }: any) => {${body}};`;
+  });
 
-  // forwardRef standard
-  const stdPattern = /const\s+(\w+)\s*=\s*forwardRef\s*\(\s*\(\s*(\w+)\s*,\s*(\w+)\s*\)\s*=>\s*\{/g;
-  transformedCode = transformedCode.replace(stdPattern, (m, name, propsParam, refParam) => `const ${name} = ({ ${refParam}, ...${propsParam} }) => {`);
+  // Pattern 2: forwardRef standard - full component with block body
+  const stdFullPattern = /const\s+(\w+)\s*=\s*forwardRef\s*\(\s*\(\s*(\w+)\s*,\s*(\w+)\s*\)\s*=>\s*\{([\s\S]*?)\}\s*\)\s*;?/g;
+  transformedCode = transformedCode.replace(stdFullPattern, (match, name, propsParam, refParam, body) => {
+    return `const ${name} = ({ ${refParam}, ...${propsParam} }) => {${body}};`;
+  });
 
-  // forwardRef arrow without braces
-  const arrowPattern = /const\s+(\w+)\s*=\s*forwardRef\s*\(\s*\(\s*(\w+)\s*,\s*(\w+)\s*\)\s*=>\s*\(/g;
-  transformedCode = transformedCode.replace(arrowPattern, (m, name, propsParam, refParam) => `const ${name} = ({ ${refParam}, ...${propsParam} }) => (`);
+  // Pattern 3: forwardRef with single expression (arrow without braces)
+  const arrowSinglePattern = /const\s+(\w+)\s*=\s*forwardRef\s*\(\s*\(\s*(\w+)\s*,\s*(\w+)\s*\)\s*=>\s*\(([\s\S]*?)\)\s*\)\s*;?/g;
+  transformedCode = transformedCode.replace(arrowSinglePattern, (match, name, propsParam, refParam, expr) => {
+    return `const ${name} = ({ ${refParam}, ...${propsParam} }) => (${expr});`;
+  });
 
   // Import cleanup: remove forwardRef from react imports if not used anymore
   if (!transformedCode.includes('forwardRef(')) {
