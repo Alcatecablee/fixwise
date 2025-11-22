@@ -187,9 +187,22 @@ class NeuroLintCore {
       // Perform rule engine analysis
       const ruleResult = await this.ruleEngine.analyze(code, analysisOptions);
       
+      // Convert SmartLayerSelector issues to proper format
+      const smartIssues = smartAnalysis.detectedIssues.map(issue => ({
+        type: `layer-${issue.layer}-issue`,
+        severity: 'medium',
+        description: issue.reason,
+        fixedByLayer: issue.layer,
+        line: issue.location?.line,
+        column: issue.location?.column,
+        ruleId: `smart-layer-${issue.layer}`
+      }));
+
       // Combine results with SmartLayerSelector recommendations
       const result = {
         ...ruleResult,
+        // Merge issues from both rule engine and SmartLayerSelector
+        issues: [...(ruleResult.issues || []), ...smartIssues],
         summary: {
           ...ruleResult.summary,
           recommendedLayers: smartAnalysis.recommendedLayers,
