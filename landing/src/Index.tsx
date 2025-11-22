@@ -144,21 +144,45 @@ export default function Index() {
       </div>
 
       {/* Navigation Header */}
-      <nav className="fixed top-0 w-full z-50 bg-black/30 backdrop-blur-sm border-b border-white/5">
+      <nav className="fixed top-0 w-full z-50 bg-black/30 backdrop-blur-md border-b border-white/10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-14">
-            <div className="flex items-center">
-              <img src="/logo.png" alt="NeuroLint" className="h-8" />
+          <div className="flex justify-between items-center h-16">
+            <div className="flex items-center gap-2">
+              <img src="/logo.png" alt="NeuroLint" className="h-9" />
+              <span className="text-white font-bold text-xl">NeuroLint</span>
             </div>
-            <div className="flex items-center space-x-6">
-              <a href="#faq" className="text-gray-300 hover:text-white transition-colors text-sm font-medium">
-                Help
+            <div className="flex items-center gap-6">
+              <a 
+                href="#comprehensive-demo" 
+                className="text-gray-300 hover:text-white transition-colors text-sm font-medium"
+              >
+                Demo
+              </a>
+              <a 
+                href="#features" 
+                className="text-gray-300 hover:text-white transition-colors text-sm font-medium"
+              >
+                Features
+              </a>
+              <a 
+                href="#faq" 
+                className="text-gray-300 hover:text-white transition-colors text-sm font-medium"
+              >
+                FAQ
+              </a>
+              <a 
+                href="https://github.com/Alcatecablee/Neurolint-CLI/blob/main/CLI_USAGE.md"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-gray-300 hover:text-white transition-colors text-sm font-medium"
+              >
+                Docs
               </a>
               <a 
                 href="https://www.npmjs.com/package/@neurolint/cli"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="px-5 py-2 bg-white text-black rounded-lg font-bold hover:bg-gray-100 transition-colors text-sm"
+                className="px-6 py-2.5 bg-white text-black rounded-lg font-bold hover:bg-gray-100 transition-colors text-sm shadow-lg"
               >
                 Install
               </a>
