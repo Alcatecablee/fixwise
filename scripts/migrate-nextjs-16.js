@@ -451,23 +451,50 @@ class NextJS16Migrator {
         // Pattern: const x = cookies()
         // Convert to: const x = await cookies()
         const cookiesMatch = content.match(/const\s+(\w+)\s*=\s*cookies\(\)/g);
-        if (cookiesMatch && !content.includes('await cookies()')) {
-          newContent = newContent.replace(
-            /const\s+(\w+)\s*=\s*cookies\(\)/g,
-            'const $1 = await cookies()'
-          );
-          modified = true;
-          this.log(`Added await to cookies() in ${path.basename(filePath)}`, 'success');
-        }
-
         const headersMatch = content.match(/const\s+(\w+)\s*=\s*headers\(\)/g);
-        if (headersMatch && !content.includes('await headers()')) {
-          newContent = newContent.replace(
-            /const\s+(\w+)\s*=\s*headers\(\)/g,
-            'const $1 = await headers()'
-          );
-          modified = true;
-          this.log(`Added await to headers() in ${path.basename(filePath)}`, 'success');
+        
+        if ((cookiesMatch && !content.includes('await cookies()')) || 
+            (headersMatch && !content.includes('await headers()'))) {
+          
+          if (cookiesMatch && !content.includes('await cookies()')) {
+            newContent = newContent.replace(
+              /const\s+(\w+)\s*=\s*cookies\(\)/g,
+              'const $1 = await cookies()'
+            );
+            modified = true;
+            this.log(`Added await to cookies() in ${path.basename(filePath)}`, 'success');
+          }
+
+          if (headersMatch && !content.includes('await headers()')) {
+            newContent = newContent.replace(
+              /const\s+(\w+)\s*=\s*headers\(\)/g,
+              'const $1 = await headers()'
+            );
+            modified = true;
+            this.log(`Added await to headers() in ${path.basename(filePath)}`, 'success');
+          }
+
+          // Add explanatory comment at the top of the file
+          if (!newContent.includes('cookies() and headers() are now async')) {
+            const lines = newContent.split('\n');
+            let insertIndex = 0;
+            
+            // Find position after imports
+            for (let i = 0; i < lines.length; i++) {
+              if (lines[i].trim().startsWith('import ') ||
+                  lines[i].trim().startsWith('type ') ||
+                  lines[i].trim() === '' || 
+                  lines[i].trim().startsWith("'use cache'") ||
+                  lines[i].trim().startsWith('"use cache"')) {
+                insertIndex = i + 1;
+              } else {
+                break;
+              }
+            }
+            
+            lines.splice(insertIndex, 0, '', '// Next.js 16: cookies() and headers() are now async', '');
+            newContent = lines.join('\n');
+          }
         }
 
         // 3. Ensure function is async if using await
@@ -495,7 +522,7 @@ class NextJS16Migrator {
   convertSyncParamsToAsync(content) {
     // Pattern 1: Page component with params
     // export default function Page({ params }) { const { id } = params }
-    // → export default async function Page(props) { const { id } = await props.params }
+    // → export default async function Page(props) { const { id} = await props.params }
     
     let newContent = content;
 
@@ -517,6 +544,26 @@ class NextJS16Migrator {
       /const\s+{([^}]+)}\s*=\s*searchParams(?!\.)/g,
       'const {$1} = await props.searchParams'
     );
+
+    // Add explanatory comment at the top of the file
+    if (!newContent.includes('params and searchParams are now async')) {
+      const lines = newContent.split('\n');
+      let insertIndex = 0;
+      
+      // Find position after imports
+      for (let i = 0; i < lines.length; i++) {
+        if (lines[i].trim().startsWith('import ') ||
+            lines[i].trim().startsWith('type ') ||
+            lines[i].trim() === '') {
+          insertIndex = i + 1;
+        } else {
+          break;
+        }
+      }
+      
+      lines.splice(insertIndex, 0, '', '// Next.js 16: params and searchParams are now async', '');
+      newContent = lines.join('\n');
+    }
 
     return newContent;
   }
