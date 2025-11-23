@@ -405,11 +405,19 @@ async function transform(code, options = {}) {
         const isArrowFunctionBody = arrowWithParens.test(beforeMatch) || arrowWithoutParens.test(beforeMatch);
         
         if (isArrowFunctionBody) {
-          // Simply replace with empty block - no inline comment to avoid swallowing subsequent code
-          // The transformation itself serves as documentation
-          const replacement = `{}`;
-          changes.push({ type: 'Comment', description: `Removed ${name} from arrow function`, location: null });
-          return replacement;
+          // Verify console.log is the ENTIRE arrow body - check what follows
+          // Only replace if followed by: whitespace + (semicolon, comma, closing brace/bracket/paren, or newline/EOF)
+          // Do NOT replace if followed by operators like ||, &&, ?, etc.
+          const afterPattern = /^\s*(;|,|}|\]|\)|$)/;
+          const isEntireBody = afterPattern.test(codeAfterMatch);
+          
+          if (isEntireBody) {
+            // Console.log is the entire arrow body - safe to replace
+            const replacement = `{}`;
+            changes.push({ type: 'Comment', description: `Removed ${name} from arrow function`, location: null });
+            return replacement;
+          }
+          // Otherwise, fall through to normal comment replacement
         }
         
         const comment = `// [NeuroLint] Removed ${name}: ${args}`;
