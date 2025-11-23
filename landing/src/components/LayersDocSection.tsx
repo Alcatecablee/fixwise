@@ -247,21 +247,19 @@ function handleClick() {
     name: "Layer 4: Hydration",
     shortName: "L4 Hydration",
     icon: <Zap className="w-6 h-6" />,
-    description: "Prevents hydration mismatches in Next.js SSR by guarding browser APIs and implementing mounted state patterns.",
+    description: "Prevents hydration mismatches in Next.js SSR by guarding browser APIs with typeof checks.",
     whatItDoes: [
-      "Adds typeof window !== 'undefined' guards",
-      "Wraps localStorage/sessionStorage access in SSR checks",
-      "Implements mounted state pattern for client-only rendering",
-      "Adds document.querySelector SSR guards",
+      "Adds typeof window !== 'undefined' guards for browser globals",
+      "Wraps localStorage/sessionStorage access in typeof checks",
+      "Adds typeof document !== 'undefined' guards for DOM access",
       "Detects addEventListener patterns missing cleanup and warns",
-      "Prevents hydration errors from browser-specific code",
-      "Provides warnings for missing useEffect cleanup patterns"
+      "Prevents 'ReferenceError: window/document is not defined' in SSR"
     ],
     keyFeatures: [
-      "Comprehensive SSR safety guards",
-      "Mounted state pattern for theme providers",
+      "Automatic typeof window/document guards",
+      "Inline SSR safety wrapping for browser APIs",
       "Detection and warnings for missing useEffect cleanup",
-      "Prevents 'ReferenceError: window is not defined'"
+      "Prevents server-side ReferenceErrors"
     ],
     examples: [
       {
@@ -273,22 +271,12 @@ function handleClick() {
   return <div className={\`theme-\${theme}\`}>...</div>;
 }`,
         after: `function ThemeProvider() {
-  const [theme, setTheme] = useState('light');
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-    setTheme(
-      typeof window !== "undefined" 
-        ? localStorage.getItem('theme') || 'light'
-        : 'light'
-    );
-  }, []);
-
-  if (!mounted) return null;
+  const [theme, setTheme] = useState(
+    (typeof window !== "undefined" ? localStorage.getItem('theme') : null) || 'light'
+  );
   return <div className={\`theme-\${theme}\`}>...</div>;
 }`,
-        explanation: "Prevents hydration mismatch by delaying client-only code until after mount. The mounted state ensures server and client render the same initial HTML."
+        explanation: "Wraps localStorage access in typeof window check to prevent server-side ReferenceError. Falls back to null if window is undefined, then || operator uses 'light' default."
       },
       {
         title: "Event Listener SSR Guard",
@@ -299,7 +287,7 @@ function handleClick() {
   window.addEventListener('resize', handleResize);
 }, []);
 // [WARNING] useEffect with addEventListener missing cleanup`,
-        explanation: "Detects addEventListener without cleanup and warns. Adds SSR guards for window/document access. Note: Cleanup must be added manually."
+        explanation: "Detects addEventListener patterns missing cleanup and emits a warning. Does not automatically add cleanup or SSR guards for event listeners - these must be added manually."
       }
     ],
     whenToUse: "Run after Layer 3. Essential for all Next.js projects with SSR/SSG, especially when using browser APIs like localStorage or window.",
