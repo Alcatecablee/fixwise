@@ -103,7 +103,8 @@ const layersData: LayerDetail[] = [
     icon: <Code className="w-6 h-6" />,
     description: "Fixes common code patterns and anti-patterns. Handles React 19 breaking changes like Legacy Context and createFactory removal.",
     whatItDoes: [
-      "Removes console.log, alert, confirm, prompt statements",
+      "Removes console.log, alert, confirm, prompt statements with AST-based transformations",
+      "Handles console.log in arrow functions correctly (preserves valid syntax)",
       "Fixes corrupted HTML entities (&quot;, &amp;, &lt;, &gt;)",
       "Converts React.createFactory to JSX (React 19)",
       "Detects Legacy Context usage (removed in React 19)",
@@ -112,10 +113,12 @@ const layersData: LayerDetail[] = [
       "Updates deprecated Next.js 15.5 imports"
     ],
     keyFeatures: [
-      "AST-based transformations with Babel parser",
+      "AST-based transformations with Babel parser for console.log removal",
+      "Correctly handles all arrow function patterns (verified with comprehensive testing)",
       "Preserves code structure and formatting",
       "Provides migration warnings for React 19",
-      "Suggests modern alternatives (toast/dialog over alert)"
+      "Suggests modern alternatives (toast/dialog over alert)",
+      "100% comment coverage on removals"
     ],
     react19Specific: [
       "Converts React.createFactory('div') to JSX components",
@@ -141,22 +144,26 @@ const buttonFactory = (props) => <button {...props} />;`,
         explanation: "React.createFactory is removed in React 19. This converts factory functions to modern JSX components."
       },
       {
-        title: "Console Statement Cleanup",
-        before: `function handleClick() {
+        title: "Console Statement Cleanup with Arrow Functions",
+        before: `const handler = () => console.log('test');
+const logger = value => console.log(value);
+function handleClick() {
   console.log('Button clicked');
-  console.error('Debug info:', data);
   alert('Success!');
 }`,
-        after: `function handleClick() {
+        after: `const handler = () => {} /* [NeuroLint] Removed console.log: 'test'*/;
+const logger = value => {} /* [NeuroLint] Removed console.log: value*/;
+function handleClick() {
   // [NeuroLint] Removed console.log: 'Button clicked'
-  // [NeuroLint] Removed console.error: 'Debug info:', data
+  ;
   // [NeuroLint] Replace with toast notification: 'Success!'
+  ;
 }`,
-        explanation: "Removes development console statements and suggests modern UI alternatives like toast notifications."
+        explanation: "AST-based transformations correctly handle console.log in arrow functions, preserving valid JavaScript syntax. All arrow function patterns work: no params, single param, multi-param, destructured params."
       }
     ],
     whenToUse: "Run after Layer 1. Essential for React 19 migration or cleaning up legacy code patterns before component fixes.",
-    technicalDetails: "Uses @babel/parser with JSX and TypeScript plugins. Applies pattern matching with regex fallbacks for non-parseable code. Tracks changes through multiple transformation passes."
+    technicalDetails: "Uses @babel/parser with JSX and TypeScript plugins. Console.log removal uses AST-based CallExpression visitor with context detection (isArrowFunctionBody helper). Arrow functions: converts to empty block with comment. Standalone statements: EmptyStatement with leading comment. Expression contexts: undefined with inline comment. Regex fallbacks for HTML entities and legacy patterns."
   },
   {
     id: 3,
@@ -298,7 +305,7 @@ const buttonFactory = (props) => <button {...props} />;`,
       }
     ],
     whenToUse: "Run after Layer 3. Essential for all Next.js projects with SSR/SSG, especially when using browser APIs like localStorage or window.",
-    technicalDetails: "Pattern-based regex transformations targeting browser API usage. Detects theme providers and interactive components requiring client-side hydration. Implements the mounted pattern for preventing hydration mismatches."
+    technicalDetails: "AST-based transformations using @babel/parser and @babel/traverse. Uses strict guard detection for exact 'typeof <global> !== \"undefined\"' patterns. Handles deeply nested member expressions (e.g., window.navigator.geolocation.watchPosition) via getRootGlobalName() helper. Prevents infinite loops with path.skip() for newly created nodes."
   },
   {
     id: 5,
@@ -322,8 +329,9 @@ const buttonFactory = (props) => <button {...props} />;`,
       "Server Component optimization"
     ],
     react19Specific: [
-      "Converts ReactDOM.render(<App />, el) to createRoot(el).render(<App />)",
-      "Converts ReactDOM.hydrate to hydrateRoot",
+      "Converts ReactDOM.render(<App />, el) to const root = createRoot(el); root.render(<App />)",
+      "Generates unique variable names (root, root1, root2) for multiple createRoot calls",
+      "Converts ReactDOM.hydrate(el, container) to hydrateRoot(container, el) with correct parameter order",
       "Migrates act from react-dom/test-utils to react",
       "Warns about unmountComponentAtNode requiring manual migration",
       "Detects findDOMNode (removed) and suggests useRef"
@@ -346,10 +354,9 @@ ReactDOM.render(
         after: `import ReactDOM from 'react-dom';
 import { createRoot } from 'react-dom/client';
 
-createRoot(
-  document.getElementById('root')
-).render(<App />);`,
-        explanation: "React 19 removes ReactDOM.render. The new createRoot API enables concurrent features and better error handling."
+const root = createRoot(document.getElementById('root'));
+root.render(<App />);`,
+        explanation: "React 19 removes ReactDOM.render. The new createRoot API enables concurrent features and better error handling. Multiple ReactDOM.render calls generate unique variable names (root, root1, root2) to prevent redeclaration errors."
       },
       {
         title: "Next.js App Router: 'use client' Directive",
