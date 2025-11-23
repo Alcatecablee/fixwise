@@ -253,14 +253,14 @@ function handleClick() {
       "Wraps localStorage/sessionStorage access in SSR checks",
       "Implements mounted state pattern for client-only rendering",
       "Adds document.querySelector SSR guards",
-      "Fixes addEventListener without removeEventListener cleanup",
+      "Detects addEventListener patterns missing cleanup and warns",
       "Prevents hydration errors from browser-specific code",
-      "Adds useEffect cleanup patterns"
+      "Provides warnings for missing useEffect cleanup patterns"
     ],
     keyFeatures: [
       "Comprehensive SSR safety guards",
       "Mounted state pattern for theme providers",
-      "Automatic useEffect cleanup generation",
+      "Detection and warnings for missing useEffect cleanup",
       "Prevents 'ReferenceError: window is not defined'"
     ],
     examples: [
@@ -291,17 +291,15 @@ function handleClick() {
         explanation: "Prevents hydration mismatch by delaying client-only code until after mount. The mounted state ensures server and client render the same initial HTML."
       },
       {
-        title: "Event Listener Cleanup",
+        title: "Event Listener SSR Guard",
         before: `useEffect(() => {
   window.addEventListener('resize', handleResize);
 }, []);`,
         after: `useEffect(() => {
-  if (typeof window !== "undefined") {
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }
-}, []);`,
-        explanation: "Adds SSR guard and cleanup function to prevent memory leaks and server-side errors."
+  window.addEventListener('resize', handleResize);
+}, []);
+// [WARNING] useEffect with addEventListener missing cleanup`,
+        explanation: "Detects addEventListener without cleanup and warns. Adds SSR guards for window/document access. Note: Cleanup must be added manually."
       }
     ],
     whenToUse: "Run after Layer 3. Essential for all Next.js projects with SSR/SSG, especially when using browser APIs like localStorage or window.",
