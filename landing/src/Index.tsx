@@ -103,15 +103,15 @@ const TypewriterHeadline = () => {
   );
 };
 
-// Asciinema Player Component
+// Asciinema Player Component (using optimized GIF)
 const AsciinemaPlayerComponent = () => {
   return (
-    <div className="w-full aspect-video">
-      <iframe
-        src="https://asciinema.org/a/D4fNjywkxwEIoJKn4G4mZjVXR/embed?autoplay=1&loop=1&theme=asciinema&preload=1&speed=0.9"
-        className="w-full h-full border-0"
-        title="NeuroLint CLI Demo - Real Pain Points Fixed in Seconds"
-        allowFullScreen
+    <div className="w-full">
+      <img
+        src="/demo.gif"
+        alt="NeuroLint CLI Demo - Hydration crashes, missing keys, and ESLint errors fixed in seconds"
+        className="w-full h-auto rounded-lg"
+        loading="lazy"
       />
     </div>
   );

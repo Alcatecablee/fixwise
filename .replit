@@ -4,7 +4,7 @@ hidden = [".config", ".git", "generated-icon.png", "node_modules", "dist"]
 
 [nix]
 channel = "stable-25_05"
-packages = ["asciinema"]
+packages = ["asciinema", "gifski", "ffmpeg", "asciinema-agg"]
 
 [deployment]
 deploymentTarget = "autoscale"
@@ -36,12 +36,12 @@ localPort = 35469
 externalPort = 3002
 
 [[ports]]
-localPort = 36261
-externalPort = 8080
-
-[[ports]]
 localPort = 36373
 externalPort = 3003
+
+[[ports]]
+localPort = 37333
+externalPort = 8080
 
 [[ports]]
 localPort = 38261
