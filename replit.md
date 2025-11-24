@@ -70,6 +70,12 @@ The landing page is a static React + Vite application that showcases NeuroLint's
 
 ## Recent Changes (November 24, 2025)
 
+- Added separate Quick Start page with React Router for multi-page navigation
+- Created `/quick-start` route with standalone page layout and navigation
+- Quick Start page based on CLI_TEST_COMMANDS.md, simplified for non-technical users
+- Includes Windows and Mac command examples with copy-to-clipboard functionality
+- Organized into sections: Installation, Check Code (Safe), Preview Changes, Fix Code, Backup Management
+- Navigation updated: replaced "Features" link with "Quick Start" link to separate page
 - Enhanced CLI demo section with professional video player-style interface
 - Terminal-themed wrapper with macOS-style window controls
 - Interactive hover controls overlay (play/pause, progress bar, speed control, fullscreen)
