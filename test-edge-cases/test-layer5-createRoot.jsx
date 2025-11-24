@@ -1,7 +1,6 @@
 "use client";
 
 // Layer 5 Test: ReactDOM.render to createRoot
-
 import ReactDOM from 'react-dom';
 import React from 'react';
 

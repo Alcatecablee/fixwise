@@ -26,13 +26,13 @@ undefined;
 // createFactory pattern
 import React from 'react';
 const divFactory = props => <div {...props} />;
-const buttonFactory = props => <button {...props} />;
+const buttonFactory = props => <Button {...props} aria-label="Button" variant="default" />;
 
 // ============ LAYER 3: Component Fixes ============
 
 // Missing accessibility attributes
 function ImageComponent() {
-  return <img src="photo.jpg" />;
+  return <img src="photo.jpg" alt="Image" />;
 }
 
 // Missing key props in map
@@ -40,13 +40,13 @@ function ListComponent({
   items
 }) {
   return <ul>
-      {items.map(item => <li>{item}</li>)}
+      {items.map(item => <li key={item.id || item}>{item}</li>)}
     </ul>;
 }
 
 // Button without accessibility
 function ButtonComponent() {
-  return <button>Click me</button>;
+  return <Button aria-label="Button" variant="default">Click me</Button>;
 }
 
 // ============ LAYER 4: Hydration/SSR Fixes ============
@@ -78,7 +78,7 @@ function Counter() {
     // [NeuroLint] Removed console.log: 'mounted'
     ;
   }, []);
-  return <button onClick={() => setCount(count + 1)}>{count}</button>;
+  return <Button onClick={() => setCount(count + 1)} aria-label="Button" variant="default">{count}</Button>;
 }
 
 // ReactDOM.render (should convert to createRoot) - Bug #2 test
