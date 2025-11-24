@@ -3,6 +3,7 @@ import { FAQSection } from "./FAQSection";
 import { ModalDemo } from "./components/ModalDemo";
 import { LayersDocSection } from "./components/LayersDocSection";
 import { LandingFooter } from "./LandingFooter";
+import 'asciinema-player/dist/bundle/asciinema-player.css';
 
 import {
   Target,
@@ -103,61 +104,157 @@ const TypewriterHeadline = () => {
   );
 };
 
-// CLI Demo Player Component with professional styling
+// CLI Demo Player Component with real asciinema player
 const AsciinemaPlayerComponent = () => {
-  const [isPlaying, setIsPlaying] = React.useState(true);
-  const imgRef = React.useRef<HTMLImageElement>(null);
+  const playerRef = React.useRef<HTMLDivElement>(null);
+  const playerInstance = React.useRef<any>(null);
+  const [isPlaying, setIsPlaying] = React.useState(false);
+  const [speed, setSpeed] = React.useState(1);
+  const [currentTime, setCurrentTime] = React.useState(0);
+  const [duration, setDuration] = React.useState(0);
+  const [player, setPlayer] = React.useState<any>(null);
 
-  const togglePlay = () => {
-    setIsPlaying(!isPlaying);
+  // Dynamically import the player module
+  React.useEffect(() => {
+    import('asciinema-player').then((p) => {
+      setPlayer(p);
+    });
+  }, []);
+
+  // Create and dispose player instance
+  React.useEffect(() => {
+    if (!player || !playerRef.current || playerInstance.current) return;
+
+    try {
+      playerInstance.current = player.create(
+        '/demo-final.cast',
+        playerRef.current,
+        {
+          autoPlay: true,
+          loop: true,
+          speed: speed,
+          fit: 'width',
+        }
+      );
+
+      setIsPlaying(true);
+
+      const intervalId = setInterval(() => {
+        if (playerInstance.current) {
+          setCurrentTime(playerInstance.current.getCurrentTime() || 0);
+          setDuration(playerInstance.current.getDuration() || 0);
+        }
+      }, 100);
+
+      return () => {
+        clearInterval(intervalId);
+        if (playerInstance.current) {
+          try {
+            playerInstance.current.dispose();
+          } catch (e) {
+            // Ignore disposal errors
+          }
+          playerInstance.current = null;
+        }
+      };
+    } catch (error) {
+      console.error('Failed to load asciinema player:', error);
+    }
+  }, [player, speed]);
+
+  const togglePlayPause = () => {
+    if (!playerInstance.current) return;
+    
+    if (isPlaying) {
+      playerInstance.current.pause();
+      setIsPlaying(false);
+    } else {
+      playerInstance.current.play();
+      setIsPlaying(true);
+    }
+  };
+
+  const changeSpeed = () => {
+    const speeds = [0.5, 1, 1.5, 2];
+    const currentIndex = speeds.indexOf(speed);
+    const nextIndex = currentIndex === -1 ? 0 : (currentIndex + 1) % speeds.length;
+    const nextSpeed = speeds[nextIndex];
+    if (nextSpeed !== undefined) {
+      setSpeed(nextSpeed);
+    }
+  };
+
+  const handleSeek = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!playerInstance.current || !duration) return;
+    
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const percentage = x / rect.width;
+    const newTime = percentage * duration;
+    
+    playerInstance.current.seek(newTime);
+  };
+
+  const formatTime = (seconds: number) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = Math.floor(seconds % 60);
+    return `${mins}:${secs.toString().padStart(2, '0')}`;
   };
 
   return (
     <div className="w-full relative">
-      <img
-        ref={imgRef}
-        src="/demo.gif"
-        alt="NeuroLint CLI Demo - Hydration crashes, missing keys, and ESLint errors fixed in seconds"
-        className="w-full h-auto rounded-lg"
-        loading="lazy"
-        style={{ display: 'block' }}
+      <div 
+        ref={playerRef} 
+        className="w-full rounded-lg overflow-hidden"
+        style={{ minHeight: '400px' }}
       />
       
       {/* Professional Control Bar Overlay */}
-      <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent p-4 opacity-0 hover:opacity-100 transition-opacity duration-300">
-        <div className="flex items-center justify-between gap-4">
-          {/* Play/Pause Button */}
-          <button
-            onClick={togglePlay}
-            className="p-2 hover:bg-white/10 rounded-lg transition-colors"
-            aria-label={isPlaying ? "Pause" : "Play"}
-          >
-            {isPlaying ? (
-              <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M6 4h4v16H6V4zm8 0h4v16h-4V4z"/>
-              </svg>
-            ) : (
-              <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M8 5v14l11-7z"/>
-              </svg>
-            )}
-          </button>
-
+      <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 via-black/70 to-transparent p-4 opacity-0 hover:opacity-100 transition-opacity duration-300">
+        <div className="flex flex-col gap-2">
           {/* Progress Bar */}
-          <div className="flex-1 h-1 bg-white/20 rounded-full overflow-hidden">
+          <div 
+            className="flex-1 h-1 bg-white/20 rounded-full overflow-hidden cursor-pointer"
+            onClick={handleSeek}
+          >
             <div 
-              className="h-full bg-white rounded-full transition-all duration-100"
-              style={{ width: '45%' }}
+              className="h-full bg-green-400 rounded-full transition-all duration-100"
+              style={{ width: `${duration ? (currentTime / duration) * 100 : 0}%` }}
             />
           </div>
+          
+          <div className="flex items-center justify-between gap-4">
+            {/* Play/Pause Button */}
+            <button
+              onClick={togglePlayPause}
+              className="p-2 hover:bg-white/10 rounded-lg transition-colors"
+              aria-label={isPlaying ? "Pause" : "Play"}
+            >
+              {isPlaying ? (
+                <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M6 4h4v16H6V4zm8 0h4v16h-4V4z"/>
+                </svg>
+              ) : (
+                <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M8 5v14l11-7z"/>
+                </svg>
+              )}
+            </button>
 
-          {/* Speed & Fullscreen */}
-          <div className="flex items-center gap-2 text-white text-sm font-mono">
-            <span className="px-2 py-1 bg-white/10 rounded">1x</span>
-            <button className="p-2 hover:bg-white/10 rounded-lg transition-colors" aria-label="Fullscreen">
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
-              </svg>
+            {/* Time Display */}
+            <div className="text-white text-xs font-mono">
+              {formatTime(currentTime)} / {formatTime(duration)}
+            </div>
+
+            <div className="flex-1"></div>
+
+            {/* Speed Control */}
+            <button 
+              onClick={changeSpeed}
+              className="px-3 py-1 bg-white/10 hover:bg-white/20 rounded text-white text-sm font-mono transition-colors"
+              aria-label={`Playback speed: ${speed}x`}
+            >
+              {speed}x
             </button>
           </div>
         </div>
@@ -398,19 +495,44 @@ export default function Index() {
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-5xl font-black mb-4 text-white">
-              See It In Action
+              Fix React Hell in 90 Seconds
             </h2>
-            <p className="text-lg md:text-xl text-gray-300 max-w-2xl mx-auto mb-6">
-              Watch NeuroLint automatically fix your code in seconds
+            <p className="text-lg md:text-xl text-gray-300 max-w-3xl mx-auto mb-8">
+              Watch the complete journey: from broken code to production-ready in under 2 minutes
             </p>
+            
+            {/* 5-Act Structure Badges */}
+            <div className="flex flex-wrap items-center justify-center gap-3 mb-6">
+              <div className="flex items-center gap-2 px-3 py-1.5 bg-red-500/10 border border-red-500/30 rounded-full">
+                <div className="w-2 h-2 bg-red-400 rounded-full"></div>
+                <span className="text-sm text-red-300 font-medium">The Pain</span>
+              </div>
+              <div className="flex items-center gap-2 px-3 py-1.5 bg-blue-500/10 border border-blue-500/30 rounded-full">
+                <div className="w-2 h-2 bg-blue-400 rounded-full"></div>
+                <span className="text-sm text-blue-300 font-medium">Analysis</span>
+              </div>
+              <div className="flex items-center gap-2 px-3 py-1.5 bg-purple-500/10 border border-purple-500/30 rounded-full">
+                <div className="w-2 h-2 bg-purple-400 rounded-full"></div>
+                <span className="text-sm text-purple-300 font-medium">The Fix</span>
+              </div>
+              <div className="flex items-center gap-2 px-3 py-1.5 bg-green-500/10 border border-green-500/30 rounded-full">
+                <div className="w-2 h-2 bg-green-400 rounded-full"></div>
+                <span className="text-sm text-green-300 font-medium">The Proof</span>
+              </div>
+              <div className="flex items-center gap-2 px-3 py-1.5 bg-orange-500/10 border border-orange-500/30 rounded-full">
+                <div className="w-2 h-2 bg-orange-400 rounded-full"></div>
+                <span className="text-sm text-orange-300 font-medium">Deploy</span>
+              </div>
+            </div>
+
             <div className="flex flex-wrap items-center justify-center gap-4 text-sm text-gray-400">
               <div className="flex items-center gap-2">
-                <div className="w-2 h-2 bg-green-400 rounded-full"></div>
-                <span>Interactive Player</span>
+                <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+                <span>Live Playback</span>
               </div>
               <div className="flex items-center gap-2">
                 <div className="w-2 h-2 bg-blue-400 rounded-full"></div>
-                <span>Pause & Resume</span>
+                <span>Click to Pause</span>
               </div>
               <div className="flex items-center gap-2">
                 <div className="w-2 h-2 bg-purple-400 rounded-full"></div>
@@ -418,7 +540,7 @@ export default function Index() {
               </div>
               <div className="flex items-center gap-2">
                 <div className="w-2 h-2 bg-orange-400 rounded-full"></div>
-                <span>Fullscreen Mode</span>
+                <span>Seek Timeline</span>
               </div>
             </div>
           </div>
