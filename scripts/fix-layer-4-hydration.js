@@ -13,6 +13,7 @@ const path = require('path');
 const BackupManager = require('../backup-manager');
 const ASTTransformer = require('../ast-transformer');
 const t = require('@babel/types');
+const parser = require('@babel/parser');
 
 /**
  * Layer 4: Hydration and SSR Fixes (AST-based)
@@ -21,6 +22,117 @@ const t = require('@babel/types');
  * - Fix hydration mismatches in useEffect
  * - Handles nested parentheses correctly via AST
  */
+
+/**
+ * Validate syntax using Babel parser
+ * Returns true if code is valid JavaScript/TypeScript, false otherwise
+ */
+function validateSyntax(code) {
+  try {
+    parser.parse(code, {
+      sourceType: 'module',
+      plugins: ['typescript', 'jsx'],
+      allowImportExportEverywhere: true,
+      strictMode: false
+    });
+    return true;
+  } catch (error) {
+    return false;
+  }
+}
+
+/**
+ * Regex-based fallback for hydration guards
+ * Used when AST transformation fails
+ */
+function applyRegexHydrationFallbacks(input) {
+  let code = input;
+  const changes = [];
+  
+  // Simple regex fallback for localStorage access
+  const localStoragePattern = /localStorage\.(getItem|setItem|removeItem|clear)\s*\(/g;
+  let match;
+  let lsCount = 0;
+  
+  while ((match = localStoragePattern.exec(input)) !== null) {
+    lsCount++;
+  }
+  
+  if (lsCount > 0) {
+    // Wrap localStorage calls with typeof window check (simple fallback)
+    code = code.replace(
+      /localStorage\.(getItem|setItem|removeItem|clear)\s*\([^)]*\)/g,
+      (match) => `(typeof window !== "undefined" ? ${match} : null)`
+    );
+    changes.push({
+      type: 'storage-guard-fallback',
+      description: `Added SSR guard for ${lsCount} localStorage calls (regex fallback)`,
+      location: null
+    });
+  }
+  
+  // Simple regex fallback for sessionStorage access
+  const sessionStoragePattern = /sessionStorage\.(getItem|setItem|removeItem|clear)\s*\(/g;
+  let ssCount = 0;
+  
+  while ((match = sessionStoragePattern.exec(input)) !== null) {
+    ssCount++;
+  }
+  
+  if (ssCount > 0) {
+    code = code.replace(
+      /sessionStorage\.(getItem|setItem|removeItem|clear)\s*\([^)]*\)/g,
+      (match) => `(typeof window !== "undefined" ? ${match} : null)`
+    );
+    changes.push({
+      type: 'storage-guard-fallback',
+      description: `Added SSR guard for ${ssCount} sessionStorage calls (regex fallback)`,
+      location: null
+    });
+  }
+  
+  // Simple regex fallback for window.matchMedia, window.location, etc.
+  const windowApiPattern = /window\.(matchMedia|location|navigator|innerWidth|innerHeight)\b/g;
+  let windowCount = 0;
+  
+  while ((match = windowApiPattern.exec(input)) !== null) {
+    windowCount++;
+  }
+  
+  if (windowCount > 0) {
+    code = code.replace(
+      /window\.(matchMedia|location|navigator|innerWidth|innerHeight)([^;{]*)/g,
+      (match, prop, rest) => `(typeof window !== "undefined" ? window.${prop}${rest} : null)`
+    );
+    changes.push({
+      type: 'window-guard-fallback',
+      description: `Added SSR guard for ${windowCount} window API calls (regex fallback)`,
+      location: null
+    });
+  }
+  
+  // Simple regex fallback for document access
+  const documentApiPattern = /document\.(querySelector|getElementById|body|documentElement)\b/g;
+  let docCount = 0;
+  
+  while ((match = documentApiPattern.exec(input)) !== null) {
+    docCount++;
+  }
+  
+  if (docCount > 0) {
+    code = code.replace(
+      /document\.(querySelector|getElementById|querySelectorAll|getElementsByClassName|getElementsByTagName|body|documentElement)([^;{]*)/g,
+      (match, method, rest) => `(typeof document !== "undefined" ? document.${method}${rest} : null)`
+    );
+    changes.push({
+      type: 'document-guard-fallback',
+      description: `Added SSR guard for ${docCount} document API calls (regex fallback)`,
+      location: null
+    });
+  }
+  
+  return { code, changes };
+}
 
 async function isRegularFile(filePath) {
   try {
@@ -789,27 +901,96 @@ async function transform(code, options = {}) {
     };
 
     // Apply AST transformations
+    // Following orchestration pattern: AST-first with validation, fallback to regex
+    let astSucceeded = false;
+    let astValidationFailed = false;
+    
     try {
       const result = transformer.transform(code, visitors, { filename: filePath });
-      updatedCode = result.code;
       
-      results.push(...changes.map(c => ({
-        type: 'hydration',
-        file: filePath,
-        success: true,
-        changes: 1,
-        details: c.description
-      })));
+      // Validate AST transformation output
+      const isValid = validateSyntax(result.code);
+      
+      if (isValid) {
+        // AST succeeded and output is valid - accept changes
+        updatedCode = result.code;
+        astSucceeded = true;
+        
+        results.push(...changes.map(c => ({
+          type: 'hydration',
+          file: filePath,
+          success: true,
+          changes: 1,
+          details: c.description
+        })));
+        
+        if (verbose && changes.length > 0) {
+          process.stdout.write(`[INFO] AST-based hydration transformations: ${changes.length} changes (validated)\n`);
+        }
+      } else {
+        // Validation failed - revert to original state
+        astValidationFailed = true;
+        updatedCode = code;
+        changeCount = 0;
+        changes.length = 0;
+        
+        if (verbose) {
+          process.stderr.write(`[WARNING] AST transformation produced invalid syntax - reverted to original\n`);
+        }
+      }
     } catch (error) {
-      if (verbose) process.stderr.write(`AST transformation error: ${error.message}\n`);
-      // Fall back to original code if AST fails
-      return {
-        success: false,
-        code,
-        originalCode: code,
-        changeCount: 0,
-        results: [{ type: 'error', file: filePath, success: false, error: error.message }]
-      };
+      // AST transformation failed - will try regex fallback below
+      if (verbose) {
+        process.stderr.write(`[WARNING] AST transformation failed: ${error.message}\n`);
+      }
+    }
+    
+    // If AST failed or validation failed, try regex fallback
+    if (!astSucceeded) {
+      if (verbose) {
+        process.stdout.write(`[INFO] Attempting regex fallback for hydration transformations\n`);
+      }
+      
+      const beforeRegex = code;
+      const regexResult = applyRegexHydrationFallbacks(code);
+      
+      // Validate regex fallback output
+      const regexMadeChanges = regexResult.code !== beforeRegex;
+      const regexOutputValid = validateSyntax(regexResult.code);
+      
+      if (regexMadeChanges && regexOutputValid) {
+        // Regex produced valid changes - accept them
+        updatedCode = regexResult.code;
+        changeCount = regexResult.changes.length;
+        
+        results.push(...regexResult.changes.map(c => ({
+          type: 'hydration-fallback',
+          file: filePath,
+          success: true,
+          changes: 1,
+          details: c.description
+        })));
+        
+        if (verbose) {
+          process.stdout.write(`[INFO] Regex fallback succeeded with ${regexResult.changes.length} changes (validated)\n`);
+        }
+      } else if (regexMadeChanges && !regexOutputValid) {
+        // Regex produced INVALID code - REJECT and revert
+        updatedCode = beforeRegex;
+        changeCount = 0;
+        
+        if (verbose) {
+          process.stderr.write(`[ERROR] Regex fallback produced invalid syntax - rejected changes\n`);
+        }
+      } else {
+        // Regex made no changes - keep original
+        updatedCode = beforeRegex;
+        changeCount = 0;
+        
+        if (verbose) {
+          process.stdout.write(`[INFO] Regex fallback made no changes\n`);
+        }
+      }
     }
 
     // Write changes if not dry-run

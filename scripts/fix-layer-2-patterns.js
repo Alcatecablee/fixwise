@@ -31,6 +31,71 @@ const parser = require('@babel/parser');
 const ASTTransformer = require('../ast-transformer');
 
 /**
+ * Validate syntax using Babel parser
+ * Returns true if code is valid JavaScript/TypeScript, false otherwise
+ */
+function validateSyntax(code) {
+  try {
+    parser.parse(code, {
+      sourceType: 'module',
+      plugins: ['typescript', 'jsx'],
+      allowImportExportEverywhere: true,
+      strictMode: false
+    });
+    return true;
+  } catch (error) {
+    return false;
+  }
+}
+
+/**
+ * Regex-based fallback for console.log, alert, confirm, prompt removal
+ * Used when AST transformation fails
+ */
+function applyRegexPatternFallbacks(input) {
+  let code = input;
+  const changes = [];
+  
+  // Remove console.log statements with simple regex (fallback)
+  const consolePattern = /console\.(log|warn|error|info|debug)\s*\([^)]*\)\s*;?/g;
+  let match;
+  let consoleCount = 0;
+  
+  while ((match = consolePattern.exec(input)) !== null) {
+    consoleCount++;
+  }
+  
+  if (consoleCount > 0) {
+    code = code.replace(consolePattern, '// [NeuroLint] Console statement removed');
+    changes.push({
+      type: 'ConsoleRemoval',
+      description: `Removed ${consoleCount} console statements (regex fallback)`,
+      location: null
+    });
+  }
+  
+  // Remove alert, confirm, prompt with simple regex
+  const dialogPattern = /\b(alert|confirm|prompt)\s*\([^)]*\)\s*;?/g;
+  let dialogMatch;
+  let dialogCount = 0;
+  
+  while ((dialogMatch = dialogPattern.exec(input)) !== null) {
+    dialogCount++;
+  }
+  
+  if (dialogCount > 0) {
+    code = code.replace(dialogPattern, '// [NeuroLint] Dialog removed');
+    changes.push({
+      type: 'DialogRemoval',
+      description: `Removed ${dialogCount} dialog calls (regex fallback)`,
+      location: null
+    });
+  }
+  
+  return { code, changes };
+}
+
+/**
  * React 19 Pattern Transformation Functions
  * Handles breaking changes in React 19 for legacy patterns
  */
@@ -384,33 +449,101 @@ async function transform(code, options = {}) {
     }
     
     // Use AST-based transformations for robust console/alert handling
+    // Following orchestration pattern: AST-first with validation, fallback to regex
+    let astSucceeded = false;
+    let astValidationFailed = false;
+    
     try {
       const transformer = new ASTTransformer();
       const astResult = transformer.transformPatterns(updatedCode, { filename: filePath });
       
-      if (astResult.success && astResult.code !== updatedCode) {
-        updatedCode = astResult.code;
+      // Only validate if we have valid code output
+      if (astResult && typeof astResult.code === 'string' && astResult.code.length > 0) {
+        // Validate AST transformation output
+        const isValid = validateSyntax(astResult.code);
         
-        // Add changes from AST transformation
-        astResult.changes.forEach(change => {
-          changes.push({
-            type: change.type,
-            description: change.description,
-            location: change.location
-          });
-          changeCount++;
-        });
-        
-        states.push(updatedCode);
-        
+        if (isValid && astResult.code !== updatedCode) {
+          // AST succeeded and output is valid - accept changes
+          updatedCode = astResult.code;
+          astSucceeded = true;
+          
+          // Add changes from AST transformation
+          if (astResult.changes && Array.isArray(astResult.changes)) {
+            astResult.changes.forEach(change => {
+              changes.push({
+                type: change.type,
+                description: change.description,
+                location: change.location
+              });
+              changeCount++;
+            });
+          }
+          
+          states.push(updatedCode);
+          
+          if (verbose) {
+            const changeMsg = astResult.changes ? astResult.changes.length : changeCount;
+            process.stdout.write(`[INFO] AST-based pattern transformations: ${changeMsg} changes (validated)\n`);
+          }
+        } else if (!isValid) {
+          // Validation failed - revert to pre-AST state
+          astValidationFailed = true;
+          updatedCode = beforeAST;
+          
+          if (verbose) {
+            process.stderr.write(`[WARNING] AST transformation produced invalid syntax - reverted to original\n`);
+          }
+        }
+      } else {
+        // AST transformation returned no valid code - will try regex fallback
         if (verbose) {
-          process.stdout.write(`[INFO] AST-based pattern transformations: ${astResult.changes.length} changes\n`);
+          process.stderr.write(`[WARNING] AST transformation did not produce valid code output\n`);
         }
       }
     } catch (astError) {
-      // If AST transformation fails, log warning but continue with other transformations
+      // AST transformation failed - will try regex fallback below
       if (verbose) {
-        process.stderr.write(`[WARNING] AST transformation skipped: ${astError.message}\n`);
+        process.stderr.write(`[WARNING] AST transformation failed: ${astError.message}\n`);
+      }
+    }
+    
+    // If AST failed or validation failed, try regex fallback
+    if (!astSucceeded) {
+      if (verbose) {
+        process.stdout.write(`[INFO] Attempting regex fallback for pattern transformations\n`);
+      }
+      
+      const beforeRegex = updatedCode;
+      const regexResult = applyRegexPatternFallbacks(updatedCode);
+      
+      // Validate regex fallback output
+      const regexMadeChanges = regexResult.code !== beforeRegex;
+      const regexOutputValid = validateSyntax(regexResult.code);
+      
+      if (regexMadeChanges && regexOutputValid) {
+        // Regex produced valid changes - accept them
+        updatedCode = regexResult.code;
+        regexResult.changes.forEach(c => {
+          changes.push(c);
+          changeCount++;
+        });
+        states.push(updatedCode);
+        
+        if (verbose) {
+          process.stdout.write(`[INFO] Regex fallback succeeded with ${regexResult.changes.length} changes (validated)\n`);
+        }
+      } else if (regexMadeChanges && !regexOutputValid) {
+        // Regex produced INVALID code - REJECT and revert
+        updatedCode = beforeRegex;
+        
+        if (verbose) {
+          process.stderr.write(`[ERROR] Regex fallback produced invalid syntax - rejected changes\n`);
+        }
+      } else {
+        // Regex made no changes
+        if (verbose) {
+          process.stdout.write(`[INFO] Regex fallback made no changes\n`);
+        }
       }
     }
 

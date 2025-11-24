@@ -16,7 +16,8 @@ NeuroLint employs a 7-layer progressive and safe architecture for code transform
 
 - **7-Layer Fixing System:**
     1.  **Configuration:** Optimizes `tsconfig.json`, `next.config.js`, `package.json`.
-    2.  **Patterns (AST-Based, Production-Ready):** 
+    2.  **Patterns (Production-Ready, Orchestration-Compliant):** 
+        - AST-first transformation strategy with validated regex fallback
         - Handles HTML entities in string literals
         - AST-based console.log/alert/confirm/prompt removal with context-aware replacements
         - Detects arrow function contexts using Babel path ancestry
@@ -24,6 +25,8 @@ NeuroLint employs a 7-layer progressive and safe architecture for code transform
         - Expression-bodied arrows: `() => {} /* [NeuroLint] comment */`
         - Block-bodied arrows & standalone: EmptyStatement with leading comments
         - Unused import removal
+        - Syntax validation prevents invalid output from reaching production
+        - Regex fallback for pattern transformations when AST parsing fails
     3.  **Components (Production-Ready, All Edge Cases Validated):** 
         - AST-first transformation strategy with validated regex fallback
         - Handles ALL parameter patterns: default params `(item = {})`, empty callbacks `()`, destructuring `({ id })`, nested destructuring `({ data: { id } })`, multiple defaults `(item = {}, idx = 0)`
@@ -31,7 +34,12 @@ NeuroLint employs a 7-layer progressive and safe architecture for code transform
         - Syntax validation prevents invalid output from reaching production
         - Comprehensive test coverage with 10/10 edge case validation
         - Addresses React keys, accessibility, prop types
-    4.  **Hydration:** Implements SSR/hydration guards for global objects (`localStorage`, `window`, `document`).
+    4.  **Hydration (Production-Ready, Orchestration-Compliant):** 
+        - AST-first transformation strategy with validated regex fallback
+        - Implements SSR/hydration guards for global objects (`localStorage`, `window`, `document`)
+        - Syntax validation prevents invalid output from reaching production
+        - Regex fallback for hydration guards when AST parsing fails
+        - Automatic event listener cleanup in useEffect hooks
     5.  **Next.js (Production-Ready):** 
         - Detects React hooks (including aliased/destructured imports like `const { useState: useCount } = React` and namespace calls like `React.useEffect()`)
         - Adds `"use client"` directive when hooks detected
