@@ -103,6 +103,20 @@ const TypewriterHeadline = () => {
   );
 };
 
+// Asciinema Player Component
+const AsciinemaPlayerComponent = () => {
+  return (
+    <div className="w-full aspect-video">
+      <iframe
+        src="https://asciinema.org/a/AxbSacKfssHHJTodkyMdLerCd/embed?autoplay=1&loop=1&theme=asciinema&preload=1"
+        className="w-full h-full border-0"
+        title="NeuroLint CLI Demo"
+        allowFullScreen
+      />
+    </div>
+  );
+};
+
 export default function Index() {
   const [mounted, setMounted] = React.useState(false);
   const [copied, setCopied] = React.useState(false);
@@ -342,21 +356,8 @@ export default function Index() {
             </p>
           </div>
           <div className="relative rounded-2xl overflow-hidden shadow-2xl border-2 border-white/10 bg-black/40 backdrop-blur-xl">
-            <video
-              autoPlay
-              loop
-              muted
-              playsInline
-              className="w-full h-auto"
-              poster="/logo.png"
-            >
-              <source src="/demo-video.mp4" type="video/mp4" />
-              Your browser does not support the video tag.
-            </video>
+            <AsciinemaPlayerComponent />
           </div>
-          <p className="text-center text-sm text-gray-400 mt-6">
-            Placeholder demo - Replace with actual CLI recording
-          </p>
         </div>
       </section>
 

@@ -41,6 +41,7 @@
     "@babel/traverse": "^7.28.5",
     "@babel/types": "^7.28.5",
     "@types/react-syntax-highlighter": "^15.5.13",
+    "asciinema-player": "^3.12.1",
     "cli-cursor": "^3.1.0",
     "cors": "^2.8.5",
     "express": "^5.1.0",
