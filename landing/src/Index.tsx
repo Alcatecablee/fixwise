@@ -447,21 +447,21 @@ export default function Index() {
       </section>
 
       {/* Orchestration Pattern Section */}
-      <section ref={orchestrationSectionRef} className="py-20 md:py-32 px-4 bg-gradient-to-b from-black via-zinc-900/30 to-black">
+      <section ref={orchestrationSectionRef} className="py-24 px-4 bg-gradient-to-b from-black via-zinc-900/30 to-black">
         <div className="max-w-7xl mx-auto">
-          <div className={`text-center mb-20 transition-all duration-700 ease-out transform ${
+          <div className={`text-center mb-16 transition-all duration-700 ease-out transform ${
             orchestrationSectionInView
               ? 'opacity-100 translate-y-0'
               : 'opacity-0 translate-y-20'
           }`}>
-            <h2 className={`text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black mb-6 md:mb-8 tracking-tight text-white transition-all duration-700 delay-100 ease-out transform ${
+            <h2 className={`text-5xl md:text-7xl font-black mb-8 tracking-tight text-white transition-all duration-700 delay-100 ease-out transform ${
               orchestrationSectionInView
                 ? 'opacity-100 translate-y-0'
                 : 'opacity-0 translate-y-10'
             }`}>
               Why NeuroLint Never Breaks Your Code
             </h2>
-            <p className={`text-lg sm:text-xl md:text-2xl text-gray-300 max-w-4xl mx-auto font-medium leading-relaxed transition-all duration-700 delay-200 ease-out transform ${
+            <p className={`text-xl md:text-2xl text-zinc-300 max-w-4xl mx-auto font-medium transition-all duration-700 delay-200 ease-out transform ${
               orchestrationSectionInView
                 ? 'opacity-100 translate-y-0'
                 : 'opacity-0 translate-y-10'
@@ -470,7 +470,7 @@ export default function Index() {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6 mb-20">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-16">
             {[
               {
                 stage: "1",
@@ -505,109 +505,68 @@ export default function Index() {
             ].map((item, index) => (
               <div
                 key={index}
-                className={`bg-gradient-to-br from-white/5 to-white/2 backdrop-blur-xl p-6 md:p-8 rounded-2xl border-2 border-white/10 hover:border-white/20 hover:from-white/8 hover:to-white/4 transition-all duration-700 ease-out transform shadow-lg hover:shadow-2xl ${
+                className={`bg-white/5 backdrop-blur-xl p-8 rounded-3xl border-2 border-black transition-all duration-700 ease-out transform ${
                   orchestrationSectionInView
                     ? 'opacity-100 translate-y-0 scale-100'
                     : 'opacity-0 translate-y-20 scale-95'
                 }`}
-                style={{ transitionDelay: `${(index * 100) + 400}ms` }}
+                style={{ transitionDelay: `${(index * 150) + 400}ms` }}
               >
                 <div className="mb-4">
-                  <item.Icon className="w-10 h-10 md:w-12 md:h-12 text-white" />
+                  <item.Icon className="w-12 h-12 text-white" />
                 </div>
-                <div className="text-2xl md:text-3xl font-black text-white mb-3">Stage {item.stage}</div>
-                <h3 className="text-lg md:text-xl font-bold mb-3 text-white leading-tight">{item.title}</h3>
-                <p className="text-sm md:text-base text-gray-300 leading-relaxed">{item.description}</p>
+                <div className="text-3xl font-black text-white mb-2">Stage {item.stage}</div>
+                <h3 className="text-xl font-bold mb-3 text-white">{item.title}</h3>
+                <p className="text-zinc-300 leading-relaxed">{item.description}</p>
               </div>
             ))}
           </div>
 
-          <div className={`max-w-6xl mx-auto space-y-12 transition-all duration-700 ease-out transform ${
+          <div className={`bg-white/5 backdrop-blur-xl rounded-3xl border-2 border-black p-8 md:p-12 transition-all duration-700 ease-out transform ${
             orchestrationSectionInView
               ? 'opacity-100 translate-y-0'
               : 'opacity-0 translate-y-20'
           }`} style={{ transitionDelay: '850ms' }}>
-            
-            {/* AI Tools vs NeuroLint Comparison */}
-            <div className="bg-gradient-to-br from-zinc-900/80 to-zinc-900/40 backdrop-blur-xl border-2 border-white/10 rounded-3xl p-8 md:p-12 shadow-2xl">
-              <h3 className="text-3xl md:text-4xl font-black text-white mb-10 text-center">AI Tools vs NeuroLint</h3>
-              <div className="grid md:grid-cols-2 gap-6 md:gap-8">
-                <div className="bg-zinc-800/50 border-2 border-red-900/30 rounded-2xl p-6 md:p-8 hover:border-red-800/40 transition-all duration-300">
-                  <h4 className="text-xl md:text-2xl font-bold text-red-300 mb-5 flex items-center gap-3">
-                    <span className="text-2xl">✗</span>
-                    AI Code Tools
-                  </h4>
-                  <div className="space-y-3 text-zinc-400 text-sm md:text-base">
-                    <p className="flex items-start gap-3">
-                      <span className="text-red-400 mt-1">—</span>
-                      <span>Generate code without validation</span>
-                    </p>
-                    <p className="flex items-start gap-3">
-                      <span className="text-red-400 mt-1">—</span>
-                      <span>Hallucinate invalid syntax</span>
-                    </p>
-                    <p className="flex items-start gap-3">
-                      <span className="text-red-400 mt-1">—</span>
-                      <span>Break production deployments</span>
-                    </p>
-                    <p className="flex items-start gap-3">
-                      <span className="text-red-400 mt-1">—</span>
-                      <span>Waste developer time debugging</span>
-                    </p>
+            <div className="max-w-4xl mx-auto">
+              <h3 className="text-2xl md:text-3xl font-black text-white mb-8 text-center">AI Tools vs NeuroLint</h3>
+              <div className="grid md:grid-cols-2 gap-8 mb-12">
+                <div className="bg-black/60 border-2 border-white/20 rounded-2xl p-6">
+                  <h4 className="text-xl font-bold text-white mb-4">AI Code Tools</h4>
+                  <div className="space-y-2 text-zinc-300 text-sm">
+                    <p>— Generate code without validation</p>
+                    <p>— Hallucinate invalid syntax</p>
+                    <p>— Break production deployments</p>
+                    <p>— Waste developer time debugging</p>
                   </div>
                 </div>
-                <div className="bg-gradient-to-br from-white/10 to-white/5 border-2 border-green-500/30 rounded-2xl p-6 md:p-8 hover:border-green-500/40 transition-all duration-300">
-                  <h4 className="text-xl md:text-2xl font-bold text-white mb-5 flex items-center gap-3">
-                    <span className="text-2xl text-green-400">✓</span>
-                    NeuroLint
-                  </h4>
-                  <div className="space-y-3 text-gray-200 text-sm md:text-base">
-                    <p className="flex items-start gap-3">
-                      <span className="text-green-400 mt-1">—</span>
-                      <span>Validate every transformation twice</span>
-                    </p>
-                    <p className="flex items-start gap-3">
-                      <span className="text-green-400 mt-1">—</span>
-                      <span>Deterministic, rule-based fixes</span>
-                    </p>
-                    <p className="flex items-start gap-3">
-                      <span className="text-green-400 mt-1">—</span>
-                      <span>Auto-revert on validation failure</span>
-                    </p>
-                    <p className="flex items-start gap-3">
-                      <span className="text-green-400 mt-1">—</span>
-                      <span>Guaranteed valid code output</span>
-                    </p>
+                <div className="bg-black/60 border-2 border-white/20 rounded-2xl p-6">
+                  <h4 className="text-xl font-bold text-white mb-4">NeuroLint</h4>
+                  <div className="space-y-2 text-zinc-300 text-sm">
+                    <p>— Validate every transformation twice</p>
+                    <p>— Deterministic, rule-based fixes</p>
+                    <p>— Auto-revert on validation failure</p>
+                    <p>— Guaranteed valid code output</p>
                   </div>
                 </div>
               </div>
-            </div>
               
-            {/* The 5-Step Flow Diagram */}
-            <div className="bg-gradient-to-br from-zinc-900/80 to-zinc-900/40 backdrop-blur-xl border-2 border-white/10 rounded-3xl p-8 md:p-12 shadow-2xl">
-              <h3 className="text-3xl md:text-4xl font-black text-white mb-8 text-center">The 5-Step Flow</h3>
-              <div className="bg-black/60 border border-white/10 rounded-2xl p-6 md:p-8 font-mono text-xs md:text-sm overflow-x-auto">
-                <div className="space-y-2">
-                  <div className="text-blue-400 font-bold">Step 1: Original Code (Last Known Good State)</div>
-                  <div className="text-gray-500 ml-6">↓</div>
-                  <div className="text-cyan-400 font-bold">Step 2: Try AST Transformation</div>
-                  <div className="text-gray-500 ml-6">↓</div>
-                  <div className="text-white font-bold">Step 3: Validate AST Result</div>
-                  <div className="text-green-400 ml-6">├─ ✓ Valid → Step 5: Accept changes</div>
-                  <div className="text-yellow-400 ml-6">└─ ✗ Invalid → Try Regex Fallback</div>
-                  <div className="text-purple-400 ml-12">↓</div>
-                  <div className="text-purple-400 font-bold ml-12">Step 4: Validate Regex Result</div>
-                  <div className="text-green-400 ml-12">├─ ✓ Valid → Step 5: Accept changes</div>
-                  <div className="text-red-400 ml-12">└─ ✗ Invalid → REVERT to original</div>
-                </div>
+              <h3 className="text-xl md:text-2xl font-black text-white mb-6 text-center">The 5-Step Flow</h3>
+              <div className="bg-black/60 border-2 border-white/20 rounded-2xl p-6 font-mono text-sm overflow-x-auto">
+                <div className="text-blue-400">Step 1: Original Code (Last Known Good State)</div>
+                <div className="text-gray-400 ml-4">↓</div>
+                <div className="text-cyan-400">Step 2: Try AST Transformation</div>
+                <div className="text-gray-400 ml-4">↓</div>
+                <div className="text-white">Step 3: Validate AST Result</div>
+                <div className="text-gray-400 ml-4">├─ Valid → Step 5: Accept changes</div>
+                <div className="text-gray-400 ml-4">└─ Invalid → Try Regex Fallback</div>
+                <div className="text-purple-400 ml-8">↓</div>
+                <div className="text-purple-400 ml-8">Step 4: Validate Regex Result</div>
+                <div className="text-gray-400 ml-8">├─ Valid → Step 5: Accept changes</div>
+                <div className="text-gray-400 ml-8">└─ Invalid → REVERT to original</div>
               </div>
-              <div className="mt-8 bg-gradient-to-r from-white/5 to-white/2 border border-white/10 rounded-xl p-6 md:p-8">
-                <p className="text-base md:text-lg leading-relaxed text-gray-300 text-center">
-                  <span className="text-white font-bold text-lg md:text-xl">This is why NeuroLint never breaks your code</span>
-                  <br />
-                  <span className="text-gray-400">Every transformation is validated twice before acceptance.</span>
-                </p>
-              </div>
+              <p className="text-lg leading-relaxed pt-8 text-zinc-300 text-center">
+                <span className="text-white font-bold">This is why NeuroLint never breaks your code</span> — every transformation is validated twice before acceptance.
+              </p>
             </div>
           </div>
         </div>
