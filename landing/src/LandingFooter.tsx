@@ -47,7 +47,7 @@ export function LandingFooter() {
             <ul className="space-y-2 text-sm">
               <li>
                 <a
-                  href="mailto:clievemakazhu@gmail.com"
+                  href="mailto:clivemakazhu@gmail.com"
                   className="text-zinc-400 hover:text-white transition-colors"
                 >
                   Email Us

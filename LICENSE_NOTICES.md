@@ -316,7 +316,7 @@ Complete license texts for all dependencies are available:
 **Audit Tool:** `npm ls --all` (329 total packages)
 
 For licensing questions or concerns:
-- Email: contact@neurolint.dev  
+- Email: clivemakazhu@gmail.com  
 - GitHub: https://github.com/Alcatecablee/Neurolint/issues
 
 ---

@@ -12,7 +12,7 @@
  * Change Date: 2029-11-22
  * Change License: GPL-3.0-or-later
  * 
- * For commercial licensing: contact@neurolint.dev
+ * For commercial licensing: clivemakazhu@gmail.com
  * Full license: https://github.com/Alcatecablee/Neurolint/blob/main/LICENSE
  */
 
@@ -3179,7 +3179,7 @@ Requirements:
   - All migration features are now free!
 
 Support:
-  Contact: migration@neurolint.dev
+  Contact: clivemakazhu@gmail.com
   Documentation: https://neurolint.dev/docs/migration
 `);
   process.exit(0);

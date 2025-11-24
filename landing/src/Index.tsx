@@ -20,7 +20,29 @@ import {
   RefreshCw,
   CheckSquare,
   FileCheck,
+  X,
 } from "lucide-react";
+
+// Beta Banner Component
+const BetaBanner = ({ onClose }: { onClose: () => void }) => {
+  return (
+    <div className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white py-3 px-4 relative">
+      <div className="container mx-auto flex items-center justify-center gap-2 text-sm md:text-base">
+        <span className="text-xl">🚀</span>
+        <p className="text-center">
+          <strong>NeuroLint CLI is currently in beta.</strong> We're actively improving and would love your feedback and contribution!
+        </p>
+        <button
+          onClick={onClose}
+          className="absolute right-4 top-1/2 -translate-y-1/2 hover:bg-white/20 rounded-full p-1 transition-colors"
+          aria-label="Close banner"
+        >
+          <X size={18} />
+        </button>
+      </div>
+    </div>
+  );
+};
 
 // Lazy Loading Hook
 const useInView = (threshold = 0.1) => {
@@ -159,6 +181,7 @@ const AsciinemaPlayerComponent = () => {
       };
     } catch (error) {
       console.error('Failed to load asciinema player:', error);
+      return;
     }
   }, [player, speed]);
 
@@ -266,6 +289,7 @@ const AsciinemaPlayerComponent = () => {
 export default function Index() {
   const [mounted, setMounted] = React.useState(false);
   const [copied, setCopied] = React.useState(false);
+  const [bannerVisible, setBannerVisible] = React.useState(true);
 
   // Lazy loading refs for each section
   const [demoSectionRef, demoSectionInView] = useInView(0.1);
@@ -304,6 +328,9 @@ export default function Index() {
 
   return (
     <div className="min-h-screen bg-black text-white relative overflow-hidden" id="main-content">
+      {/* Beta Banner */}
+      {bannerVisible && <BetaBanner onClose={() => setBannerVisible(false)} />}
+
       {/* Global Background Gradients */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-1/4 -left-1/4 w-1/2 h-1/2 bg-gradient-to-br from-blue-500/20 to-purple-600/20 rounded-full blur-3xl"></div>
@@ -312,7 +339,10 @@ export default function Index() {
       </div>
 
       {/* Navigation Header */}
-      <nav className="fixed top-0 w-full z-50 bg-black/30 backdrop-blur-md border-b border-white/10">
+      <nav 
+        className="fixed top-0 w-full z-50 bg-black/30 backdrop-blur-md border-b border-white/10 transition-all duration-300" 
+        style={{ marginTop: bannerVisible ? '48px' : '0' }}
+      >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <a href="/" className="flex items-center">

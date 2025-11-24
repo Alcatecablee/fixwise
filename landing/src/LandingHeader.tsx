@@ -44,7 +44,7 @@ export function LandingHeader() {
         </a>
       </nav>
       <a
-        href="mailto:clievemakazhu@gmail.com?subject=I can help with NeuroLint orchestration!"
+        href="mailto:clivemakazhu@gmail.com?subject=I can help with NeuroLint orchestration!"
         className="ml-2"
         tabIndex={-1}
       >

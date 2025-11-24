@@ -343,7 +343,7 @@ Manual fixes are slow, error-prone, and expensive. NeuroLint processes hundreds 
 
 - **Issues:** [github.com/Alcatecablee/Neurolint/issues](https://github.com/Alcatecablee/Neurolint/issues)
 - **Discussions:** [github.com/Alcatecablee/Neurolint/discussions](https://github.com/Alcatecablee/Neurolint/discussions)
-- **Email:** contact@neurolint.dev
+- **Email:** clivemakazhu@gmail.com
 
 ---
 
@@ -357,7 +357,7 @@ Business Source License 1.1
 
 [Read the full license](./LICENSE) | [Learn about BSL](https://mariadb.com/bsl-faq-mariadb/)
 
-For commercial licensing inquiries: contact@neurolint.dev
+For commercial licensing inquiries: clivemakazhu@gmail.com
 
 ---
 

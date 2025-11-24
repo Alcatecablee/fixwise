@@ -95,7 +95,7 @@ export function LandingFeatures() {
             asChild
           >
             <a
-              href="mailto:clievemakazhu@gmail.com?subject=I want to help NeuroLint!"
+              href="mailto:clivemakazhu@gmail.com?subject=I want to help NeuroLint!"
               target="_blank"
               rel="noopener noreferrer"
             >
@@ -183,7 +183,7 @@ export function LandingFeatures() {
             shown above are functional and use proven pattern-matching
             techniques. AI integration is planned for future releases.{" "}
             <a
-              href="mailto:clievemakazhu@gmail.com"
+              href="mailto:clivemakazhu@gmail.com"
               className="underline text-white"
             >
               Share feedback or collaborate!

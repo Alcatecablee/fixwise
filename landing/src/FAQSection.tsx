@@ -245,7 +245,7 @@ export const FAQSection: React.FC = () => {
                   View Documentation
                 </a>
                 <a
-                  href="mailto:clievemakazhu@gmail.com"
+                  href="mailto:clivemakazhu@gmail.com"
                   className="inline-flex items-center px-6 py-3 bg-zinc-800 text-white font-semibold rounded-xl border border-zinc-700 hover:bg-zinc-700 transition-colors"
                 >
                   Email Support
