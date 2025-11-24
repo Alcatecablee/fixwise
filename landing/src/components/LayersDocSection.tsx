@@ -522,8 +522,11 @@ export function LayersDocSection() {
           <h2 className="text-5xl md:text-7xl font-black mb-8 tracking-tight text-white">
             Explore Each Layer in Detail
           </h2>
-          <p className="text-xl md:text-2xl text-gray-300 max-w-4xl mx-auto font-medium">
+          <p className="text-xl md:text-2xl text-gray-300 max-w-4xl mx-auto font-medium mb-6">
             Deep dive into NeuroLint's 7-layer architecture. Each layer targets specific issues with surgical precision.
+          </p>
+          <p className="text-lg text-gray-300 max-w-3xl mx-auto leading-relaxed">
+            Each layer builds upon the previous, ensuring foundational issues are resolved first. Run individually or together based on your needs.
           </p>
         </div>
 
