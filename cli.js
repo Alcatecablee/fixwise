@@ -2977,7 +2977,8 @@ Examples:
 
 // Show version if requested
 if (process.argv.includes('--version') || process.argv.includes('-v')) {
-  console.log('1.3.4');
+  const packageJson = require('./package.json');
+  console.log(packageJson.version);
   process.exit(0);
 }
 
