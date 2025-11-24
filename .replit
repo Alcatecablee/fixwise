@@ -4,6 +4,7 @@ hidden = [".config", ".git", "generated-icon.png", "node_modules", "dist"]
 
 [nix]
 channel = "stable-25_05"
+packages = ["asciinema"]
 
 [deployment]
 deploymentTarget = "autoscale"
