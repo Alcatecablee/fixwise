@@ -251,16 +251,42 @@ The Architect agent verified full compliance with orchestration patterns:
 
 ### Test Results After Orchestration Updates
 
+Following the testing methodology from `FINAL_ALL_LAYERS_TEST_RESULTS.md`, all edge cases were re-tested using the proper CLI commands:
+
+#### Testing Commands Used
+```bash
+# Layer 2 - Critical arrow function edge case
+node cli.js fix test-edge-cases/layer2-ast-arrow-tests.jsx --layers 2 --verbose
+
+# Layer 4 - Hydration/SSR fixes
+node cli.js fix test-edge-cases/test-layer4-hydration.jsx --layers 4 --verbose
+
+# Layer 5 - ReactDOM.render unique variables
+node cli.js fix test-edge-cases/test-layer5-createRoot.jsx --layers 5 --verbose
+
+# Comprehensive all-layers test
+node cli.js fix test-edge-cases/all-layers-test.jsx --all-layers --verbose
+```
+
+#### Results Summary
+
+| Test | Command | Transformations | LSP Errors | Status |
+|------|---------|----------------|------------|--------|
+| **Layer 2 Arrow Functions** | `--layers 2` | 30 changes (validated) | 0 | ✅ PASS |
+| **Layer 2 Patterns** | `--layers 2` | AST validated | 0 | ✅ PASS |
+| **Layer 4 Hydration** | `--layers 4` | Hydration fixes applied | 0 | ✅ PASS |
+| **Layer 5 CreateRoot** | `--layers 5` | NextJS transformations | 0 | ✅ PASS |
+| **All Layers** | `--all-layers` | 100% success rate | 0 | ✅ PASS |
+
+#### Jest Test Suite Results
+
 | Test Suite | Tests Passed | Status |
 |------------|--------------|--------|
 | Validator | 17/17 | ✅ Pass |
 | AST Transformer | 16/16 | ✅ Pass |
 | React 19 Dependencies | 11/11 | ✅ Pass |
-| Layer 2 Edge Cases | 30 transformations (validated) | ✅ Pass |
-| Layer 4 Edge Cases | Hydration guards working | ✅ Pass |
-| Layer 5 Edge Cases | createRoot transformations | ✅ Pass |
 
-**Total Verified**: 44+ tests passing, 0 regressions introduced
+**Total Verified**: 44+ Jest tests + 5 CLI edge case tests = **100% pass rate**, **0 regressions introduced**, **0 LSP errors**
 
 ### Architectural Benefits
 
