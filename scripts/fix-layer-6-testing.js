@@ -105,7 +105,7 @@ async function transform(code, options = {}) {
         });
         
         // Add RSC testing comment
-        updatedCode = `// ⚠️  React Server Component Testing:\n// - Use integration tests (Playwright/Cypress) instead of RTL\n// - Or mock fetch/database calls and test business logic separately\n// - Server Components cannot use traditional React testing tools\n\n${updatedCode}`;
+        updatedCode = `// WARNING: React Server Component Testing:\n// - Use integration tests (Playwright/Cypress) instead of RTL\n// - Or mock fetch/database calls and test business logic separately\n// - Server Components cannot use traditional React testing tools\n\n${updatedCode}`;
         changes.push({
           type: 'RSCTestingGuidance',
           description: 'Added React Server Component testing guidance',
@@ -124,7 +124,7 @@ async function transform(code, options = {}) {
         });
         
         // Add MSW alternative suggestion
-        updatedCode = `// ⚠️  MSW Compatibility Issue with Next.js App Router:\n// - MSW doesn't work in Edge Runtime\n// - Consider using fetch mocking: vi.mock('node:fetch') or jest.mock('node:fetch')\n// - Or use Next.js route handlers for API mocking\n\n${updatedCode}`;
+        updatedCode = `// WARNING: MSW Compatibility Issue with Next.js App Router:\n// - MSW doesn't work in Edge Runtime\n// - Consider using fetch mocking: vi.mock('node:fetch') or jest.mock('node:fetch')\n// - Or use Next.js route handlers for API mocking\n\n${updatedCode}`;
         changes.push({
           type: 'MSWCompatibilityWarning',
           description: 'Added MSW compatibility warning for App Router',

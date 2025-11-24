@@ -247,7 +247,7 @@ class ReactCompilerDetector {
       const items = byPattern[pattern];
       const totalCount = items.reduce((sum, item) => sum + item.count, 0);
       
-      console.log(`📊 ${pattern} (${totalCount} occurrences in ${items.length} files)`);
+      console.log(`${pattern} (${totalCount} occurrences in ${items.length} files)`);
       console.log(`   Benefit: ${items[0].benefit}`);
       console.log('');
       
@@ -264,19 +264,19 @@ class ReactCompilerDetector {
     // Potential savings
     if (this.potentialSavings) {
       console.log('Potential Benefits of React Compiler:\n');
-      console.log(`  ⚡ Reduce bundle size by ~${this.potentialSavings.bundleSize} bytes`);
-      console.log(`  ⚡ Eliminate ${this.potentialSavings.runtimeOptimizations} manual optimization calls`);
-      console.log(`  ⚡ Simplify code in ${this.potentialSavings.codeSimplification} files`);
+      console.log(`  - Reduce bundle size by ~${this.potentialSavings.bundleSize} bytes`);
+      console.log(`  - Eliminate ${this.potentialSavings.runtimeOptimizations} manual optimization calls`);
+      console.log(`  - Simplify code in ${this.potentialSavings.codeSimplification} files`);
       console.log('');
     }
 
     // Recommendation
     if (this.findings.length >= 3) {
-      console.log('🎯 Strong Recommendation: Enable React Compiler\n');
+      console.log('Strong Recommendation: Enable React Compiler\n');
       console.log('Your project has significant manual memoization that React Compiler');
       console.log('can handle automatically, resulting in cleaner code and better performance.\n');
     } else {
-      console.log('💡 Consider React Compiler\n');
+      console.log('Consider React Compiler\n');
       console.log('Your project has some manual memoization. React Compiler could simplify');
       console.log('your code, though the impact may be modest.\n');
     }

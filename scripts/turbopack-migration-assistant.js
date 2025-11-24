@@ -300,8 +300,8 @@ class TurbopackMigrationAssistant {
       console.log(`Found ${this.issues.length} compatibility issues:\n`);
       
       this.issues.forEach((issue, i) => {
-        const severity = issue.severity === 'high' ? '🔴 HIGH' : 
-                        issue.severity === 'medium' ? '🟡 MEDIUM' : '🟢 LOW';
+        const severity = issue.severity === 'high' ? 'HIGH' : 
+                        issue.severity === 'medium' ? 'MEDIUM' : 'LOW';
         console.log(`${i + 1}. [${severity}] ${issue.issue}`);
         console.log(`   File: ${issue.file}`);
         console.log(`   ${issue.description}`);
@@ -316,12 +316,12 @@ class TurbopackMigrationAssistant {
     if (this.suggestions.length > 0) {
       console.log('Recommendations:\n');
       this.suggestions.forEach((sug, i) => {
-        const icon = sug.type === 'critical' ? '🔴' :
-                    sug.type === 'warning' ? '🟡' :
-                    sug.type === 'success' ? '✓' :
-                    sug.type === 'optimization' ? '⚡' : 'ℹ️';
+        const prefix = sug.type === 'critical' ? '[CRITICAL]' :
+                    sug.type === 'warning' ? '[WARNING]' :
+                    sug.type === 'success' ? '[SUCCESS]' :
+                    sug.type === 'optimization' ? '[OPTIMIZATION]' : '[INFO]';
         
-        console.log(`${icon} ${sug.message}`);
+        console.log(`${prefix} ${sug.message}`);
         console.log(`   ${sug.recommendation}`);
         if (sug.code || sug.implementation) {
           console.log('\n   ' + (sug.code || sug.implementation).split('\n').join('\n   '));
