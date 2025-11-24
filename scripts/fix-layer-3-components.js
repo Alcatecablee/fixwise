@@ -202,7 +202,7 @@ function applyRegexFallbacks(input) {
     }
   };
   
-  // Add key prop to map items missing keys in simple cases
+  // Add key prop to map items missing keys - PAIRED TAGS (e.g., <Tag>...</Tag>)
   // IMPROVED REGEX: Properly captures ALL parameter patterns including default params
   // Uses balanced parentheses matching to handle complex cases
   code = code.replace(
@@ -216,6 +216,26 @@ function applyRegexFallbacks(input) {
         
         changes.push({ description: 'Added key prop in map()', location: {} });
         return `{ ${arr}.map(${newParams} => <${tag} key={${keyExpr}}${attrs}>${inner}</${tag}>) }`;
+      } catch (error) {
+        // If classification fails, return original to avoid corruption
+        return m;
+      }
+    }
+  );
+
+  // Add key prop to map items missing keys - SELF-CLOSING TAGS (e.g., <Tag />)
+  // Handles patterns like: items.map(item => <TodoItem {...item} />)
+  code = code.replace(
+    /\{\s*([a-zA-Z_$][\w$]*)\.map\((\((?:[^()]|\([^()]*\))*\)|[^(),]+)\s*=>\s*<([A-Z][\w]*)\b([^>]*)\/>\s*\)\s*\}/g,
+    (m, arr, params, tag, attrs) => {
+      if (/\bkey=/.test(m)) return m;
+      
+      try {
+        const { keyExpr, needsIndex, originalParams, hadParens } = classifyMapParams(params);
+        const newParams = needsIndex ? insertIndexParam(originalParams, hadParens) : originalParams;
+        
+        changes.push({ description: 'Added key prop in map() (self-closing)', location: {} });
+        return `{ ${arr}.map(${newParams} => <${tag} key={${keyExpr}}${attrs} />) }`;
       } catch (error) {
         // If classification fails, return original to avoid corruption
         return m;
@@ -390,21 +410,33 @@ async function transform(code, options = {}) {
 
       // SMART FALLBACK: Only apply regex if AST didn't make changes
       if (astSucceeded) {
-        // AST succeeded - use AST result
+        // AST succeeded - use AST result EXCLUSIVELY (no regex)
         updatedCode = astCode;
         astChanges.forEach(c => changes.push(c));
+        if (verbose) process.stdout.write(`[INFO] Using AST transformation (regex skipped)\n`);
       } else {
-        // AST failed or made no changes - try regex fallback with validation
+        // AST failed or made no changes - try regex fallback with STRICT validation
+        if (verbose) process.stdout.write(`[INFO] AST made no changes, attempting regex fallback\n`);
+        
         const beforeRegex = updatedCode;
         const fallback = applyRegexFallbacks(updatedCode);
         
-        // VALIDATE regex output for syntax errors
-        if (validateSyntax(fallback.code)) {
+        // VALIDATE: Check if regex made changes and if output is syntactically valid
+        const regexMadeChanges = fallback.code !== beforeRegex;
+        const regexOutputValid = validateSyntax(fallback.code);
+        
+        if (regexMadeChanges && regexOutputValid) {
+          // Regex produced valid changes - accept them
           updatedCode = fallback.code;
           fallback.changes.forEach(c => changes.push(c));
+          if (verbose) process.stdout.write(`[INFO] Regex fallback succeeded with ${fallback.changes.length} changes\n`);
+        } else if (regexMadeChanges && !regexOutputValid) {
+          // Regex produced INVALID code - REJECT and revert
+          if (verbose) process.stdout.write(`[ERROR] Regex fallback produced invalid syntax - REJECTING changes\n`);
+          updatedCode = beforeRegex;
         } else {
-          // Regex produced invalid code - revert to original
-          if (verbose) process.stdout.write(`[WARNING] Regex fallback produced invalid syntax, reverting\n`);
+          // Regex made no changes - keep original
+          if (verbose) process.stdout.write(`[INFO] Regex fallback made no changes\n`);
           updatedCode = beforeRegex;
         }
       }
