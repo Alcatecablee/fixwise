@@ -532,50 +532,48 @@ export default function Index() {
             <div className="bg-gradient-to-br from-zinc-900/80 to-zinc-900/40 backdrop-blur-xl border-2 border-white/10 rounded-3xl p-8 md:p-12 shadow-2xl">
               <h3 className="text-3xl md:text-4xl font-black text-white mb-10 text-center">AI Tools vs NeuroLint</h3>
               <div className="grid md:grid-cols-2 gap-6 md:gap-8">
-                <div className="bg-zinc-800/50 border-2 border-red-900/30 rounded-2xl p-6 md:p-8 hover:border-red-800/40 transition-all duration-300">
-                  <h4 className="text-xl md:text-2xl font-bold text-red-300 mb-5 flex items-center gap-3">
-                    <span className="text-2xl">✗</span>
+                <div className="bg-zinc-800/50 border-2 border-black rounded-2xl p-6 md:p-8 hover:border-white/20 transition-all duration-300">
+                  <h4 className="text-xl md:text-2xl font-bold text-zinc-300 mb-5">
                     AI Code Tools
                   </h4>
                   <div className="space-y-3 text-zinc-400 text-sm md:text-base">
                     <p className="flex items-start gap-3">
-                      <span className="text-red-400 mt-1">—</span>
+                      <span className="mt-1">—</span>
                       <span>Generate code without validation</span>
                     </p>
                     <p className="flex items-start gap-3">
-                      <span className="text-red-400 mt-1">—</span>
+                      <span className="mt-1">—</span>
                       <span>Hallucinate invalid syntax</span>
                     </p>
                     <p className="flex items-start gap-3">
-                      <span className="text-red-400 mt-1">—</span>
+                      <span className="mt-1">—</span>
                       <span>Break production deployments</span>
                     </p>
                     <p className="flex items-start gap-3">
-                      <span className="text-red-400 mt-1">—</span>
+                      <span className="mt-1">—</span>
                       <span>Waste developer time debugging</span>
                     </p>
                   </div>
                 </div>
-                <div className="bg-gradient-to-br from-white/10 to-white/5 border-2 border-green-500/30 rounded-2xl p-6 md:p-8 hover:border-green-500/40 transition-all duration-300">
-                  <h4 className="text-xl md:text-2xl font-bold text-white mb-5 flex items-center gap-3">
-                    <span className="text-2xl text-green-400">✓</span>
+                <div className="bg-gradient-to-br from-white/10 to-white/5 border-2 border-black rounded-2xl p-6 md:p-8 hover:border-white/20 transition-all duration-300">
+                  <h4 className="text-xl md:text-2xl font-bold text-white mb-5">
                     NeuroLint
                   </h4>
                   <div className="space-y-3 text-gray-200 text-sm md:text-base">
                     <p className="flex items-start gap-3">
-                      <span className="text-green-400 mt-1">—</span>
+                      <span className="mt-1">—</span>
                       <span>Validate every transformation twice</span>
                     </p>
                     <p className="flex items-start gap-3">
-                      <span className="text-green-400 mt-1">—</span>
+                      <span className="mt-1">—</span>
                       <span>Deterministic, rule-based fixes</span>
                     </p>
                     <p className="flex items-start gap-3">
-                      <span className="text-green-400 mt-1">—</span>
+                      <span className="mt-1">—</span>
                       <span>Auto-revert on validation failure</span>
                     </p>
                     <p className="flex items-start gap-3">
-                      <span className="text-green-400 mt-1">—</span>
+                      <span className="mt-1">—</span>
                       <span>Guaranteed valid code output</span>
                     </p>
                   </div>
@@ -593,12 +591,12 @@ export default function Index() {
                   <div className="text-cyan-400 font-bold">Step 2: Try AST Transformation</div>
                   <div className="text-gray-500 ml-6">↓</div>
                   <div className="text-white font-bold">Step 3: Validate AST Result</div>
-                  <div className="text-green-400 ml-6">├─ ✓ Valid → Step 5: Accept changes</div>
-                  <div className="text-yellow-400 ml-6">└─ ✗ Invalid → Try Regex Fallback</div>
+                  <div className="text-gray-400 ml-6">├─ Valid → Step 5: Accept changes</div>
+                  <div className="text-gray-400 ml-6">└─ Invalid → Try Regex Fallback</div>
                   <div className="text-purple-400 ml-12">↓</div>
                   <div className="text-purple-400 font-bold ml-12">Step 4: Validate Regex Result</div>
-                  <div className="text-green-400 ml-12">├─ ✓ Valid → Step 5: Accept changes</div>
-                  <div className="text-red-400 ml-12">└─ ✗ Invalid → REVERT to original</div>
+                  <div className="text-gray-400 ml-12">├─ Valid → Step 5: Accept changes</div>
+                  <div className="text-gray-400 ml-12">└─ Invalid → REVERT to original</div>
                 </div>
               </div>
               <div className="mt-8 bg-gradient-to-r from-white/5 to-white/2 border border-white/10 rounded-xl p-6 md:p-8">
