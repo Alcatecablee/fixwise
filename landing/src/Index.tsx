@@ -495,52 +495,23 @@ export default function Index() {
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-5xl font-black mb-4 text-white">
-              Fix React Hell in 90 Seconds
+              See It In Action
             </h2>
-            <p className="text-lg md:text-xl text-gray-300 max-w-3xl mx-auto mb-8">
-              Watch the complete journey: from broken code to production-ready in under 2 minutes
+            <p className="text-lg md:text-xl text-gray-300 max-w-2xl mx-auto mb-6">
+              Watch NeuroLint automatically fix your code in seconds
             </p>
-            
-            {/* 5-Act Structure Badges */}
-            <div className="flex flex-wrap items-center justify-center gap-3 mb-6">
-              <div className="flex items-center gap-2 px-3 py-1.5 bg-red-500/10 border border-red-500/30 rounded-full">
-                <div className="w-2 h-2 bg-red-400 rounded-full"></div>
-                <span className="text-sm text-red-300 font-medium">The Pain</span>
-              </div>
-              <div className="flex items-center gap-2 px-3 py-1.5 bg-blue-500/10 border border-blue-500/30 rounded-full">
-                <div className="w-2 h-2 bg-blue-400 rounded-full"></div>
-                <span className="text-sm text-blue-300 font-medium">Analysis</span>
-              </div>
-              <div className="flex items-center gap-2 px-3 py-1.5 bg-purple-500/10 border border-purple-500/30 rounded-full">
-                <div className="w-2 h-2 bg-purple-400 rounded-full"></div>
-                <span className="text-sm text-purple-300 font-medium">The Fix</span>
-              </div>
-              <div className="flex items-center gap-2 px-3 py-1.5 bg-green-500/10 border border-green-500/30 rounded-full">
-                <div className="w-2 h-2 bg-green-400 rounded-full"></div>
-                <span className="text-sm text-green-300 font-medium">The Proof</span>
-              </div>
-              <div className="flex items-center gap-2 px-3 py-1.5 bg-orange-500/10 border border-orange-500/30 rounded-full">
-                <div className="w-2 h-2 bg-orange-400 rounded-full"></div>
-                <span className="text-sm text-orange-300 font-medium">Deploy</span>
-              </div>
-            </div>
-
             <div className="flex flex-wrap items-center justify-center gap-4 text-sm text-gray-400">
               <div className="flex items-center gap-2">
-                <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-                <span>Live Playback</span>
+                <div className="w-2 h-2 bg-white/40 rounded-full"></div>
+                <span>Interactive Player</span>
               </div>
               <div className="flex items-center gap-2">
-                <div className="w-2 h-2 bg-blue-400 rounded-full"></div>
-                <span>Click to Pause</span>
+                <div className="w-2 h-2 bg-white/40 rounded-full"></div>
+                <span>Pause & Resume</span>
               </div>
               <div className="flex items-center gap-2">
-                <div className="w-2 h-2 bg-purple-400 rounded-full"></div>
+                <div className="w-2 h-2 bg-white/40 rounded-full"></div>
                 <span>Speed Control</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <div className="w-2 h-2 bg-orange-400 rounded-full"></div>
-                <span>Seek Timeline</span>
               </div>
             </div>
           </div>
