@@ -28,7 +28,6 @@ const BetaBanner = ({ onClose }: { onClose: () => void }) => {
   return (
     <div className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white py-3 px-4 relative">
       <div className="container mx-auto flex items-center justify-center gap-2 text-sm md:text-base">
-        <span className="text-xl">🚀</span>
         <p className="text-center">
           <strong>NeuroLint CLI is currently in beta.</strong> We're actively improving and would love your feedback and contribution!
         </p>

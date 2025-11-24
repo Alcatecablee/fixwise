@@ -406,7 +406,7 @@ export default function Counter() {
 test('renders', () => {
   render(<ServerComponent />);
 });`,
-        after: `// ⚠️  React Server Component Testing:
+        after: `// WARNING: React Server Component Testing:
 // - Use integration tests (Playwright/Cypress) instead of RTL
 // - Or mock fetch/database calls and test business logic separately
 // - Server Components cannot use traditional React testing tools
