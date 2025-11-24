@@ -16,6 +16,7 @@
 
 const fs = require('fs').promises;
 const path = require('path');
+const parser = require('@babel/parser');
 const ASTTransformer = require('../ast-transformer');
 
 async function isRegularFile(filePath) {
@@ -23,6 +24,24 @@ async function isRegularFile(filePath) {
     const stat = await fs.stat(filePath);
     return stat.isFile();
   } catch {
+    return false;
+  }
+}
+
+/**
+ * Validate syntax of transformed code
+ * Returns true if code is syntactically valid, false otherwise
+ */
+function validateSyntax(code) {
+  try {
+    parser.parse(code, {
+      sourceType: 'module',
+      plugins: ['typescript', 'jsx'],
+      allowImportExportEverywhere: true,
+      strictMode: false
+    });
+    return true;
+  } catch (error) {
     return false;
   }
 }
@@ -168,26 +187,37 @@ function applyRegexFallbacks(input) {
     const trimmed = params.trim();
     
     if (hadParens) {
-      // Insert before closing paren
+      const inner = trimmed.slice(1, -1).trim();
+      // Handle empty params: () => becomes (index) =>
+      if (!inner) {
+        return '(index)';
+      }
+      // Insert before closing paren: (item) => becomes (item, index) =>
       return trimmed.slice(0, -1) + ', index)';
     } else {
-      // Wrap and add index
+      // Wrap and add index: item => becomes (item, index) =>
       return `(${trimmed}, index)`;
     }
   };
   
   // Add key prop to map items missing keys in simple cases
-  // Match pattern: { array.map(params => <Tag>...</Tag>) }
-  // Updated regex to capture params correctly (everything between .map( and =>)
-  code = code.replace(/\{\s*([a-zA-Z_$][\w$]*)\.map\(([^=]*)\s*=>\s*<([A-Z][\w]*)\b([^>]*)>\s*([^<]*)\s*<\/\3>\s*\)\s*\}/g,
+  // IMPROVED REGEX: Properly captures ALL parameter patterns including default params
+  // Uses balanced parentheses matching to handle complex cases
+  code = code.replace(
+    /\{\s*([a-zA-Z_$][\w$]*)\.map\((\((?:[^()]|\([^()]*\))*\)|[^(),]+)\s*=>\s*<([A-Z][\w]*)\b([^>]*)>\s*([^<]*)\s*<\/\3>\s*\)\s*\}/g,
     (m, arr, params, tag, attrs, inner) => {
       if (/\bkey=/.test(m)) return m;
-      changes.push({ description: 'Added key prop in map()', location: {} });
       
-      const { keyExpr, needsIndex, originalParams, hadParens } = classifyMapParams(params);
-      const newParams = needsIndex ? insertIndexParam(originalParams, hadParens) : originalParams;
-      
-      return `{ ${arr}.map(${newParams} => <${tag} key={${keyExpr}}${attrs}>${inner}</${tag}>) }`;
+      try {
+        const { keyExpr, needsIndex, originalParams, hadParens } = classifyMapParams(params);
+        const newParams = needsIndex ? insertIndexParam(originalParams, hadParens) : originalParams;
+        
+        changes.push({ description: 'Added key prop in map()', location: {} });
+        return `{ ${arr}.map(${newParams} => <${tag} key={${keyExpr}}${attrs}>${inner}</${tag}>) }`;
+      } catch (error) {
+        // If classification fails, return original to avoid corruption
+        return m;
+      }
     }
   );
 
@@ -336,26 +366,46 @@ async function transform(code, options = {}) {
     const react19Only = options && options.react19Only === true;
 
     if (!react19Only) {
-      // First try AST-based transformation
+      // AST-FIRST STRATEGY: Only use regex fallback when AST fails
       let astSucceeded = false;
+      let astCode = updatedCode;
+      let astChanges = [];
+      
       try {
         const transformer = new ASTTransformer();
         const transformResult = transformer.transformComponents(updatedCode, {
           filename: filePath
         });
         if (transformResult && transformResult.success) {
-          updatedCode = transformResult.code;
-          (transformResult.changes || []).forEach(c => changes.push(c));
-          astSucceeded = (transformResult.changes || []).length > 0;
+          astCode = transformResult.code;
+          astChanges = transformResult.changes || [];
+          astSucceeded = astChanges.length > 0;
         }
       } catch (error) {
-        // ignore AST errors; fallback to regex
+        // AST failed, will use regex fallback
+        if (verbose) process.stdout.write(`[INFO] AST transformation failed, using regex fallback\n`);
       }
 
-      // Apply regex fallbacks to ensure test expectations
-      const fallback = applyRegexFallbacks(updatedCode);
-      updatedCode = fallback.code;
-      fallback.changes.forEach(c => changes.push(c));
+      // SMART FALLBACK: Only apply regex if AST didn't make changes
+      if (astSucceeded) {
+        // AST succeeded - use AST result
+        updatedCode = astCode;
+        astChanges.forEach(c => changes.push(c));
+      } else {
+        // AST failed or made no changes - try regex fallback with validation
+        const beforeRegex = updatedCode;
+        const fallback = applyRegexFallbacks(updatedCode);
+        
+        // VALIDATE regex output for syntax errors
+        if (validateSyntax(fallback.code)) {
+          updatedCode = fallback.code;
+          fallback.changes.forEach(c => changes.push(c));
+        } else {
+          // Regex produced invalid code - revert to original
+          if (verbose) process.stdout.write(`[WARNING] Regex fallback produced invalid syntax, reverting\n`);
+          updatedCode = beforeRegex;
+        }
+      }
     }
 
     // Apply React 19 component fixes (forwardRef, string refs, PropTypes warnings)
