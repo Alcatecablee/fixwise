@@ -20,6 +20,8 @@
 
 const fs = require('fs').promises;
 const path = require('path');
+const https = require('https');
+const http = require('http');
 
 class Analytics {
   constructor() {
@@ -56,8 +58,22 @@ class Analytics {
     };
     
     this.analyticsPath = path.join(process.cwd(), '.neurolint', 'analytics.json');
+    this.queuePath = path.join(process.cwd(), '.neurolint', 'analytics-queue.json');
     this.sessionId = this.generateSessionId();
     this.startTime = Date.now();
+    
+    this.eventQueue = [];
+    this.syncConfig = {
+      apiUrl: process.env.NEUROLINT_API_URL || null,
+      apiKey: process.env.NEUROLINT_API_KEY || null,
+      userId: process.env.NEUROLINT_USER_ID || null,
+      enabled: false,
+      batchSize: 10,
+      maxRetries: 3,
+      retryDelay: 1000
+    };
+    
+    this.loadSyncConfig();
   }
 
   /**
@@ -65,6 +81,136 @@ class Analytics {
    */
   generateSessionId() {
     return `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+  }
+
+  /**
+   * Load sync configuration from environment or config file
+   */
+  loadSyncConfig() {
+    this.syncConfig.enabled = !!(this.syncConfig.apiUrl && this.syncConfig.apiKey);
+  }
+
+  /**
+   * Configure sync settings
+   */
+  configureSync(options = {}) {
+    this.syncConfig = {
+      ...this.syncConfig,
+      ...options
+    };
+    this.syncConfig.enabled = !!(this.syncConfig.apiUrl && this.syncConfig.apiKey);
+    return this.syncConfig.enabled;
+  }
+
+  /**
+   * Queue an analytics event for later syncing
+   */
+  queueEvent(type, data) {
+    const event = {
+      type,
+      data,
+      timestamp: new Date().toISOString(),
+      sessionId: this.sessionId
+    };
+    
+    this.eventQueue.push(event);
+    
+    if (this.eventQueue.length >= this.syncConfig.batchSize) {
+      this.syncEvents().catch(() => {});
+    }
+  }
+
+  /**
+   * Sync queued events to the API
+   */
+  async syncEvents(retryCount = 0) {
+    if (!this.syncConfig.enabled || this.eventQueue.length === 0) {
+      return { success: false, reason: 'sync_disabled_or_empty_queue' };
+    }
+
+    const eventsToSync = this.eventQueue.splice(0, this.syncConfig.batchSize);
+    
+    try {
+      await this.saveQueue();
+      
+      const url = new URL('/api/cli/analytics', this.syncConfig.apiUrl);
+      const protocol = url.protocol === 'https:' ? https : http;
+      
+      const payload = JSON.stringify({
+        events: eventsToSync,
+        sessionId: this.sessionId,
+        platform: 'cli'
+      });
+      
+      const options = {
+        hostname: url.hostname,
+        port: url.port || (url.protocol === 'https:' ? 443 : 80),
+        path: url.pathname,
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Content-Length': Buffer.byteLength(payload),
+          'Authorization': `Bearer ${this.syncConfig.apiKey}`
+        }
+      };
+      
+      const response = await new Promise((resolve, reject) => {
+        const req = protocol.request(options, (res) => {
+          let data = '';
+          res.on('data', (chunk) => data += chunk);
+          res.on('end', () => {
+            if (res.statusCode >= 200 && res.statusCode < 300) {
+              resolve({ success: true, data: JSON.parse(data || '{}') });
+            } else {
+              reject(new Error(`HTTP ${res.statusCode}: ${data}`));
+            }
+          });
+        });
+        
+        req.on('error', reject);
+        req.write(payload);
+        req.end();
+      });
+      
+      return response;
+      
+    } catch (error) {
+      this.eventQueue.unshift(...eventsToSync);
+      
+      if (retryCount < this.syncConfig.maxRetries) {
+        await new Promise(resolve => 
+          setTimeout(resolve, this.syncConfig.retryDelay * (retryCount + 1))
+        );
+        return this.syncEvents(retryCount + 1);
+      }
+      
+      await this.saveQueue();
+      return { success: false, error: error.message };
+    }
+  }
+
+  /**
+   * Save event queue to disk
+   */
+  async saveQueue() {
+    try {
+      const queueDir = path.dirname(this.queuePath);
+      await fs.mkdir(queueDir, { recursive: true });
+      await fs.writeFile(this.queuePath, JSON.stringify(this.eventQueue, null, 2));
+    } catch (error) {
+    }
+  }
+
+  /**
+   * Load event queue from disk
+   */
+  async loadQueue() {
+    try {
+      const data = await fs.readFile(this.queuePath, 'utf8');
+      this.eventQueue = JSON.parse(data);
+    } catch (error) {
+      this.eventQueue = [];
+    }
   }
 
   /**
@@ -76,7 +222,8 @@ class Analytics {
       issues,
       executionTime,
       layers,
-      platform = 'cli'
+      platform = 'cli',
+      result
     } = data;
 
     // Update file count
@@ -119,6 +266,20 @@ class Analytics {
     // Track platform usage
     this.metrics.usage.platforms[platform] = 
       (this.metrics.usage.platforms[platform] || 0) + 1;
+    
+    // Queue event for API sync if enabled
+    if (this.syncConfig.enabled) {
+      this.queueEvent('analysis', {
+        filename: files[0] || 'unknown',
+        success: result?.success || true,
+        analysis: result?.analysis || {},
+        issues: issues || [],
+        layers: layers || [],
+        summary: result?.summary || {},
+        executionTime: executionTime,
+        platform: platform
+      });
+    }
   }
 
   /**
@@ -156,6 +317,18 @@ class Analytics {
     const totalAttempts = this.metrics.fixes.totalApplied + this.metrics.fixes.rollbacks;
     this.metrics.fixes.successRate = totalAttempts > 0 ? 
       (this.metrics.fixes.totalApplied / totalAttempts) * 100 : 0;
+    
+    // Queue event for API sync if enabled
+    if (this.syncConfig.enabled) {
+      this.queueEvent('fix', {
+        appliedFixes: appliedFixes || [],
+        success,
+        rollback,
+        layer,
+        rule,
+        platform
+      });
+    }
   }
 
   /**
@@ -177,6 +350,19 @@ class Analytics {
 
     // Track session
     this.metrics.usage.sessions += 1;
+    
+    // Queue event for API sync if enabled
+    if (this.syncConfig.enabled) {
+      this.queueEvent('usage', {
+        command,
+        action: command,
+        platform,
+        executionTime,
+        success,
+        filesProcessed: options.filesProcessed || 0,
+        layersUsed: options.layers || []
+      });
+    }
   }
 
   /**

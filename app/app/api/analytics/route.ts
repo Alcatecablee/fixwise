@@ -23,11 +23,12 @@ export async function GET(request: NextRequest) {
     const teamId = searchParams.get('teamId');
     const detailed = searchParams.get('detailed') === 'true';
     const includePredictive = searchParams.get('includePredictive') === 'true';
+    const useDemoData = searchParams.get('demo') === 'true' || isDemoMode();
 
-    // Demo mode - return mock analytics data
-    if (isDemoMode()) {
+    if (useDemoData) {
       console.log('[Demo Mode] Returning mock analytics data');
       return NextResponse.json({
+        demo: true,
         analysisHistory: DEMO_ANALYSIS_HISTORY,
         usageLogs: [],
         summary: {
