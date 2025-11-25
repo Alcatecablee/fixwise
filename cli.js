@@ -264,25 +264,25 @@ function printCommunityCTA(context = 'default') {
 ${separator}
 \x1b[1m\x1b[36mJoin the NeuroLint Community\x1b[0m
 
-  \x1b[33m★\x1b[0m Star us on GitHub: ${NEUROLINT_GITHUB}
-  \x1b[34m📖\x1b[0m Documentation:     ${NEUROLINT_DOCS}
-  \x1b[32m🐛\x1b[0m Report issues:     ${NEUROLINT_ISSUES}
+  [STAR] Star us on GitHub: ${NEUROLINT_GITHUB}
+  [DOCS] Documentation:     ${NEUROLINT_DOCS}
+  [HELP] Report issues:     ${NEUROLINT_ISSUES}
 ${separator}`);
   } else if (context === 'version') {
-    console.log(`\x1b[2m→ Star us: ${NEUROLINT_GITHUB}\x1b[0m`);
+    console.log(`\x1b[2m-> Star us: ${NEUROLINT_GITHUB}\x1b[0m`);
   } else if (context === 'success') {
-    console.log(`\n\x1b[2m💡 Love NeuroLint? Star us on GitHub: ${NEUROLINT_GITHUB}\x1b[0m`);
+    console.log(`\n\x1b[2mLove NeuroLint? Star us on GitHub: ${NEUROLINT_GITHUB}\x1b[0m`);
   } else if (context === 'first-run') {
     console.log(`
-\x1b[1m\x1b[32m✨ Welcome to NeuroLint!\x1b[0m
+\x1b[1m\x1b[32mWelcome to NeuroLint!\x1b[0m
 
 Get started:
-  \x1b[33m→\x1b[0m Run \x1b[1mneurolint --help\x1b[0m to see all commands
-  \x1b[33m→\x1b[0m Run \x1b[1mneurolint analyze .\x1b[0m to analyze your project
+  -> Run \x1b[1mneurolint --help\x1b[0m to see all commands
+  -> Run \x1b[1mneurolint analyze .\x1b[0m to analyze your project
 
 Join our community:
-  \x1b[33m★\x1b[0m Star us: ${NEUROLINT_GITHUB}
-  \x1b[34m📖\x1b[0m Docs:    ${NEUROLINT_DOCS}
+  [STAR] Star us: ${NEUROLINT_GITHUB}
+  [DOCS] Docs:    ${NEUROLINT_DOCS}
 `);
   }
 }
