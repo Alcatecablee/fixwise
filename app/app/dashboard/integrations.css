@@ -1,0 +1,350 @@
+/* Integrations Section Styles */
+.integrations-overview {
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 12px;
+  border: 1px solid #000000;
+  padding: 24px;
+}
+
+.integrations-overview h3 {
+  color: #ffffff;
+  margin: 0 0 8px 0;
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.integration-categories {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 24px;
+  margin-top: 32px;
+}
+
+.integration-category {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid #000000;
+  border-radius: 12px;
+  padding: 24px;
+  transition: all 0.2s ease;
+}
+
+.integration-category:hover {
+  background: rgba(255, 255, 255, 0.08);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+}
+
+.category-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.category-header h4 {
+  color: #ffffff;
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.category-status {
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Status colors - using data attributes instead of :contains */
+.category-status[data-status="available"] {
+  background: rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.9);
+  border: 1px solid #000000;
+}
+
+.category-status[data-status="coming-soon"] {
+  background: rgba(255, 152, 0, 0.2);
+  color: #ff9800;
+}
+
+.integration-category p {
+  color: rgba(255, 255, 255, 0.8);
+  margin: 0 0 20px 0;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.supported-platforms {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.platform-badge {
+  background: rgba(33, 150, 243, 0.2);
+  color: rgba(33, 150, 243, 0.9);
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  border: 1px solid #000000;
+}
+
+.webhook-features,
+.api-features {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.feature-item {
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 0.9rem;
+  padding: 8px 0;
+  border-bottom: 1px solid #000000;
+}
+
+.feature-item:last-child {
+  border-bottom: none;
+}
+
+.notification-channels {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.channel-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 0.9rem;
+  border: 1px solid #000000;
+}
+
+.channel-icon {
+  font-size: 1.2rem;
+}
+
+.api-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 20px;
+  flex-wrap: wrap;
+}
+
+.btn {
+  padding: 10px 20px;
+  border-radius: 6px;
+  border: none;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.9rem;
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn-primary {
+  background: linear-gradient(
+    135deg,
+    rgba(33, 150, 243, 0.2) 0%,
+    rgba(33, 150, 243, 0.15) 50%,
+    rgba(255, 255, 255, 0.1) 100%
+  );
+  border: 1px solid #000000;
+  border-radius: 8px;
+  backdrop-filter: blur(20px) saturate(1.2);
+  -webkit-backdrop-filter: blur(20px) saturate(1.2);
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1),
+    0 0 12px rgba(33, 150, 243, 0.2);
+  color: #ffffff;
+}
+
+.btn-primary:hover:not(:disabled) {
+  background: linear-gradient(
+    135deg,
+    rgba(33, 150, 243, 0.3) 0%,
+    rgba(33, 150, 243, 0.22) 50%,
+    rgba(255, 255, 255, 0.12) 100%
+  );
+  border-color: #000000;
+  transform: translateY(-2px);
+  box-shadow:
+    0 12px 40px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.15),
+    0 0 16px rgba(33, 150, 243, 0.3);
+}
+
+.btn-secondary {
+  background: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+  border: 1px solid #000000;
+}
+
+.btn-secondary:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.15);
+  transform: translateY(-1px);
+}
+
+/* Enhanced mobile responsiveness */
+@media (max-width: 768px) {
+  .integration-categories {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .integration-category {
+    padding: 20px;
+  }
+
+  .category-header {
+    flex-direction: column;
+    gap: 8px;
+    align-items: flex-start;
+  }
+
+  .supported-platforms {
+    gap: 6px;
+  }
+
+  .platform-badge {
+    font-size: 0.75rem;
+    padding: 4px 8px;
+  }
+
+  .notification-channels {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .api-actions {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .btn {
+    justify-content: center;
+    text-align: center;
+  }
+}
+
+/* Enhanced status indicators */
+.category-status {
+  position: relative;
+  overflow: hidden;
+}
+
+.category-status::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.2),
+    transparent
+  );
+  transition: left 0.5s ease;
+}
+
+.integration-category:hover .category-status::before {
+  left: 100%;
+}
+
+/* Improved accessibility */
+.integration-category:focus-within {
+  outline: 2px solid rgba(33, 150, 243, 0.5);
+  outline-offset: 2px;
+}
+
+.btn:focus-visible {
+  outline: 2px solid rgba(255, 255, 255, 0.8);
+  outline-offset: 2px;
+}
+
+/* Subtle animations */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.integration-category {
+  animation: fadeInUp 0.4s ease-out;
+}
+
+.integration-category:nth-child(1) {
+  animation-delay: 0.1s;
+}
+.integration-category:nth-child(2) {
+  animation-delay: 0.2s;
+}
+.integration-category:nth-child(3) {
+  animation-delay: 0.3s;
+}
+.integration-category:nth-child(4) {
+  animation-delay: 0.4s;
+}
+
+/* Dark theme optimizations */
+@media (prefers-color-scheme: dark) {
+  .integrations-overview {
+    background: rgba(255, 255, 255, 0.03);
+    border-color: #000000;
+  }
+
+  .integration-category {
+    background: rgba(255, 255, 255, 0.06);
+    border-color: #000000;
+  }
+
+  .integration-category:hover {
+    background: rgba(255, 255, 255, 0.1);
+  }
+}
+
+/* Print styles */
+@media print {
+  .integrations-overview {
+    background: white;
+    color: black;
+    border: 1px solid #ccc;
+  }
+
+  .integration-category {
+    background: #f9f9f9;
+    border: 1px solid #ddd;
+    break-inside: avoid;
+  }
+
+  .btn {
+    display: none;
+  }
+}

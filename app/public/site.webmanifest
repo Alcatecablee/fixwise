@@ -1,0 +1,21 @@
+{
+  "name": "NeuroLint Pro - Code Quality Tool",
+  "short_name": "NeuroLint",
+  "description": "Professional React/Next.js modernization and code quality platform",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0A1628",
+  "theme_color": "#3B82F6",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    },
+    {
+      "src": "/favicon.ico",
+      "sizes": "32x32",
+      "type": "image/x-icon"
+    }
+  ]
+}
