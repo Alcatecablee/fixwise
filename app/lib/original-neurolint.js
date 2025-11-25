@@ -40,14 +40,21 @@ const runOriginalNeuroLint = async (
   const requestId = options.requestId || 'api';
 
   try {
-    // Verify fix-master.js exists
-    const masterPath = path.join(process.cwd(), 'fix-master.js');
+    // Verify fix-master.js exists - check both current dir and parent dir (for Next.js app/)
+    let masterPath = path.join(process.cwd(), 'fix-master.js');
+    let scriptsDir = path.join(process.cwd(), 'scripts');
+    
     if (!fs.existsSync(masterPath)) {
-      throw new Error('fix-master.js not found in current directory');
+      // Try parent directory (for when running from app/)
+      masterPath = path.join(process.cwd(), '..', 'fix-master.js');
+      scriptsDir = path.join(process.cwd(), '..', 'scripts');
+    }
+    
+    if (!fs.existsSync(masterPath)) {
+      throw new Error('fix-master.js not found in current or parent directory');
     }
 
     // Verify scripts directory exists
-    const scriptsDir = path.join(process.cwd(), 'scripts');
     if (!fs.existsSync(scriptsDir)) {
       throw new Error('scripts/ directory not found');
     }
@@ -80,7 +87,10 @@ const runOriginalNeuroLint = async (
       console.log(`[ORIGINAL NEUROLINT] ${requestId} Using Clean Hybrid Architecture`);
       
       // Step 1: Use shared-core for intelligent analysis
-      const sharedCore = require('../../shared-core');
+      const sharedCorePath = fs.existsSync(path.join(process.cwd(), 'shared-core')) 
+        ? '../../shared-core' 
+        : '../../../shared-core';
+      const sharedCore = require(sharedCorePath);
       await sharedCore.core.initialize({ platform: 'web' });
       
       const analysisResult = await sharedCore.analyze(code, {
@@ -91,7 +101,10 @@ const runOriginalNeuroLint = async (
       });
       
       // Step 2: Use fix-master for proven transformations
-      const fixMaster = require('../../fix-master');
+      const fixMasterPath = fs.existsSync(path.join(process.cwd(), 'fix-master.js'))
+        ? '../../fix-master'
+        : '../../../fix-master';
+      const fixMaster = require(fixMasterPath);
       const layersToExecute = layers || analysisResult.summary?.recommendedLayers || [2, 3, 4, 5, 6, 7];
       
       const fixResult = await fixMaster.executeLayers(code, layersToExecute, {

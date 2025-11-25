@@ -2,11 +2,23 @@ import crypto from "crypto";
 import { supabase } from "./supabase-client";
 import { createClient, SupabaseClient } from "@supabase/supabase-js";
 
-// Create a service role client for API key validation
-const supabaseService = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-);
+// Lazy initialization of service role client for API key validation
+let supabaseService: SupabaseClient | null = null;
+
+function getSupabaseService(): SupabaseClient | null {
+  if (supabaseService) return supabaseService;
+  
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL;
+  const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  
+  if (!url || !key) {
+    console.warn('[API Key Utils] Supabase not configured - API key validation unavailable');
+    return null;
+  }
+  
+  supabaseService = createClient(url, key);
+  return supabaseService;
+}
 
 export interface ApiKey {
   id: string;
@@ -204,10 +216,16 @@ export const apiKeyService = {
 
   // Validate API key (for authentication)
   async validate(key: string): Promise<ApiKey | null> {
+    const client = getSupabaseService();
+    if (!client) {
+      console.warn('[API Key Utils] Supabase not available - cannot validate API key');
+      return null;
+    }
+    
     const keyHash = hashApiKey(key);
 
     // Use service role client for API key validation
-    const { data, error } = await supabaseService
+    const { data, error } = await client
       .from('api_keys')
       .select('*')
       .eq('key_hash', keyHash)
@@ -224,7 +242,7 @@ export const apiKeyService = {
     }
 
     // Update last_used timestamp using service role client
-    await supabaseService
+    await client
       .from('api_keys')
       .update({ last_used: new Date().toISOString() })
       .eq('id', data.id);
