@@ -5,6 +5,22 @@ All notable changes to NeuroLint CLI will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Changed
+- **License migrated from Business Source License 1.1 to Apache License 2.0**
+- NeuroLint CLI is now permanently free and open-source
+- Updated all documentation to reflect Apache 2.0 licensing
+- Updated package.json, README.md, CONTRIBUTING.md, LICENSE_NOTICES.md
+- Added commitment: "This license will never change"
+
+### Why Apache 2.0?
+- Maximum developer trust and adoption
+- Enterprise-friendly with explicit patent grant
+- Compatible with React/Next.js ecosystem (all use permissive licenses)
+- No restrictions on commercial use
+- Enables partnerships and integrations
+
 ## [1.3.9] - 2025-11-25
 
 ### Changed
@@ -99,9 +115,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.3.3] - 2025-11-19
 
 ### Changed
-- License migrated from MIT to Business Source License 1.1
-- Change Date: 2029-11-22
-- Change License: GPL-3.0-or-later after change date
+- License migrated from MIT to Business Source License 1.1 (later changed to Apache 2.0)
+- Change Date: 2029-11-22 (no longer applicable)
+- Change License: GPL-3.0-or-later after change date (no longer applicable)
 
 ### Added
 - LICENSE_NOTICES.md documenting all 329 third-party dependencies (direct + transitive)

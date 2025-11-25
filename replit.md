@@ -2,7 +2,7 @@
 
 ## Overview
 
-NeuroLint CLI is a deterministic, rule-based code transformation tool designed for TypeScript, JavaScript, React, and Next.js projects. It automates fixing common code issues such as ESLint errors, hydration bugs, and missing React keys through a progressive 7-layer architecture. Originally developed to address widespread code quality issues, NeuroLint aims to provide intelligent, predictable code fixes without relying on AI/LLM for stability and reliability. The project is positioned for public release, Y Combinator application, and aims to be the go-to solution for maintaining high code quality in modern web development. All its powerful fixing layers are now completely free to use, fostering community adoption and enterprise opportunities under a Business Source License 1.1.
+NeuroLint CLI is a deterministic, rule-based code transformation tool designed for TypeScript, JavaScript, React, and Next.js projects. It automates fixing common code issues such as ESLint errors, hydration bugs, and missing React keys through a progressive 7-layer architecture. Originally developed to address widespread code quality issues, NeuroLint aims to provide intelligent, predictable code fixes without relying on AI/LLM for stability and reliability. The project is positioned for public release, Y Combinator application, and aims to be the go-to solution for maintaining high code quality in modern web development. All its powerful fixing layers are now completely free to use, fostering community adoption and enterprise opportunities under the Apache License 2.0.
 
 ## User Preferences
 
@@ -66,7 +66,7 @@ The landing page is a static React + Vite application that showcases NeuroLint's
 - **npm:** The `@neurolint/cli` package is published and distributed via npm.
 - **Jest:** Used for comprehensive automated testing.
 - **React, Next.js, TypeScript, JavaScript:** Target technologies for code transformation and analysis.
-- **Business Source License 1.1:** The project's licensing model, preventing commercial exploitation by direct competitors while allowing internal use and contributions.
+- **Apache License 2.0:** The project's open-source licensing model, enabling maximum adoption, enterprise use, commercial use, and community contributions without restrictions.
 
 ## Recent Changes (November 24, 2025)
 

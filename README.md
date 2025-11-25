@@ -3,7 +3,7 @@
 > Deterministic code transformation for React, Next.js, and TypeScript projects
 
 [![npm version](https://img.shields.io/npm/v/@neurolint/cli.svg)](https://www.npmjs.com/package/@neurolint/cli)
-[![License: BSL 1.1](https://img.shields.io/badge/License-BSL%201.1-blue.svg)](./LICENSE)
+[![License: Apache 2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](./LICENSE)
 [![Tests](https://img.shields.io/badge/tests-297%20passing-brightgreen.svg)](./__tests__)
 [![Node.js](https://img.shields.io/badge/node-%3E%3D18.0.0-brightgreen)]()
 
@@ -322,7 +322,7 @@ neurolint rules --import=team-rules.json
 - **[Changelog](./CHANGELOG.md)** — Version history and release notes
 - **[Contributing](./CONTRIBUTING.md)** — Contribution guidelines
 - **[Code of Conduct](./CODE_OF_CONDUCT.md)** — Community standards
-- **[License](./LICENSE)** — Business Source License 1.1
+- **[License](./LICENSE)** — Apache License 2.0
 
 ---
 
@@ -349,15 +349,22 @@ Manual fixes are slow, error-prone, and expensive. NeuroLint processes hundreds 
 
 ## License
 
-Business Source License 1.1
+**Apache License 2.0**
 
-- **Use freely** for internal development, testing, and production
-- **Cannot** offer as commercial SaaS competing with NeuroLint
-- **Becomes GPL-3.0** on November 22, 2029
+NeuroLint CLI is free and open-source software licensed under Apache 2.0.
 
-[Read the full license](./LICENSE) | [Learn about BSL](https://mariadb.com/bsl-faq-mariadb/)
+- ✅ **Free forever** — No fees, no restrictions, no license changes
+- ✅ **Commercial use allowed** — Use in your company, startup, or enterprise
+- ✅ **Modify and distribute** — Fork, customize, and share as needed
+- ✅ **Patent protection** — Includes explicit patent grant
 
-For commercial licensing inquiries: clivemakazhu@gmail.com
+**This license will never change.** The NeuroLint CLI will remain free and open-source under Apache 2.0 indefinitely.
+
+[Read the full license](./LICENSE)
+
+---
+
+**Future:** We're building advanced team collaboration features, real-time editing, and enterprise tools as a separate product. The CLI will always remain free and open-source.
 
 ---
 

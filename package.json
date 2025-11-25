@@ -134,6 +134,6 @@
     "url": "https://github.com/Alcatecablee/Neurolint/issues"
   },
   "homepage": "https://github.com/Alcatecablee/Neurolint#readme",
-  "license": "SEE LICENSE IN LICENSE",
+  "license": "Apache-2.0",
   "author": "NeuroLint"
 }

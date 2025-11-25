@@ -1634,4 +1634,4 @@ New to NeuroLint? Follow this checklist:
 
 **Built for developers who want deterministic, rule-based code quality - not AI-driven unpredictability.**
 
-**Version 1.3.9** | Business Source License 1.1 | Built for the React and Next.js community
+**Version 1.3.9** | Apache License 2.0 | Built for the React and Next.js community

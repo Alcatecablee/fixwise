@@ -8,9 +8,9 @@ NeuroLint uses open-source dependencies in its CLI tool and API server. This doc
 
 **Total Dependencies (including transitive):** 329 packages
 **License Types:** MIT, ISC, Apache-2.0, BSD
-**Last Audit:** November 22, 2025
+**Last Audit:** November 25, 2025
 
-All third-party dependencies use permissive open-source licenses compatible with the Business Source License 1.1 under which NeuroLint is distributed.
+All third-party dependencies use permissive open-source licenses compatible with the Apache License 2.0 under which NeuroLint is distributed.
 
 ---
 
@@ -291,13 +291,13 @@ npm ls --production
 
 ## License Compatibility Statement
 
-The Business Source License 1.1 (BSL 1.1) under which NeuroLint is distributed is fully compatible with all included dependencies:
+The Apache License 2.0 under which NeuroLint is distributed is fully compatible with all included dependencies:
 
-1. **MIT/ISC Dependencies:** Can be included in BSL-licensed projects. The BSL's Use Limitation applies only to NeuroLint's proprietary code, not to the open-source dependencies.
+1. **MIT/ISC Dependencies:** Fully compatible with Apache 2.0. Both are permissive licenses that allow commercial use, modification, and distribution.
 
 2. **Attribution Requirements:** This LICENSE_NOTICES.md file satisfies the attribution requirements of all MIT and ISC licensed dependencies.
 
-3. **Distribution:** When NeuroLint converts to GPL-3.0-or-later on 2029-11-22, all dependencies will remain compatible as MIT/ISC are GPL-compatible.
+3. **Distribution:** Apache 2.0 is compatible with all major open-source licenses including MIT, ISC, BSD, and GPL.
 
 ---
 

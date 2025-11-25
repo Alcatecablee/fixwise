@@ -118,7 +118,7 @@ orchestration to automatically fix React/Next.js bugs:
 - 🔗 GitHub: https://github.com/Alcatecablee/Neurolint
 - 📖 Landing: [your landing page URL]
 
-**Free, source-available (BSL 1.1), no API keys required.**
+**Free, open-source (Apache 2.0), no API keys required.**
 
 We're actively looking for feedback - what React/Next.js issues drive 
 you crazy? What would you want automated?
@@ -233,7 +233,7 @@ NeuroLint uses a 5-step fail-safe orchestration system:
 **Stats:**
 - ✅ 297 passing tests
 - ✅ Deterministic (same input = same output)
-- ✅ Free, source-available (BSL 1.1 → GPL-3.0 in 2029)
+- ✅ Free, open-source (Apache 2.0 - permanently)
 - ✅ No API keys required
 
 **What's Next:**
@@ -341,10 +341,10 @@ patterns, but ship deterministic rules."
 #### ✅ Use:
 
 - "297 passing tests"
-- "Source-available (BSL 1.1) - code is public, free for most uses"
-- "Becomes fully open-source (GPL-3.0) in 2029"
+- "Open-source (Apache 2.0) - free forever, never changing"
 - "6 months of development"
 - "Tested on 100+ real projects"
+- "Enterprise-friendly with patent protection"
 - GitHub stars + download velocity (as they grow)
 
 #### ❌ Avoid:
