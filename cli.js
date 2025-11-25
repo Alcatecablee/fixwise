@@ -248,6 +248,45 @@ class RuleStore {
   }
 }
 
+// Community CTA helper - displays GitHub, docs, and support links
+const NEUROLINT_GITHUB = 'https://github.com/Alcatecablee/Neurolint';
+const NEUROLINT_DOCS = 'https://github.com/Alcatecablee/Neurolint/blob/main/CLI_USAGE.md';
+const NEUROLINT_ISSUES = 'https://github.com/Alcatecablee/Neurolint/issues';
+
+function printCommunityCTA(context = 'default') {
+  const isQuiet = process.argv.includes('--quiet') || process.argv.includes('-q');
+  if (isQuiet) return;
+
+  const separator = '\x1b[2m' + '─'.repeat(60) + '\x1b[0m';
+  
+  if (context === 'help') {
+    console.log(`
+${separator}
+\x1b[1m\x1b[36mJoin the NeuroLint Community\x1b[0m
+
+  \x1b[33m★\x1b[0m Star us on GitHub: ${NEUROLINT_GITHUB}
+  \x1b[34m📖\x1b[0m Documentation:     ${NEUROLINT_DOCS}
+  \x1b[32m🐛\x1b[0m Report issues:     ${NEUROLINT_ISSUES}
+${separator}`);
+  } else if (context === 'version') {
+    console.log(`\x1b[2m→ Star us: ${NEUROLINT_GITHUB}\x1b[0m`);
+  } else if (context === 'success') {
+    console.log(`\n\x1b[2m💡 Love NeuroLint? Star us on GitHub: ${NEUROLINT_GITHUB}\x1b[0m`);
+  } else if (context === 'first-run') {
+    console.log(`
+\x1b[1m\x1b[32m✨ Welcome to NeuroLint!\x1b[0m
+
+Get started:
+  \x1b[33m→\x1b[0m Run \x1b[1mneurolint --help\x1b[0m to see all commands
+  \x1b[33m→\x1b[0m Run \x1b[1mneurolint analyze .\x1b[0m to analyze your project
+
+Join our community:
+  \x1b[33m★\x1b[0m Star us: ${NEUROLINT_GITHUB}
+  \x1b[34m📖\x1b[0m Docs:    ${NEUROLINT_DOCS}
+`);
+  }
+}
+
 // File pattern matching utility with performance optimizations
 async function getFiles(dir, include = ['**/*.{ts,tsx,js,jsx,json}'], exclude = [
   // Build and dependency directories
@@ -2268,7 +2307,7 @@ async function handleHealth(options, spinner) {
         process.stdout.write(`[SUCCESS] Configuration: Present\n`);
       }
       if (!ruleFileExists) {
-        // Create the learned rules file if it doesn't exist
+        // Create the learned rules file if it doesn't exist (first run)
         try {
           await fs.mkdir(path.dirname(ruleFile), { recursive: true });
           const defaultRules = {
@@ -2281,6 +2320,7 @@ async function handleHealth(options, spinner) {
           };
           await fs.writeFile(ruleFile, JSON.stringify(defaultRules, null, 2));
           process.stdout.write(`[SUCCESS] Learned rules file created: ${ruleFile}\n`);
+          printCommunityCTA('first-run');
         } catch (error) {
           process.stdout.write(`[ERROR] Failed to create learned rules file: ${error.message}\n`);
         }
@@ -2936,6 +2976,11 @@ Examples:
       const executionTime = Date.now() - startTime;
       const timeMessage = executionTime > 1000 ? ` (${(executionTime / 1000).toFixed(1)}s)` : '';
       logSuccess(`${command.charAt(0).toUpperCase() + command.slice(1)} completed${timeMessage}`);
+      
+      // Show CTA after successful major operations
+      if (['fix', 'migrate', 'analyze', 'validate', 'simplify'].includes(command)) {
+        printCommunityCTA('success');
+      }
     }
     
     // Stop the spinner and exit successfully
@@ -2981,6 +3026,7 @@ Examples:
 if (process.argv.includes('--version') || process.argv.includes('-v')) {
   const packageJson = require('./package.json');
   console.log(packageJson.version);
+  printCommunityCTA('version');
   process.exit(0);
 }
 
@@ -3098,6 +3144,7 @@ Examples:
   neurolint rules --reset
   neurolint health
 `);
+  printCommunityCTA('help');
   process.exit(0);
 }
 
