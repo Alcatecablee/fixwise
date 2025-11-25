@@ -62,9 +62,9 @@
 ```
 "How we shipped a deterministic React 19 migration CLI with 297 tests (no AI)"
 
-"We built an open-source fail-safe tool that fixes hydration bugs before deploy — walkthrough + repo"
+"We built a free fail-safe tool that fixes hydration bugs before deploy — walkthrough + repo"
 
-"Spent 6 months building a CLI that actually fixes React/Next.js bugs (not just lints them) [open source]"
+"Spent 6 months building a CLI that actually fixes React/Next.js bugs (not just lints them) [free]"
 
 "Free CLI that migrates React 19 + Next.js 16 with automatic rollback (deterministic, not AI)"
 ```
@@ -118,7 +118,7 @@ orchestration to automatically fix React/Next.js bugs:
 - 🔗 GitHub: https://github.com/Alcatecablee/Neurolint
 - 📖 Landing: [your landing page URL]
 
-**Free, open-source (BSL 1.1), no API keys required.**
+**Free, source-available (BSL 1.1), no API keys required.**
 
 We're actively looking for feedback - what React/Next.js issues drive 
 you crazy? What would you want automated?
@@ -233,7 +233,7 @@ NeuroLint uses a 5-step fail-safe orchestration system:
 **Stats:**
 - ✅ 297 passing tests
 - ✅ Deterministic (same input = same output)
-- ✅ Free, open-source (BSL 1.1)
+- ✅ Free, source-available (BSL 1.1 → GPL-3.0 in 2029)
 - ✅ No API keys required
 
 **What's Next:**
@@ -341,7 +341,8 @@ patterns, but ship deterministic rules."
 #### ✅ Use:
 
 - "297 passing tests"
-- "Business Source License (transparent, not black-box)"
+- "Source-available (BSL 1.1) - code is public, free for most uses"
+- "Becomes fully open-source (GPL-3.0) in 2029"
 - "6 months of development"
 - "Tested on 100+ real projects"
 - GitHub stars + download velocity (as they grow)
