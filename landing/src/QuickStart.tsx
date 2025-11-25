@@ -221,30 +221,29 @@ export function QuickStart() {
 
           {/* Actual Fix Commands */}
           <div className="mb-16 text-left">
-            <h2 className="text-2xl font-bold text-white mb-8">Actual Fix Commands (MAKES CHANGES - Use with caution)</h2>
+            <h2 className="text-2xl font-bold text-white mb-8">Actual Fix Commands (MAKES CHANGES - Backups created automatically)</h2>
             
-            <h3 className="text-lg text-gray-300 mb-4">Apply Fixes with Backup (Recommended)</h3>
-            <CommandBlock command="neurolint fix your-project --all-layers --backup --verbose" id="fix-backup-all" />
-            <CommandBlock command="neurolint fix your-project --layers=1,2,3 --backup --verbose" id="fix-backup-specific" />
+            <h3 className="text-lg text-gray-300 mb-4">Apply All Fixes (Automatic Backup)</h3>
+            <CommandBlock command="neurolint fix your-project --all-layers --verbose" id="fix-all" />
+            <CommandBlock command="neurolint fix your-project --layers=1,2,3 --verbose" id="fix-specific" />
 
-            <h3 className="text-lg text-gray-300 mb-4 mt-8">Apply Fixes Without Backup</h3>
-            <CommandBlock command="neurolint fix your-project --all-layers --verbose" id="fix-no-backup-all" />
-            <CommandBlock command="neurolint fix your-project --layers=1 --verbose" id="fix-no-backup-layer1" />
+            <h3 className="text-lg text-gray-300 mb-4 mt-8">Apply Fixes Without Backup (Not Recommended)</h3>
+            <CommandBlock command="neurolint fix your-project --all-layers --no-backup --verbose" id="fix-no-backup-all" />
+            <CommandBlock command="neurolint fix your-project --layers=1 --no-backup --verbose" id="fix-no-backup-layer1" />
           </div>
 
           {/* Migration Commands */}
           <div className="mb-16 text-left">
-            <h2 className="text-2xl font-bold text-white mb-8">Migration Commands (MAKES CHANGES)</h2>
+            <h2 className="text-2xl font-bold text-white mb-8">Migration Commands (MAKES CHANGES - Backups created automatically)</h2>
             
             <h3 className="text-lg text-gray-300 mb-4">React 19 Migration</h3>
-            <CommandBlock command="neurolint migrate-react19 your-project --backup --verbose" id="migrate-react19-backup" />
-            <CommandBlock command="neurolint migrate-react19 your-project --verbose" id="migrate-react19-no-backup" />
+            <CommandBlock command="neurolint migrate-react19 your-project --verbose" id="migrate-react19" />
 
             <h3 className="text-lg text-gray-300 mb-4 mt-8">Next.js 16 Migration</h3>
-            <CommandBlock command="neurolint migrate-nextjs-16 your-project --backup --verbose" id="migrate-next16" />
+            <CommandBlock command="neurolint migrate-nextjs-16 your-project --verbose" id="migrate-next16" />
 
             <h3 className="text-lg text-gray-300 mb-4 mt-8">Biome Migration</h3>
-            <CommandBlock command="neurolint migrate-biome your-project --backup --verbose" id="migrate-biome" />
+            <CommandBlock command="neurolint migrate-biome your-project --verbose" id="migrate-biome" />
           </div>
 
           {/* Backup Management */}
@@ -271,10 +270,10 @@ export function QuickStart() {
             <h3 className="text-lg text-gray-300 mb-4 mt-8">Step 3: Preview Fixes</h3>
             <CommandBlock command="neurolint fix your-project --all-layers --dry-run --verbose" id="workflow-preview" />
 
-            <h3 className="text-lg text-gray-300 mb-4 mt-8">Step 4: Apply Layer by Layer (Safest Approach)</h3>
-            <CommandBlock command="neurolint fix your-project --layers=1 --backup --verbose" id="workflow-layer1" />
-            <CommandBlock command="neurolint fix your-project --layers=2 --backup --verbose" id="workflow-layer2" />
-            <CommandBlock command="neurolint fix your-project --layers=3 --backup --verbose" id="workflow-layer3" />
+            <h3 className="text-lg text-gray-300 mb-4 mt-8">Step 4: Apply Layer by Layer (Safest Approach - Automatic Backups)</h3>
+            <CommandBlock command="neurolint fix your-project --layers=1 --verbose" id="workflow-layer1" />
+            <CommandBlock command="neurolint fix your-project --layers=2 --verbose" id="workflow-layer2" />
+            <CommandBlock command="neurolint fix your-project --layers=3 --verbose" id="workflow-layer3" />
 
             <h3 className="text-lg text-gray-300 mb-4 mt-8">Step 5: Validate</h3>
             <CommandBlock command="neurolint validate your-project --verbose" id="workflow-validate" />
@@ -291,11 +290,11 @@ export function QuickStart() {
             <CommandBlock command="neurolint fix your-project --all-layers --dry-run --verbose" id="usecase-preview" />
 
             <h3 className="text-lg text-gray-300 mb-4 mt-8">"I want to fix everything safely"</h3>
-            <CommandBlock command="neurolint fix your-project --all-layers --backup --verbose" id="usecase-fix" />
+            <CommandBlock command="neurolint fix your-project --all-layers --verbose" id="usecase-fix" />
 
             <h3 className="text-lg text-gray-300 mb-4 mt-8">"I want to migrate to React 19"</h3>
             <CommandBlock command="neurolint migrate-react19 your-project --dry-run --verbose" id="usecase-react19-preview" />
-            <CommandBlock command="neurolint migrate-react19 your-project --backup --verbose" id="usecase-react19-apply" />
+            <CommandBlock command="neurolint migrate-react19 your-project --verbose" id="usecase-react19-apply" />
 
             <h3 className="text-lg text-gray-300 mb-4 mt-8">"I want to check Turbopack compatibility"</h3>
             <CommandBlock command="neurolint check-turbopack your-project --verbose" id="usecase-turbopack" />
@@ -309,7 +308,7 @@ export function QuickStart() {
             <h2 className="text-2xl font-bold text-white mb-8">Notes</h2>
             <div className="text-sm text-gray-400 space-y-2">
               <p>• Always use <code className="text-green-400">--dry-run</code> first to preview changes before applying</p>
-              <p>• Use <code className="text-green-400">--backup</code> flag to create restore points (optional but recommended for safety)</p>
+              <p>• Backups are created <strong>automatically by default</strong> - use <code className="text-green-400">--no-backup</code> to skip (not recommended)</p>
               <p>• Use <code className="text-green-400">--verbose</code> to see detailed output and understand what's happening</p>
               <p>• The CLI validates all transformations twice (AST + regex fallback) to prevent breaking your code</p>
               <p>• All paths can be relative or absolute - use what works best for your system</p>
