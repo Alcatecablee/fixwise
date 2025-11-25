@@ -460,19 +460,16 @@ export default function Index() {
           </div>
 
           {/* Badges */}
-          <div className="flex flex-wrap items-center justify-center gap-2.5 md:gap-3 mb-10 md:mb-12 animate-slide-in-up animate-delay-800">
-            <a 
-              href="https://github.com/Alcatecablee/Neurolint-CLI" 
-              target="_blank"
-              rel="noopener noreferrer"
+          <div className="flex flex-wrap items-center justify-center gap-3 md:gap-4 mb-10 md:mb-12 animate-slide-in-up animate-delay-800">
+            <iframe
+              src="https://ghbtns.com/github-btn.html?user=Alcatecablee&repo=Neurolint-CLI&type=star&count=true&size=large"
+              frameBorder="0"
+              scrolling="0"
+              width="130"
+              height="30"
+              title="GitHub Star Button"
               className="opacity-90 hover:opacity-100 transition-opacity"
-            >
-              <img 
-                src="https://img.shields.io/github/stars/Alcatecablee/Neurolint-CLI?style=social" 
-                alt="GitHub stars"
-                className="h-5"
-              />
-            </a>
+            />
             <a 
               href="https://www.npmjs.com/package/@neurolint/cli" 
               target="_blank"
