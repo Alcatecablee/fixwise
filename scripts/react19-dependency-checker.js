@@ -1,20 +1,10 @@
 #!/usr/bin/env node
 
 /**
- * NeuroLint - Copyright (c) 2025 NeuroLint
- * 
+ * NeuroLint - Licensed under Business Source License 1.1
  * Copyright (c) 2025 NeuroLint
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- * 
- *     http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Change Date: 2029-11-22 | Change License: GPL-3.0-or-later
+ * Full license: https://github.com/Alcatecablee/Neurolint/blob/main/LICENSE
  */
 
 
@@ -24,6 +14,7 @@
  * 
  * Scans package.json for React 19 incompatible dependencies
  * Provides compatibility reports and suggests fixes
+ */
 
 const fs = require('fs').promises;
 const path = require('path');
@@ -80,6 +71,7 @@ class React19DependencyChecker {
 
   /**
    * Main check entry point
+   */
   async check() {
     this.log('Scanning dependencies for React 19 compatibility...', 'info');
     
@@ -111,6 +103,7 @@ class React19DependencyChecker {
 
   /**
    * Check React version
+   */
   async checkReactVersion(packageJson) {
     const reactVersion = packageJson.dependencies?.react || 
                         packageJson.devDependencies?.react ||
@@ -143,6 +136,7 @@ class React19DependencyChecker {
 
   /**
    * Check all dependencies for known React 19 issues
+   */
   async checkDependencies(packageJson) {
     const issues = [];
     const allDeps = {
@@ -185,6 +179,7 @@ class React19DependencyChecker {
 
   /**
    * Check peer dependencies
+   */
   async checkPeerDependencies(packageJson) {
     const warnings = [];
 
@@ -211,6 +206,7 @@ class React19DependencyChecker {
 
   /**
    * Check if version is incompatible
+   */
   isIncompatibleVersion(version, incompatiblePatterns) {
     for (const pattern of incompatiblePatterns) {
       if (pattern.startsWith('<')) {
@@ -225,6 +221,7 @@ class React19DependencyChecker {
 
   /**
    * Compare semantic versions
+   */
   compareVersions(v1, v2) {
     const parts1 = v1.split('.').map(Number);
     const parts2 = v2.split('.').map(Number);
@@ -242,6 +239,7 @@ class React19DependencyChecker {
 
   /**
    * Generate suggestions based on findings
+   */
   generateSuggestions(results) {
     const suggestions = [];
 
@@ -276,6 +274,7 @@ class React19DependencyChecker {
 
   /**
    * Generate specific fix commands
+   */
   generateFixes(results) {
     const fixes = [];
 
@@ -315,6 +314,7 @@ class React19DependencyChecker {
 
   /**
    * Print formatted report
+   */
   printReport(results) {
     console.log('\n' + '='.repeat(60));
     console.log('  React 19 Dependency Compatibility Report');
@@ -375,6 +375,7 @@ class React19DependencyChecker {
 
   /**
    * Apply automatic fixes
+   */
   async applyFixes(fixes) {
     this.log('Applying automatic fixes...', 'info');
 

@@ -1,18 +1,20 @@
 /**
- * NeuroLint
+ * NeuroLint - Analytics and Metrics Engine
+ * 
+ * Tracks usage, performance, and provides insights across
+ * CLI, VS Code, and Web App platforms.
  * 
  * Copyright (c) 2025 NeuroLint
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * Licensed under the Business Source License 1.1
  * 
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * Use Limitation: You may not use this software to provide a commercial
+ * SaaS offering that competes with NeuroLint's code transformation services.
  * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Change Date: 2029-11-22
+ * Change License: GPL-3.0-or-later
+ * 
+ * For commercial licensing: clivemakazhu@gmail.com
+ * Full license: https://github.com/Alcatecablee/Neurolint/blob/main/LICENSE
  */
 
 const fs = require('fs').promises;
@@ -59,12 +61,14 @@ class Analytics {
 
   /**
    * Generate unique session ID
+   */
   generateSessionId() {
     return `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
   }
 
   /**
    * Track analysis event
+   */
   trackAnalysis(data) {
     const {
       files,
@@ -118,6 +122,7 @@ class Analytics {
 
   /**
    * Track fix application event
+   */
   trackFix(data) {
     const {
       appliedFixes,
@@ -154,6 +159,7 @@ class Analytics {
 
   /**
    * Track command usage
+   */
   trackCommand(command, options = {}) {
     const {
       platform = 'cli',
@@ -174,6 +180,7 @@ class Analytics {
 
   /**
    * Track user activity
+   */
   trackUser(userId, action) {
     this.metrics.usage.activeUsers.add(userId);
     
@@ -201,6 +208,7 @@ class Analytics {
 
   /**
    * Calculate code quality score
+   */
   calculateQualityScore(issues, totalFiles) {
     if (totalFiles === 0) return 100;
     
@@ -214,6 +222,7 @@ class Analytics {
 
   /**
    * Calculate modernization progress
+   */
   calculateModernizationProgress(issuesByLayer) {
     const totalIssues = Object.values(issuesByLayer).reduce((sum, count) => sum + count, 0);
     const modernizedIssues = (issuesByLayer[1] || 0) + (issuesByLayer[2] || 0); // Layers 1-2 are basic modernization
@@ -226,6 +235,7 @@ class Analytics {
 
   /**
    * Calculate technical debt
+   */
   calculateTechnicalDebt(issuesByType) {
     const criticalIssues = (issuesByType.error || 0) * 3; // Errors count 3x
     const warningIssues = (issuesByType.warning || 0) * 2; // Warnings count 2x
@@ -237,6 +247,7 @@ class Analytics {
 
   /**
    * Generate analytics report
+   */
   generateReport(options = {}) {
     const {
       includeUsers = false,
@@ -288,6 +299,7 @@ class Analytics {
 
   /**
    * Save analytics data
+   */
   async saveAnalytics() {
     try {
       const analyticsDir = path.dirname(this.analyticsPath);
@@ -311,6 +323,7 @@ class Analytics {
 
   /**
    * Load analytics data
+   */
   async loadAnalytics() {
     try {
       const data = await fs.readFile(this.analyticsPath, 'utf8');
@@ -333,6 +346,7 @@ class Analytics {
 
   /**
    * Export analytics for external analysis
+   */
   exportAnalytics(format = 'json') {
     const data = this.generateReport({ includeUsers: true, includePerformance: true, includeQuality: true });
     
@@ -353,6 +367,7 @@ class Analytics {
 
   /**
    * Convert analytics to CSV format
+   */
   convertToCSV(data) {
     const lines = [];
     
@@ -375,6 +390,7 @@ class Analytics {
 
   /**
    * Convert analytics to HTML format
+   */
   convertToHTML(data) {
     return `
 <!DOCTYPE html>
@@ -413,6 +429,7 @@ class Analytics {
 
   /**
    * Reset analytics data
+   */
   resetAnalytics() {
     this.metrics = {
       analysis: {

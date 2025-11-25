@@ -1,20 +1,10 @@
 #!/usr/bin/env node
 
 /**
- * NeuroLint - Copyright (c) 2025 NeuroLint
- * 
+ * NeuroLint - Licensed under Business Source License 1.1
  * Copyright (c) 2025 NeuroLint
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- * 
- *     http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Change Date: 2029-11-22 | Change License: GPL-3.0-or-later
+ * Full license: https://github.com/Alcatecablee/Neurolint/blob/main/LICENSE
  */
 
 
@@ -24,6 +14,7 @@
  * 
  * Detects Webpack-specific configurations that won't work with Turbopack
  * Provides migration guidance and optimization suggestions
+ */
 
 const fs = require('fs').promises;
 const path = require('path');
@@ -47,6 +38,7 @@ class TurbopackMigrationAssistant {
 
   /**
    * Main migration check
+   */
   async analyze() {
     this.log('Analyzing project for Turbopack compatibility...', 'info');
 
@@ -73,6 +65,7 @@ class TurbopackMigrationAssistant {
 
   /**
    * Check next.config for Webpack-specific settings
+   */
   async checkNextConfig() {
     const configPaths = [
       path.join(this.projectPath, 'next.config.js'),
@@ -137,6 +130,7 @@ class TurbopackMigrationAssistant {
 
   /**
    * Check for separate webpack.config.js
+   */
   async checkWebpackConfig() {
     const webpackConfigPath = path.join(this.projectPath, 'webpack.config.js');
     const exists = await fs.access(webpackConfigPath).then(() => true).catch(() => false);
@@ -154,6 +148,7 @@ class TurbopackMigrationAssistant {
 
   /**
    * Check Babel configuration
+   */
   async checkBabelConfig() {
     const babelPaths = [
       path.join(this.projectPath, '.babelrc'),
@@ -185,6 +180,7 @@ class TurbopackMigrationAssistant {
 
   /**
    * Check for custom loaders
+   */
   async checkCustomLoaders() {
     const loaderPatterns = [
       'style-loader',
@@ -222,6 +218,7 @@ class TurbopackMigrationAssistant {
 
   /**
    * Check for Webpack plugins in dependencies
+   */
   async checkPlugins() {
     const pluginPatterns = [
       'html-webpack-plugin',
@@ -256,6 +253,7 @@ class TurbopackMigrationAssistant {
 
   /**
    * Generate recommendations based on findings
+   */
   generateRecommendations() {
     const highSeverityIssues = this.issues.filter(i => i.severity === 'high').length;
     const mediumSeverityIssues = this.issues.filter(i => i.severity === 'medium').length;
@@ -291,6 +289,7 @@ class TurbopackMigrationAssistant {
 
   /**
    * Print formatted report
+   */
   printReport() {
     console.log('\n' + '='.repeat(60));
     console.log('  Turbopack Migration Analysis');
@@ -347,6 +346,7 @@ class TurbopackMigrationAssistant {
 
   /**
    * Generate migration config
+   */
   async generateMigrationConfig() {
     const config = {
       turbopackReady: this.issues.filter(i => i.severity === 'high').length === 0,

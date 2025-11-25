@@ -1,20 +1,10 @@
 #!/usr/bin/env node
 
 /**
- * NeuroLint - Copyright (c) 2025 NeuroLint
- * 
+ * NeuroLint - Licensed under Business Source License 1.1
  * Copyright (c) 2025 NeuroLint
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- * 
- *     http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Change Date: 2029-11-22 | Change License: GPL-3.0-or-later
+ * Full license: https://github.com/Alcatecablee/Neurolint/blob/main/LICENSE
  */
 
 
@@ -28,6 +18,7 @@
  * - Function export update (middleware → proxy)
  * - Async params/searchParams updates
  * - New caching APIs (updateTag, refresh, cacheLife)
+ */
 
 const fs = require('fs').promises;
 const path = require('path');
@@ -48,6 +39,7 @@ class NextJS16Migrator {
 
   /**
    * Main migration entry point
+   */
   async migrate(projectPath = process.cwd()) {
     this.log('Starting Next.js 16 migration...', 'info');
     
@@ -81,6 +73,7 @@ class NextJS16Migrator {
 
   /**
    * Migrate middleware.ts to proxy.ts
+   */
   async migrateMiddlewareToProxy(projectPath) {
     this.log('Checking for middleware.ts...', 'info');
     
@@ -155,6 +148,7 @@ class NextJS16Migrator {
 
   /**
    * Migrate experimental.ppr to Cache Components
+   */
   async migratePPRToCacheComponents(projectPath) {
     this.log('Checking for experimental.ppr configuration...', 'info');
     
@@ -242,6 +236,7 @@ class NextJS16Migrator {
 
   /**
    * Update next.config for Next.js 16 compatibility
+   */
   async updateNextConfig(projectPath) {
     this.log('Updating next.config for Next.js 16...', 'info');
     
@@ -305,6 +300,7 @@ class NextJS16Migrator {
 
   /**
    * Migrate old caching APIs to new Next.js 16 APIs
+   */
   async migrateCachingAPIs(projectPath) {
     this.log('Scanning for old caching API usage...', 'info');
     
@@ -390,6 +386,7 @@ class NextJS16Migrator {
 
   /**
    * Check if component should have 'use cache' directive
+   */
   shouldAddUseCacheDirective(content) {
     // Don't add to client components
     if (content.includes("'use client'") || content.includes('"use client"')) {
@@ -406,6 +403,7 @@ class NextJS16Migrator {
 
   /**
    * Add 'use cache' directive to file
+   */
   addUseCacheDirective(content) {
     const lines = content.split('\n');
     let insertIndex = 0;
@@ -428,6 +426,7 @@ class NextJS16Migrator {
 
   /**
    * Update async request APIs (params, searchParams, cookies, headers)
+   */
   async updateAsyncAPIs(projectPath) {
     this.log('Updating async request APIs...', 'info');
     
@@ -519,6 +518,7 @@ class NextJS16Migrator {
 
   /**
    * Convert sync params destructuring to async
+   */
   convertSyncParamsToAsync(content) {
     // Pattern 1: Page component with params
     // export default function Page({ params }) { const { id } = params }
@@ -570,6 +570,7 @@ class NextJS16Migrator {
 
   /**
    * Ensure function is async
+   */
   ensureFunctionIsAsync(content) {
     // Add async to export default function if not present
     let newContent = content.replace(
@@ -588,6 +589,7 @@ class NextJS16Migrator {
 
   /**
    * Find all source files in the project
+   */
   async findSourceFiles(projectPath) {
     const files = [];
     const extensions = ['.ts', '.tsx', '.js', '.jsx'];
@@ -622,6 +624,7 @@ class NextJS16Migrator {
 
   /**
    * Generate migration summary
+   */
   generateSummary() {
     const summary = {
       total: this.changes.length,

@@ -1,20 +1,10 @@
 #!/usr/bin/env node
 
 /**
- * NeuroLint - Copyright (c) 2025 NeuroLint
- * 
+ * NeuroLint - Licensed under Business Source License 1.1
  * Copyright (c) 2025 NeuroLint
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- * 
- *     http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Change Date: 2029-11-22 | Change License: GPL-3.0-or-later
+ * Full license: https://github.com/Alcatecablee/Neurolint/blob/main/LICENSE
  */
 
 
@@ -22,6 +12,7 @@
 /**
  * Router Complexity Assessor
  * Analyzes Next.js projects and recommends optimal routing setup
+ */
 
 const fs = require('fs').promises;
 const path = require('path');
@@ -41,6 +32,7 @@ class RouterComplexityAssessor {
 
   /**
    * Main assessment entry point
+   */
   async assess() {
     this.log('Analyzing router complexity...', 'info');
     
@@ -80,6 +72,7 @@ class RouterComplexityAssessor {
 
   /**
    * Detect App Router usage
+   */
   async detectAppRouter() {
     const appDirPath = path.join(this.projectPath, 'app');
     const srcAppDirPath = path.join(this.projectPath, 'src', 'app');
@@ -99,6 +92,7 @@ class RouterComplexityAssessor {
 
   /**
    * Detect Pages Router usage
+   */
   async detectPagesRouter() {
     const pagesDirPath = path.join(this.projectPath, 'pages');
     const srcPagesDirPath = path.join(this.projectPath, 'src', 'pages');
@@ -118,6 +112,7 @@ class RouterComplexityAssessor {
 
   /**
    * Count total routes
+   */
   async countRoutes() {
     let count = 0;
     
@@ -141,6 +136,7 @@ class RouterComplexityAssessor {
 
   /**
    * Detect middleware
+   */
   async detectMiddleware() {
     const middlewarePaths = [
       path.join(this.projectPath, 'middleware.ts'),
@@ -165,6 +161,7 @@ class RouterComplexityAssessor {
 
   /**
    * Detect API routes
+   */
   async detectAPIRoutes() {
     const apiDirs = [
       path.join(this.projectPath, 'pages', 'api'),
@@ -187,6 +184,7 @@ class RouterComplexityAssessor {
 
   /**
    * Detect Server Components
+   */
   async detectServerComponents() {
     const files = await this.findSourceFiles();
     
@@ -208,6 +206,7 @@ class RouterComplexityAssessor {
 
   /**
    * Detect Client Components
+   */
   async detectClientComponents() {
     const files = await this.findSourceFiles();
     
@@ -227,6 +226,7 @@ class RouterComplexityAssessor {
 
   /**
    * Detect SSR usage
+   */
   async detectSSR() {
     const files = await this.findSourceFiles();
     
@@ -246,6 +246,7 @@ class RouterComplexityAssessor {
 
   /**
    * Detect SSG usage
+   */
   async detectSSG() {
     const files = await this.findSourceFiles();
     
@@ -265,6 +266,7 @@ class RouterComplexityAssessor {
 
   /**
    * Calculate complexity score (0-100)
+   */
   calculateComplexity(metrics) {
     let score = 0;
 
@@ -293,6 +295,7 @@ class RouterComplexityAssessor {
 
   /**
    * Get complexity level
+   */
   getComplexityLevel(score) {
     if (score <= 30) return 'Simple';
     if (score <= 60) return 'Moderate';
@@ -302,6 +305,7 @@ class RouterComplexityAssessor {
 
   /**
    * Generate recommendations
+   */
   generateRecommendations(metrics) {
     const recommendations = [];
 
@@ -351,6 +355,7 @@ class RouterComplexityAssessor {
 
   /**
    * Print assessment report
+   */
   printReport(metrics, recommendations) {
     console.log('\n' + '='.repeat(60));
     console.log('Next.js Router Complexity Assessment');
@@ -383,6 +388,7 @@ class RouterComplexityAssessor {
 
   /**
    * Helper: Count files in directory
+   */
   async countFilesInDir(dir, pattern) {
     let count = 0;
     
@@ -407,6 +413,7 @@ class RouterComplexityAssessor {
 
   /**
    * Helper: Find all source files
+   */
   async findSourceFiles() {
     const files = [];
     const extensions = ['.ts', '.tsx', '.js', '.jsx'];

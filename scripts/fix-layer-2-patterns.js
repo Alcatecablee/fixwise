@@ -1,20 +1,10 @@
 #!/usr/bin/env node
 
 /**
- * NeuroLint - Copyright (c) 2025 NeuroLint
- * 
+ * NeuroLint - Licensed under Business Source License 1.1
  * Copyright (c) 2025 NeuroLint
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- * 
- *     http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Change Date: 2029-11-22 | Change License: GPL-3.0-or-later
+ * Full license: https://github.com/Alcatecablee/Neurolint/blob/main/LICENSE
  */
 
 
@@ -32,6 +22,7 @@
  * - Provide a `changes` array alongside `changeCount` and `warnings`
  * - Safe backups only for real files and not in dry-run
  * - Normalize no-change case to success=false with 'No changes were made'
+ */
 
 const fs = require('fs').promises;
 const path = require('path');
@@ -42,6 +33,7 @@ const ASTTransformer = require('../ast-transformer');
 /**
  * Validate syntax using Babel parser
  * Returns true if code is valid JavaScript/TypeScript, false otherwise
+ */
 function validateSyntax(code) {
   try {
     parser.parse(code, {
@@ -59,6 +51,7 @@ function validateSyntax(code) {
 /**
  * Regex-based fallback for console.log, alert, confirm, prompt removal
  * Used when AST transformation fails
+ */
 function applyRegexPatternFallbacks(input) {
   let code = input;
   const changes = [];
@@ -105,10 +98,12 @@ function applyRegexPatternFallbacks(input) {
 /**
  * React 19 Pattern Transformation Functions
  * Handles breaking changes in React 19 for legacy patterns
+ */
 
 /**
  * Convert Legacy Context to modern Context API (React 19)
  * Legacy Context (contextTypes, getChildContext) is removed in React 19
+ */
 function convertLegacyContext(code) {
   let transformedCode = code;
   const changes = [];
@@ -155,6 +150,7 @@ function convertLegacyContext(code) {
 /**
  * Convert React.createFactory to JSX (React 19)
  * React.createFactory is removed in React 19
+ */
 function convertCreateFactory(code) {
   let transformedCode = code;
   const changes = [];
@@ -206,6 +202,7 @@ function convertCreateFactory(code) {
 /**
  * Detect and warn about module pattern factories (React 19)
  * Module pattern factories are no longer supported in React 19
+ */
 function detectModulePatternFactories(code) {
   const warnings = [];
   
@@ -286,6 +283,7 @@ function detectModulePatternFactories(code) {
 
 /**
  * Apply all React 19 pattern fixes
+ */
 function applyReact19PatternFixes(code, options = {}) {
   const { verbose = false } = options;
   let transformedCode = code;

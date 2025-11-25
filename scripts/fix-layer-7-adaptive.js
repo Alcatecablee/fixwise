@@ -1,20 +1,10 @@
 #!/usr/bin/env node
 
 /**
- * NeuroLint - Copyright (c) 2025 NeuroLint
- * 
+ * NeuroLint - Licensed under Business Source License 1.1
  * Copyright (c) 2025 NeuroLint
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- * 
- *     http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Change Date: 2029-11-22 | Change License: GPL-3.0-or-later
+ * Full license: https://github.com/Alcatecablee/Neurolint/blob/main/LICENSE
  */
 
 
@@ -22,6 +12,7 @@
 /**
  * Layer 7: Adaptive Pattern Learning
  * Learns from previous layer transformations and applies patterns
+ */
 
 const fs = require('fs').promises;
 const path = require('path');
@@ -29,6 +20,7 @@ const BackupManager = require('../backup-manager');
 
 /**
  * Rule Store for managing learned patterns
+ */
 class RuleStore {
   constructor() {
     this.rules = [];
@@ -168,6 +160,7 @@ async function isRegularFile(filePath) {
 
 /**
  * Transform code using adaptive pattern learning
+ */
 async function transform(code, options = {}) {
   const { dryRun = false, verbose = false, filePath = process.cwd(), previousResults = [] } = options;
   const results = [];

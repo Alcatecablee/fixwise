@@ -1,20 +1,10 @@
 #!/usr/bin/env node
 
 /**
- * NeuroLint - Copyright (c) 2025 NeuroLint
- * 
+ * NeuroLint - Licensed under Business Source License 1.1
  * Copyright (c) 2025 NeuroLint
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- * 
- *     http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Change Date: 2029-11-22 | Change License: GPL-3.0-or-later
+ * Full license: https://github.com/Alcatecablee/Neurolint/blob/main/LICENSE
  */
 
 
@@ -24,6 +14,7 @@
  * 
  * Detects manual memoization patterns that React Compiler would handle automatically
  * Suggests enabling React Compiler for performance gains
+ */
 
 const fs = require('fs').promises;
 const path = require('path');
@@ -45,6 +36,7 @@ class ReactCompilerDetector {
 
   /**
    * Main analysis entry point
+   */
   async analyze() {
     this.log('Scanning for manual memoization patterns...', 'info');
 
@@ -71,6 +63,7 @@ class ReactCompilerDetector {
 
   /**
    * Find all source files
+   */
   async findSourceFiles() {
     const files = [];
     const extensions = ['.tsx', '.jsx', '.ts', '.js'];
@@ -105,6 +98,7 @@ class ReactCompilerDetector {
 
   /**
    * Analyze a single file for memoization patterns
+   */
   async analyzeFile(filePath) {
     try {
       const content = await fs.readFile(filePath, 'utf8');
@@ -184,6 +178,7 @@ class ReactCompilerDetector {
 
   /**
    * Find line number of a pattern
+   */
   findLineNumber(content, pattern) {
     const lines = content.split('\n');
     
@@ -210,6 +205,7 @@ class ReactCompilerDetector {
 
   /**
    * Calculate potential performance savings
+   */
   calculatePotentialSavings() {
     const totalMemoizations = this.findings.reduce((sum, f) => sum + f.count, 0);
     
@@ -224,6 +220,7 @@ class ReactCompilerDetector {
 
   /**
    * Print formatted report
+   */
   printReport() {
     console.log('\n' + '='.repeat(60));
     console.log('  React Compiler Opportunity Analysis');
@@ -308,6 +305,7 @@ class ReactCompilerDetector {
 
   /**
    * Generate cleanup suggestions
+   */
   async generateCleanupSuggestions() {
     const suggestions = [];
 
