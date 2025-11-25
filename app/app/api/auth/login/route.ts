@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
-import { validateSupabaseConfig } from "../../../../lib/demo-mode";
+import { validateSupabaseConfig, isDemoMode, DEMO_USER, DEMO_SESSION } from "../../../../lib/demo-mode";
 
 // Rate limiting for login attempts
 const loginAttempts = new Map<
@@ -59,10 +59,13 @@ const supabaseAnonKey = process.env['NEXT_PUBLIC_SUPABASE_ANON_KEY'];
 
 let supabase: any = null;
 
-if (!validateSupabaseConfig()) {
-  console.error("Invalid Supabase configuration");
-} else {
-  supabase = createClient(supabaseUrl!, supabaseAnonKey!);
+// Only create Supabase client if not in demo mode
+if (!isDemoMode()) {
+  if (!validateSupabaseConfig()) {
+    console.error("Invalid Supabase configuration");
+  } else {
+    supabase = createClient(supabaseUrl!, supabaseAnonKey!);
+  }
 }
 
 export async function POST(request: NextRequest) {
@@ -100,6 +103,26 @@ export async function POST(request: NextRequest) {
         },
         { status: 429 },
       );
+    }
+
+    // Demo mode - bypass authentication
+    if (isDemoMode()) {
+      console.log('[Demo Mode] Login attempt for:', sanitizedEmail);
+      recordLoginAttempt(identifier, true);
+      
+      return NextResponse.json({
+        success: true,
+        demoMode: true,
+        user: {
+          id: DEMO_USER.id,
+          email: DEMO_USER.email,
+          firstName: DEMO_USER.first_name,
+          lastName: DEMO_USER.last_name,
+          plan: DEMO_USER.plan,
+          emailConfirmed: DEMO_USER.email_confirmed,
+        },
+        session: DEMO_SESSION,
+      });
     }
 
     // Database mode
