@@ -138,7 +138,12 @@ export function QuickStart() {
           
           <div className="mb-12">
             <p className="text-base md:text-lg lg:text-xl text-gray-300 max-w-3xl mx-auto leading-relaxed px-4">
-              All NeuroLint commands with examples for Windows and Mac
+              Complete CLI reference with all NeuroLint commands
+            </p>
+            <p className="text-sm text-gray-400 mt-4 max-w-2xl mx-auto">
+              Replace <code className="text-green-400 bg-zinc-800 px-2 py-1 rounded">your-project</code> with your actual project path
+              <br />
+              (e.g., <code className="text-green-400">C:\Users\YourName\my-app</code> on Windows or <code className="text-green-400">/Users/YourName/my-app</code> on Mac)
             </p>
           </div>
 
@@ -162,42 +167,31 @@ export function QuickStart() {
             <p className="text-sm text-gray-400 mb-8">These commands analyze your project without making any modifications</p>
             
             <h3 className="text-lg text-gray-300 mb-4">Analyze Project</h3>
-            <CommandBlock command="neurolint analyze C:\Users\YourName\your-project" id="analyze-win" />
-            <CommandBlock command="neurolint analyze /Users/YourName/your-project" id="analyze-mac" />
-            <CommandBlock command="neurolint analyze C:\Users\YourName\your-project --verbose" id="analyze-verbose-win" />
-            <CommandBlock command="neurolint analyze /Users/YourName/your-project --verbose" id="analyze-verbose-mac" />
-            <CommandBlock command="neurolint analyze C:\Users\YourName\your-project\src --verbose" id="analyze-folder-win" />
-            <CommandBlock command="neurolint analyze /Users/YourName/your-project/src --verbose" id="analyze-folder-mac" />
+            <CommandBlock command="neurolint analyze your-project" id="analyze" />
+            <CommandBlock command="neurolint analyze your-project --verbose" id="analyze-verbose" />
+            <CommandBlock command="neurolint analyze your-project/src --verbose" id="analyze-folder" />
 
             <h3 className="text-lg text-gray-300 mb-4 mt-8">Check Project Statistics</h3>
-            <CommandBlock command="neurolint stats C:\Users\YourName\your-project --verbose" id="stats-win" />
-            <CommandBlock command="neurolint stats /Users/YourName/your-project --verbose" id="stats-mac" />
+            <CommandBlock command="neurolint stats your-project --verbose" id="stats" />
 
             <h3 className="text-lg text-gray-300 mb-4 mt-8">Validate Without Changes</h3>
-            <CommandBlock command="neurolint validate C:\Users\YourName\your-project --verbose" id="validate-win" />
-            <CommandBlock command="neurolint validate /Users/YourName/your-project --verbose" id="validate-mac" />
+            <CommandBlock command="neurolint validate your-project --verbose" id="validate" />
 
             <h3 className="text-lg text-gray-300 mb-4 mt-8">Check React 19 Dependency Compatibility</h3>
-            <CommandBlock command="neurolint check-deps C:\Users\YourName\your-project --verbose" id="check-deps-win" />
-            <CommandBlock command="neurolint check-deps /Users/YourName/your-project --verbose" id="check-deps-mac" />
-            <CommandBlock command="neurolint check-deps C:\Users\YourName\your-project --fix --verbose" id="check-deps-fix-win" />
-            <CommandBlock command="neurolint check-deps /Users/YourName/your-project --fix --verbose" id="check-deps-fix-mac" />
+            <CommandBlock command="neurolint check-deps your-project --verbose" id="check-deps" />
+            <CommandBlock command="neurolint check-deps your-project --fix --verbose" id="check-deps-fix" />
 
             <h3 className="text-lg text-gray-300 mb-4 mt-8">Check Turbopack Migration Readiness</h3>
-            <CommandBlock command="neurolint check-turbopack C:\Users\YourName\your-project --verbose" id="turbopack-win" />
-            <CommandBlock command="neurolint check-turbopack /Users/YourName/your-project --verbose" id="turbopack-mac" />
+            <CommandBlock command="neurolint check-turbopack your-project --verbose" id="turbopack" />
 
             <h3 className="text-lg text-gray-300 mb-4 mt-8">Check React Compiler Opportunities</h3>
-            <CommandBlock command="neurolint check-compiler C:\Users\YourName\your-project --verbose" id="compiler-win" />
-            <CommandBlock command="neurolint check-compiler /Users/YourName/your-project --verbose" id="compiler-mac" />
+            <CommandBlock command="neurolint check-compiler your-project --verbose" id="compiler" />
 
             <h3 className="text-lg text-gray-300 mb-4 mt-8">Assess Router Complexity</h3>
-            <CommandBlock command="neurolint assess-router C:\Users\YourName\your-project --verbose" id="router-win" />
-            <CommandBlock command="neurolint assess-router /Users/YourName/your-project --verbose" id="router-mac" />
+            <CommandBlock command="neurolint assess-router your-project --verbose" id="router" />
 
             <h3 className="text-lg text-gray-300 mb-4 mt-8">Detect React 19.2 Feature Opportunities</h3>
-            <CommandBlock command="neurolint detect-react192 C:\Users\YourName\your-project --verbose" id="react192-win" />
-            <CommandBlock command="neurolint detect-react192 /Users/YourName/your-project --verbose" id="react192-mac" />
+            <CommandBlock command="neurolint detect-react192 your-project --verbose" id="react192" />
           </div>
 
           {/* Dry Run Commands */}
@@ -206,53 +200,36 @@ export function QuickStart() {
             <p className="text-sm text-gray-400 mb-8">See what would be fixed without actually changing your files</p>
             
             <h3 className="text-lg text-gray-300 mb-4">Preview All Layer Fixes</h3>
-            <CommandBlock command="neurolint fix C:\Users\YourName\your-project --all-layers --dry-run --verbose" id="preview-all-win" />
-            <CommandBlock command="neurolint fix /Users/YourName/your-project --all-layers --dry-run --verbose" id="preview-all-mac" />
+            <CommandBlock command="neurolint fix your-project --all-layers --dry-run --verbose" id="preview-all" />
 
             <h3 className="text-lg text-gray-300 mb-4 mt-8">Preview Specific Layer Fixes</h3>
-            <CommandBlock command="neurolint fix C:\Users\YourName\your-project --layers=1 --dry-run --verbose" id="layer1-win" />
-            <CommandBlock command="neurolint fix /Users/YourName/your-project --layers=1 --dry-run --verbose" id="layer1-mac" />
-            <CommandBlock command="neurolint fix C:\Users\YourName\your-project --layers=2 --dry-run --verbose" id="layer2-win" />
-            <CommandBlock command="neurolint fix /Users/YourName/your-project --layers=2 --dry-run --verbose" id="layer2-mac" />
-            <CommandBlock command="neurolint fix C:\Users\YourName\your-project --layers=3 --dry-run --verbose" id="layer3-win" />
-            <CommandBlock command="neurolint fix /Users/YourName/your-project --layers=3 --dry-run --verbose" id="layer3-mac" />
-            <CommandBlock command="neurolint fix C:\Users\YourName\your-project --layers=4 --dry-run --verbose" id="layer4-win" />
-            <CommandBlock command="neurolint fix /Users/YourName/your-project --layers=4 --dry-run --verbose" id="layer4-mac" />
-            <CommandBlock command="neurolint fix C:\Users\YourName\your-project --layers=5 --dry-run --verbose" id="layer5-win" />
-            <CommandBlock command="neurolint fix /Users/YourName/your-project --layers=5 --dry-run --verbose" id="layer5-mac" />
-            <CommandBlock command="neurolint fix C:\Users\YourName\your-project --layers=6 --dry-run --verbose" id="layer6-win" />
-            <CommandBlock command="neurolint fix /Users/YourName/your-project --layers=6 --dry-run --verbose" id="layer6-mac" />
-            <CommandBlock command="neurolint fix C:\Users\YourName\your-project --layers=7 --dry-run --verbose" id="layer7-win" />
-            <CommandBlock command="neurolint fix /Users/YourName/your-project --layers=7 --dry-run --verbose" id="layer7-mac" />
-            <CommandBlock command="neurolint fix C:\Users\YourName\your-project --layers=1,2,3 --dry-run --verbose" id="layers-multi-win" />
-            <CommandBlock command="neurolint fix /Users/YourName/your-project --layers=1,2,3 --dry-run --verbose" id="layers-multi-mac" />
+            <CommandBlock command="neurolint fix your-project --layers=1 --dry-run --verbose" id="layer1" />
+            <CommandBlock command="neurolint fix your-project --layers=2 --dry-run --verbose" id="layer2" />
+            <CommandBlock command="neurolint fix your-project --layers=3 --dry-run --verbose" id="layer3" />
+            <CommandBlock command="neurolint fix your-project --layers=4 --dry-run --verbose" id="layer4" />
+            <CommandBlock command="neurolint fix your-project --layers=5 --dry-run --verbose" id="layer5" />
+            <CommandBlock command="neurolint fix your-project --layers=6 --dry-run --verbose" id="layer6" />
+            <CommandBlock command="neurolint fix your-project --layers=7 --dry-run --verbose" id="layer7" />
+            <CommandBlock command="neurolint fix your-project --layers=1,2,3 --dry-run --verbose" id="layers-multi" />
 
             <h3 className="text-lg text-gray-300 mb-4 mt-8">Preview Migration Commands</h3>
-            <CommandBlock command="neurolint migrate-react19 C:\Users\YourName\your-project --dry-run --verbose" id="migrate-react19-preview-win" />
-            <CommandBlock command="neurolint migrate-react19 /Users/YourName/your-project --dry-run --verbose" id="migrate-react19-preview-mac" />
-            <CommandBlock command="neurolint migrate-nextjs-16 C:\Users\YourName\your-project --dry-run --verbose" id="migrate-next16-preview-win" />
-            <CommandBlock command="neurolint migrate-nextjs-16 /Users/YourName/your-project --dry-run --verbose" id="migrate-next16-preview-mac" />
-            <CommandBlock command="neurolint migrate-nextjs-15.5 C:\Users\YourName\your-project --dry-run --verbose" id="migrate-next155-preview-win" />
-            <CommandBlock command="neurolint migrate-nextjs-15.5 /Users/YourName/your-project --dry-run --verbose" id="migrate-next155-preview-mac" />
-            <CommandBlock command="neurolint migrate-biome C:\Users\YourName\your-project --dry-run --verbose" id="migrate-biome-preview-win" />
-            <CommandBlock command="neurolint migrate-biome /Users/YourName/your-project --dry-run --verbose" id="migrate-biome-preview-mac" />
+            <CommandBlock command="neurolint migrate-react19 your-project --dry-run --verbose" id="migrate-react19-preview" />
+            <CommandBlock command="neurolint migrate-nextjs-16 your-project --dry-run --verbose" id="migrate-next16-preview" />
+            <CommandBlock command="neurolint migrate-nextjs-15.5 your-project --dry-run --verbose" id="migrate-next155-preview" />
+            <CommandBlock command="neurolint migrate-biome your-project --dry-run --verbose" id="migrate-biome-preview" />
           </div>
 
           {/* Actual Fix Commands */}
           <div className="mb-16 text-left">
             <h2 className="text-2xl font-bold text-white mb-8">Actual Fix Commands (MAKES CHANGES - Use with caution)</h2>
             
-            <h3 className="text-lg text-gray-300 mb-4">Apply Fixes with Backup</h3>
-            <CommandBlock command="neurolint fix C:\Users\YourName\your-project --all-layers --backup --verbose" id="fix-backup-all-win" />
-            <CommandBlock command="neurolint fix /Users/YourName/your-project --all-layers --backup --verbose" id="fix-backup-all-mac" />
-            <CommandBlock command="neurolint fix C:\Users\YourName\your-project --layers=1,2,3 --backup --verbose" id="fix-backup-specific-win" />
-            <CommandBlock command="neurolint fix /Users/YourName/your-project --layers=1,2,3 --backup --verbose" id="fix-backup-specific-mac" />
+            <h3 className="text-lg text-gray-300 mb-4">Apply Fixes with Backup (Recommended)</h3>
+            <CommandBlock command="neurolint fix your-project --all-layers --backup --verbose" id="fix-backup-all" />
+            <CommandBlock command="neurolint fix your-project --layers=1,2,3 --backup --verbose" id="fix-backup-specific" />
 
-            <h3 className="text-lg text-gray-300 mb-4 mt-8">Apply Fixes Without Backup (Use with caution)</h3>
-            <CommandBlock command="neurolint fix C:\Users\YourName\your-project --all-layers --verbose" id="fix-no-backup-all-win" />
-            <CommandBlock command="neurolint fix /Users/YourName/your-project --all-layers --verbose" id="fix-no-backup-all-mac" />
-            <CommandBlock command="neurolint fix C:\Users\YourName\your-project --layers=1 --verbose" id="fix-no-backup-layer1-win" />
-            <CommandBlock command="neurolint fix /Users/YourName/your-project --layers=1 --verbose" id="fix-no-backup-layer1-mac" />
+            <h3 className="text-lg text-gray-300 mb-4 mt-8">Apply Fixes Without Backup</h3>
+            <CommandBlock command="neurolint fix your-project --all-layers --verbose" id="fix-no-backup-all" />
+            <CommandBlock command="neurolint fix your-project --layers=1 --verbose" id="fix-no-backup-layer1" />
           </div>
 
           {/* Migration Commands */}
@@ -260,18 +237,14 @@ export function QuickStart() {
             <h2 className="text-2xl font-bold text-white mb-8">Migration Commands (MAKES CHANGES)</h2>
             
             <h3 className="text-lg text-gray-300 mb-4">React 19 Migration</h3>
-            <CommandBlock command="neurolint migrate-react19 C:\Users\YourName\your-project --backup --verbose" id="migrate-react19-backup-win" />
-            <CommandBlock command="neurolint migrate-react19 /Users/YourName/your-project --backup --verbose" id="migrate-react19-backup-mac" />
-            <CommandBlock command="neurolint migrate-react19 C:\Users\YourName\your-project --verbose" id="migrate-react19-no-backup-win" />
-            <CommandBlock command="neurolint migrate-react19 /Users/YourName/your-project --verbose" id="migrate-react19-no-backup-mac" />
+            <CommandBlock command="neurolint migrate-react19 your-project --backup --verbose" id="migrate-react19-backup" />
+            <CommandBlock command="neurolint migrate-react19 your-project --verbose" id="migrate-react19-no-backup" />
 
             <h3 className="text-lg text-gray-300 mb-4 mt-8">Next.js 16 Migration</h3>
-            <CommandBlock command="neurolint migrate-nextjs-16 C:\Users\YourName\your-project --backup --verbose" id="migrate-next16-win" />
-            <CommandBlock command="neurolint migrate-nextjs-16 /Users/YourName/your-project --backup --verbose" id="migrate-next16-mac" />
+            <CommandBlock command="neurolint migrate-nextjs-16 your-project --backup --verbose" id="migrate-next16" />
 
             <h3 className="text-lg text-gray-300 mb-4 mt-8">Biome Migration</h3>
-            <CommandBlock command="neurolint migrate-biome C:\Users\YourName\your-project --backup --verbose" id="migrate-biome-win" />
-            <CommandBlock command="neurolint migrate-biome /Users/YourName/your-project --backup --verbose" id="migrate-biome-mac" />
+            <CommandBlock command="neurolint migrate-biome your-project --backup --verbose" id="migrate-biome" />
           </div>
 
           {/* Backup Management */}
@@ -290,28 +263,21 @@ export function QuickStart() {
             <h2 className="text-2xl font-bold text-white mb-8">Testing Workflow (Recommended Order)</h2>
             
             <h3 className="text-lg text-gray-300 mb-4">Step 1: Analyze First</h3>
-            <CommandBlock command="neurolint analyze C:\Users\YourName\your-project --verbose" id="workflow-analyze-win" />
-            <CommandBlock command="neurolint analyze /Users/YourName/your-project --verbose" id="workflow-analyze-mac" />
+            <CommandBlock command="neurolint analyze your-project --verbose" id="workflow-analyze" />
 
             <h3 className="text-lg text-gray-300 mb-4 mt-8">Step 2: Check Dependencies</h3>
-            <CommandBlock command="neurolint check-deps C:\Users\YourName\your-project --verbose" id="workflow-deps-win" />
-            <CommandBlock command="neurolint check-deps /Users/YourName/your-project --verbose" id="workflow-deps-mac" />
+            <CommandBlock command="neurolint check-deps your-project --verbose" id="workflow-deps" />
 
             <h3 className="text-lg text-gray-300 mb-4 mt-8">Step 3: Preview Fixes</h3>
-            <CommandBlock command="neurolint fix C:\Users\YourName\your-project --all-layers --dry-run --verbose" id="workflow-preview-win" />
-            <CommandBlock command="neurolint fix /Users/YourName/your-project --all-layers --dry-run --verbose" id="workflow-preview-mac" />
+            <CommandBlock command="neurolint fix your-project --all-layers --dry-run --verbose" id="workflow-preview" />
 
             <h3 className="text-lg text-gray-300 mb-4 mt-8">Step 4: Apply Layer by Layer (Safest Approach)</h3>
-            <CommandBlock command="neurolint fix C:\Users\YourName\your-project --layers=1 --backup --verbose" id="workflow-layer1-win" />
-            <CommandBlock command="neurolint fix /Users/YourName/your-project --layers=1 --backup --verbose" id="workflow-layer1-mac" />
-            <CommandBlock command="neurolint fix C:\Users\YourName\your-project --layers=2 --backup --verbose" id="workflow-layer2-win" />
-            <CommandBlock command="neurolint fix /Users/YourName/your-project --layers=2 --backup --verbose" id="workflow-layer2-mac" />
-            <CommandBlock command="neurolint fix C:\Users\YourName\your-project --layers=3 --backup --verbose" id="workflow-layer3-win" />
-            <CommandBlock command="neurolint fix /Users/YourName/your-project --layers=3 --backup --verbose" id="workflow-layer3-mac" />
+            <CommandBlock command="neurolint fix your-project --layers=1 --backup --verbose" id="workflow-layer1" />
+            <CommandBlock command="neurolint fix your-project --layers=2 --backup --verbose" id="workflow-layer2" />
+            <CommandBlock command="neurolint fix your-project --layers=3 --backup --verbose" id="workflow-layer3" />
 
             <h3 className="text-lg text-gray-300 mb-4 mt-8">Step 5: Validate</h3>
-            <CommandBlock command="neurolint validate C:\Users\YourName\your-project --verbose" id="workflow-validate-win" />
-            <CommandBlock command="neurolint validate /Users/YourName/your-project --verbose" id="workflow-validate-mac" />
+            <CommandBlock command="neurolint validate your-project --verbose" id="workflow-validate" />
           </div>
 
           {/* Quick Reference by Use Case */}
@@ -319,26 +285,20 @@ export function QuickStart() {
             <h2 className="text-2xl font-bold text-white mb-8">Quick Reference by Use Case</h2>
             
             <h3 className="text-lg text-gray-300 mb-4">"I want to see what issues exist"</h3>
-            <CommandBlock command="neurolint analyze C:\Users\YourName\your-project --verbose" id="usecase-issues-win" />
-            <CommandBlock command="neurolint analyze /Users/YourName/your-project --verbose" id="usecase-issues-mac" />
+            <CommandBlock command="neurolint analyze your-project --verbose" id="usecase-issues" />
 
             <h3 className="text-lg text-gray-300 mb-4 mt-8">"I want to see what would be fixed"</h3>
-            <CommandBlock command="neurolint fix C:\Users\YourName\your-project --all-layers --dry-run --verbose" id="usecase-preview-win" />
-            <CommandBlock command="neurolint fix /Users/YourName/your-project --all-layers --dry-run --verbose" id="usecase-preview-mac" />
+            <CommandBlock command="neurolint fix your-project --all-layers --dry-run --verbose" id="usecase-preview" />
 
             <h3 className="text-lg text-gray-300 mb-4 mt-8">"I want to fix everything safely"</h3>
-            <CommandBlock command="neurolint fix C:\Users\YourName\your-project --all-layers --backup --verbose" id="usecase-fix-win" />
-            <CommandBlock command="neurolint fix /Users/YourName/your-project --all-layers --backup --verbose" id="usecase-fix-mac" />
+            <CommandBlock command="neurolint fix your-project --all-layers --backup --verbose" id="usecase-fix" />
 
             <h3 className="text-lg text-gray-300 mb-4 mt-8">"I want to migrate to React 19"</h3>
-            <CommandBlock command="neurolint migrate-react19 C:\Users\YourName\your-project --dry-run --verbose" id="usecase-react19-preview-win" />
-            <CommandBlock command="neurolint migrate-react19 /Users/YourName/your-project --dry-run --verbose" id="usecase-react19-preview-mac" />
-            <CommandBlock command="neurolint migrate-react19 C:\Users\YourName\your-project --backup --verbose" id="usecase-react19-apply-win" />
-            <CommandBlock command="neurolint migrate-react19 /Users/YourName/your-project --backup --verbose" id="usecase-react19-apply-mac" />
+            <CommandBlock command="neurolint migrate-react19 your-project --dry-run --verbose" id="usecase-react19-preview" />
+            <CommandBlock command="neurolint migrate-react19 your-project --backup --verbose" id="usecase-react19-apply" />
 
             <h3 className="text-lg text-gray-300 mb-4 mt-8">"I want to check Turbopack compatibility"</h3>
-            <CommandBlock command="neurolint check-turbopack C:\Users\YourName\your-project --verbose" id="usecase-turbopack-win" />
-            <CommandBlock command="neurolint check-turbopack /Users/YourName/your-project --verbose" id="usecase-turbopack-mac" />
+            <CommandBlock command="neurolint check-turbopack your-project --verbose" id="usecase-turbopack" />
 
             <h3 className="text-lg text-gray-300 mb-4 mt-8">"I need to undo changes"</h3>
             <CommandBlock command="neurolint restore --interactive" id="usecase-undo" />
@@ -349,11 +309,10 @@ export function QuickStart() {
             <h2 className="text-2xl font-bold text-white mb-8">Notes</h2>
             <div className="text-sm text-gray-400 space-y-2">
               <p>• Always use <code className="text-green-400">--dry-run</code> first to preview changes before applying</p>
-              <p>• Always use <code className="text-green-400">--backup</code> when making actual changes to create restore points</p>
+              <p>• Use <code className="text-green-400">--backup</code> flag to create restore points (optional but recommended for safety)</p>
               <p>• Use <code className="text-green-400">--verbose</code> to see detailed output and understand what's happening</p>
               <p>• The CLI validates all transformations twice (AST + regex fallback) to prevent breaking your code</p>
-              <p>• All paths can be relative or absolute</p>
-              <p>• On Windows, use backslashes <code className="text-green-400">\</code> or forward slashes <code className="text-green-400">/</code> in paths</p>
+              <p>• All paths can be relative or absolute - use what works best for your system</p>
             </div>
           </div>
         </div>
