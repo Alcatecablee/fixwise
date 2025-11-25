@@ -1,17 +1,22 @@
-import { Copy, Check, X } from "lucide-react";
-import { useState } from "react";
+import { Copy, Check, X, Menu } from "lucide-react";
+import { useState, useEffect } from "react";
 
 const BetaBanner = ({ onClose }: { onClose: () => void }) => {
   return (
-    <div className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white py-3 px-4 relative">
+    <div 
+      className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white py-3 px-4 relative transition-all duration-300 ease-out"
+      role="banner"
+      aria-label="Beta announcement"
+    >
       <div className="container mx-auto flex items-center justify-center gap-2 text-sm md:text-base">
-        <p className="text-center">
+        <p className="text-center pr-8 md:pr-0">
           <strong>NeuroLint CLI is currently in beta.</strong> We're actively improving and would love your feedback and contribution!
         </p>
         <button
           onClick={onClose}
-          className="absolute right-4 top-1/2 -translate-y-1/2 hover:bg-white/20 rounded-full p-1 transition-colors"
-          aria-label="Close banner"
+          className="absolute right-4 top-1/2 -translate-y-1/2 hover:bg-white/20 rounded-full p-2 transition-all duration-200 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-white/50"
+          aria-label="Close beta announcement banner"
+          title="Close banner"
         >
           <X size={18} />
         </button>
@@ -23,11 +28,24 @@ const BetaBanner = ({ onClose }: { onClose: () => void }) => {
 export function QuickStart() {
   const [copiedCommand, setCopiedCommand] = useState<string | null>(null);
   const [bannerVisible, setBannerVisible] = useState(true);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  const copyToClipboard = (command: string, id: string) => {
-    navigator.clipboard.writeText(command);
-    setCopiedCommand(id);
-    setTimeout(() => setCopiedCommand(null), 2000);
+  useEffect(() => {
+    // Smooth scroll behavior
+    document.documentElement.style.scrollBehavior = 'smooth';
+    return () => {
+      document.documentElement.style.scrollBehavior = 'auto';
+    };
+  }, []);
+
+  const copyToClipboard = async (command: string, id: string) => {
+    try {
+      await navigator.clipboard.writeText(command);
+      setCopiedCommand(id);
+      setTimeout(() => setCopiedCommand(null), 2000);
+    } catch (err) {
+      console.error('Failed to copy:', err);
+    }
   };
 
   const CommandBlock = ({ 
@@ -37,26 +55,27 @@ export function QuickStart() {
     command: string; 
     id: string;
   }) => (
-    <div className="max-w-2xl mx-auto bg-zinc-900/80 border border-zinc-700/50 rounded-xl p-4 md:p-5 backdrop-blur-sm relative group hover:border-zinc-600/50 transition-colors duration-300 mb-4">
-      <code className="text-green-400 font-mono text-sm md:text-base block text-center pr-10">
+    <div className="max-w-2xl mx-auto bg-zinc-900/90 border border-zinc-700/50 rounded-xl p-4 md:p-5 backdrop-blur-sm relative group hover:border-zinc-600 hover:bg-zinc-800/90 hover:shadow-lg hover:shadow-zinc-900/50 transition-all duration-300 ease-out mb-4 transform hover:scale-[1.01]">
+      <code className="text-green-400 font-mono text-xs sm:text-sm md:text-base block pr-12 md:pr-14 break-all">
         {command}
       </code>
       <button
         onClick={() => copyToClipboard(command, id)}
-        className="absolute right-3 top-1/2 -translate-y-1/2 p-2 hover:bg-white/10 rounded-md transition-colors"
-        aria-label="Copy command"
+        className="absolute right-3 top-1/2 -translate-y-1/2 p-2.5 md:p-3 hover:bg-white/10 rounded-lg transition-all duration-200 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-green-400/50 active:scale-95 min-w-[44px] min-h-[44px] flex items-center justify-center"
+        aria-label={copiedCommand === id ? "Command copied" : `Copy command: ${command}`}
+        title={copiedCommand === id ? "Copied!" : "Copy to clipboard"}
       >
         {copiedCommand === id ? (
-          <Check className="w-4 h-4 md:w-5 md:h-5 text-green-400" />
+          <Check className="w-5 h-5 text-green-400" aria-hidden="true" />
         ) : (
-          <Copy className="w-4 h-4 md:w-5 md:h-5 text-gray-400 group-hover:text-white" />
+          <Copy className="w-5 h-5 text-gray-400 group-hover:text-white transition-colors duration-200" aria-hidden="true" />
         )}
       </button>
     </div>
   );
 
   return (
-    <div className="min-h-screen bg-black text-white relative overflow-hidden" id="main-content">
+    <div className="min-h-screen bg-black text-white relative overflow-hidden scroll-smooth" id="main-content">
       {/* Beta Banner */}
       {bannerVisible && <BetaBanner onClose={() => setBannerVisible(false)} />}
 
@@ -69,30 +88,39 @@ export function QuickStart() {
 
       {/* Navigation Header */}
       <nav 
-        className="fixed top-0 w-full z-50 bg-black/30 backdrop-blur-md border-b border-white/10 transition-all duration-300" 
+        className="fixed top-0 w-full z-50 bg-black/40 backdrop-blur-md border-b border-white/10 transition-all duration-300 ease-out" 
         style={{ marginTop: bannerVisible ? '48px' : '0' }}
+        role="navigation"
+        aria-label="Main navigation"
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
-            <a href="/" className="flex items-center">
-              <img src="/logo.png" alt="NeuroLint" className="h-9" />
+            <a 
+              href="/" 
+              className="flex items-center focus:outline-none focus:ring-2 focus:ring-white/50 rounded-md transition-all duration-200"
+              aria-label="NeuroLint home"
+            >
+              <img src="/logo.png" alt="NeuroLint logo" className="h-9" />
             </a>
-            <div className="flex items-center gap-6">
+            
+            {/* Desktop Navigation */}
+            <div className="hidden md:flex items-center gap-6">
               <a 
                 href="/" 
-                className="text-gray-300 hover:text-white transition-colors text-sm font-medium"
+                className="text-gray-300 hover:text-white transition-all duration-200 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-white/50 rounded px-2 py-1"
               >
                 Home
               </a>
               <a 
                 href="/quick-start" 
-                className="text-white font-medium text-sm"
+                className="text-white font-medium text-sm focus:outline-none focus:ring-2 focus:ring-white/50 rounded px-2 py-1"
+                aria-current="page"
               >
                 Quick Start
               </a>
               <a 
                 href="/#faq" 
-                className="text-gray-300 hover:text-white transition-colors text-sm font-medium"
+                className="text-gray-300 hover:text-white transition-all duration-200 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-white/50 rounded px-2 py-1"
               >
                 FAQ
               </a>
@@ -100,7 +128,7 @@ export function QuickStart() {
                 href="https://github.com/Alcatecablee/Neurolint-CLI/blob/main/CLI_USAGE.md"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-gray-300 hover:text-white transition-colors text-sm font-medium"
+                className="text-gray-300 hover:text-white transition-all duration-200 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-white/50 rounded px-2 py-1"
               >
                 Docs
               </a>
@@ -108,48 +136,112 @@ export function QuickStart() {
                 href="https://www.npmjs.com/package/@neurolint/cli"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="px-6 py-2.5 bg-white text-black rounded-lg font-bold hover:bg-gray-100 transition-colors text-sm shadow-lg"
+                className="px-6 py-2.5 bg-white text-black rounded-lg font-bold hover:bg-gray-100 hover:shadow-xl transition-all duration-200 text-sm shadow-lg focus:outline-none focus:ring-2 focus:ring-white/50 hover:scale-105 active:scale-95"
               >
                 Install
               </a>
             </div>
+
+            {/* Mobile Menu Button */}
+            <button
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              className="md:hidden p-2 text-gray-300 hover:text-white focus:outline-none focus:ring-2 focus:ring-white/50 rounded-lg transition-all duration-200 min-w-[44px] min-h-[44px]"
+              aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
+              aria-expanded={mobileMenuOpen}
+              aria-controls="mobile-menu"
+            >
+              <Menu size={24} aria-hidden="true" />
+            </button>
           </div>
+
+          {/* Mobile Menu */}
+          {mobileMenuOpen && (
+            <div 
+              id="mobile-menu"
+              className="md:hidden py-4 border-t border-white/10 animate-fadeIn"
+              role="menu"
+            >
+              <div className="flex flex-col gap-3">
+                <a 
+                  href="/" 
+                  className="text-gray-300 hover:text-white transition-all duration-200 text-base font-medium py-3 px-4 rounded-lg hover:bg-white/5 focus:outline-none focus:ring-2 focus:ring-white/50"
+                  role="menuitem"
+                >
+                  Home
+                </a>
+                <a 
+                  href="/quick-start" 
+                  className="text-white font-medium text-base py-3 px-4 rounded-lg bg-white/10 focus:outline-none focus:ring-2 focus:ring-white/50"
+                  aria-current="page"
+                  role="menuitem"
+                >
+                  Quick Start
+                </a>
+                <a 
+                  href="/#faq" 
+                  className="text-gray-300 hover:text-white transition-all duration-200 text-base font-medium py-3 px-4 rounded-lg hover:bg-white/5 focus:outline-none focus:ring-2 focus:ring-white/50"
+                  role="menuitem"
+                >
+                  FAQ
+                </a>
+                <a 
+                  href="https://github.com/Alcatecablee/Neurolint-CLI/blob/main/CLI_USAGE.md"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-gray-300 hover:text-white transition-all duration-200 text-base font-medium py-3 px-4 rounded-lg hover:bg-white/5 focus:outline-none focus:ring-2 focus:ring-white/50"
+                  role="menuitem"
+                >
+                  Docs
+                </a>
+                <a 
+                  href="https://www.npmjs.com/package/@neurolint/cli"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mt-2 px-6 py-3 bg-white text-black rounded-lg font-bold hover:bg-gray-100 transition-all duration-200 text-center shadow-lg focus:outline-none focus:ring-2 focus:ring-white/50 active:scale-95"
+                  role="menuitem"
+                >
+                  Install
+                </a>
+              </div>
+            </div>
+          )}
         </div>
       </nav>
 
       {/* Main Content */}
       <section
-        className="min-h-screen flex items-center justify-center text-center px-4 py-16 pt-20 relative"
+        className="min-h-screen flex items-center justify-center text-center px-4 sm:px-6 py-20 md:py-24 pt-24 md:pt-32 relative"
         aria-label="Quick Start Guide"
         role="main"
       >
-        <div className="max-w-6xl mx-auto z-10">
-          <div className="mb-6 md:mb-8">
+        <div className="max-w-6xl mx-auto z-10 w-full">
+          <div className="mb-6 md:mb-8 animate-fadeIn">
             <span
-              className="inline-block px-4 md:px-5 py-1.5 md:py-2 bg-white text-black rounded-full text-xs md:text-sm font-bold shadow-md hover:shadow-lg transition-shadow duration-300 cursor-default"
+              className="inline-block px-5 md:px-6 py-2 md:py-2.5 bg-white text-black rounded-full text-xs md:text-sm font-bold shadow-md hover:shadow-xl transition-all duration-300 cursor-default hover:scale-105"
+              role="status"
             >
               Complete CLI Reference
             </span>
           </div>
           
-          <h1 className="text-5xl md:text-7xl font-black mb-8 tracking-tight text-white">
+          <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black mb-6 md:mb-8 tracking-tight text-white animate-fadeIn">
             Quick Start
           </h1>
           
-          <div className="mb-12">
-            <p className="text-base md:text-lg lg:text-xl text-gray-300 max-w-3xl mx-auto leading-relaxed px-4">
+          <div className="mb-12 md:mb-16 animate-fadeIn">
+            <p className="text-base sm:text-lg md:text-xl text-gray-300 max-w-3xl mx-auto leading-relaxed px-2 sm:px-4">
               Complete CLI reference with all NeuroLint commands
             </p>
-            <p className="text-sm text-gray-400 mt-4 max-w-2xl mx-auto">
-              Replace <code className="text-green-400 bg-zinc-800 px-2 py-1 rounded">your-project</code> with your actual project path
-              <br />
-              (e.g., <code className="text-green-400">C:\Users\YourName\my-app</code> on Windows or <code className="text-green-400">/Users/YourName/my-app</code> on Mac)
+            <p className="text-sm sm:text-base text-gray-400 mt-4 md:mt-6 max-w-2xl mx-auto px-2 sm:px-4">
+              Replace <code className="text-green-400 bg-zinc-800 px-2 py-0.5 rounded text-xs sm:text-sm">your-project</code> with your actual project path
+              <br className="hidden sm:block" />
+              <span className="text-xs sm:text-sm">(e.g., <code className="text-green-400 text-xs sm:text-sm">C:\Users\YourName\my-app</code> on Windows or <code className="text-green-400 text-xs sm:text-sm">/Users/YourName/my-app</code> on Mac)</span>
             </p>
           </div>
 
           {/* Basic Commands */}
-          <div className="mb-16 text-left">
-            <h2 className="text-2xl font-bold text-white mb-8">Basic Commands</h2>
+          <div className="mb-12 md:mb-16 text-left">
+            <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-white mb-6 md:mb-8 scroll-mt-24" id="basic-commands">Basic Commands</h2>
             
             <h3 className="text-lg text-gray-300 mb-4">Show Version</h3>
             <CommandBlock command="neurolint --version" id="version" />
