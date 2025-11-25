@@ -1,25 +1,45 @@
 import { Copy, Check, X, Menu } from "lucide-react";
 import { useState, useEffect } from "react";
 
+// Beta Banner Component - Floating notification style
 const BetaBanner = ({ onClose }: { onClose: () => void }) => {
   return (
     <div 
-      className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white py-3 px-4 relative transition-all duration-300 ease-out"
+      className="fixed bottom-6 left-6 z-50 max-w-sm animate-slide-in-up"
       role="banner"
       aria-label="Beta announcement"
     >
-      <div className="container mx-auto flex items-center justify-center gap-2 text-sm md:text-base">
-        <p className="text-center pr-8 md:pr-0">
-          <strong>NeuroLint CLI is currently in beta.</strong> We're actively improving and would love your feedback and contribution!
-        </p>
-        <button
-          onClick={onClose}
-          className="absolute right-4 top-1/2 -translate-y-1/2 hover:bg-white/20 rounded-full p-2 transition-all duration-200 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-white/50"
-          aria-label="Close beta announcement banner"
-          title="Close banner"
-        >
-          <X size={18} />
-        </button>
+      <div className="bg-zinc-900/95 backdrop-blur-md border border-white/10 rounded-xl p-4 shadow-2xl">
+        <div className="flex items-start gap-3">
+          <div className="flex-shrink-0 w-8 h-8 bg-gradient-to-br from-blue-500/20 to-purple-500/20 rounded-lg flex items-center justify-center border border-white/10">
+            <span className="text-sm">Beta</span>
+          </div>
+          <div className="flex-1 min-w-0">
+            <p className="text-sm text-gray-300 leading-relaxed">
+              <span className="text-white font-medium">NeuroLint CLI is in beta.</span>{" "}
+              We'd love your feedback and contributions!
+            </p>
+            <a 
+              href="https://github.com/Alcatecablee/Neurolint-CLI/issues"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1 mt-2 text-xs text-blue-400 hover:text-blue-300 transition-colors"
+            >
+              Share feedback
+              <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+              </svg>
+            </a>
+          </div>
+          <button
+            onClick={onClose}
+            className="flex-shrink-0 p-1 hover:bg-white/10 rounded-lg transition-colors text-gray-500 hover:text-white"
+            aria-label="Close beta announcement banner"
+            title="Close banner"
+          >
+            <X size={16} />
+          </button>
+        </div>
       </div>
     </div>
   );
@@ -88,8 +108,7 @@ export function QuickStart() {
 
       {/* Navigation Header */}
       <nav 
-        className="fixed top-0 w-full z-50 bg-black/40 backdrop-blur-md border-b border-white/10 transition-all duration-300 ease-out" 
-        style={{ marginTop: bannerVisible ? '48px' : '0' }}
+        className="fixed top-0 w-full z-50 bg-black/40 backdrop-blur-md border-b border-white/10 transition-all duration-300 ease-out"
         role="navigation"
         aria-label="Main navigation"
       >
