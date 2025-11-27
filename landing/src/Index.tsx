@@ -471,56 +471,7 @@ export default function Index() {
             </div>
           </div>
 
-          {/* Badges */}
-          <div className="flex flex-wrap items-center justify-center gap-3 md:gap-4 mb-10 md:mb-12 animate-slide-in-up animate-delay-800">
-            <iframe
-              src="https://ghbtns.com/github-btn.html?user=Alcatecablee&repo=Neurolint-CLI&type=star&count=true&size=large"
-              frameBorder="0"
-              scrolling="0"
-              width="130"
-              height="30"
-              title="GitHub Star Button"
-              className="opacity-90 hover:opacity-100 transition-opacity"
-            />
-            <a 
-              href="https://www.npmjs.com/package/@neurolint/cli" 
-              target="_blank"
-              rel="noopener noreferrer"
-              className="opacity-90 hover:opacity-100 transition-opacity"
-            >
-              <img 
-                src="https://img.shields.io/npm/v/@neurolint/cli.svg?style=flat-square&color=blue" 
-                alt="npm version"
-                className="h-5"
-              />
-            </a>
-            <a 
-              href="https://www.npmjs.com/package/@neurolint/cli" 
-              target="_blank"
-              rel="noopener noreferrer"
-              className="opacity-90 hover:opacity-100 transition-opacity"
-            >
-              <img 
-                src="https://img.shields.io/npm/dm/@neurolint/cli.svg?style=flat-square&color=green" 
-                alt="npm downloads"
-                className="h-5"
-              />
-            </a>
-            <a 
-              href="./LICENSE" 
-              target="_blank"
-              rel="noopener noreferrer"
-              className="opacity-90 hover:opacity-100 transition-opacity"
-            >
-              <img 
-                src="https://img.shields.io/badge/license-BSL%201.1-blue.svg?style=flat-square" 
-                alt="BSL 1.1 License"
-                className="h-5"
-              />
-            </a>
-          </div>
-
-          <div className="flex flex-col sm:flex-row gap-4 justify-center animate-slide-in-up animate-delay-900">
+          <div className="flex flex-col sm:flex-row gap-4 justify-center animate-slide-in-up animate-delay-800">
             <a
               href="#comprehensive-demo"
               className="group relative px-8 md:px-10 py-3.5 md:py-4 bg-white text-black font-bold rounded-xl hover:bg-gray-100 active:bg-gray-200 transition-all duration-300 ease-out flex items-center justify-center gap-2 md:gap-3 text-base md:text-lg shadow-xl hover:shadow-2xl hover:scale-[1.02] active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50 focus-visible:ring-offset-2 focus-visible:ring-offset-black touch-manipulation min-h-[48px]"
