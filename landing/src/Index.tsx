@@ -27,9 +27,9 @@ import {
 const BetaBanner = ({ onClose }: { onClose: () => void }) => {
   return (
     <div className="fixed bottom-6 left-6 z-50 max-w-sm animate-slide-in-up">
-      <div className="bg-zinc-900/95 backdrop-blur-md border border-white/10 rounded-xl p-4 shadow-2xl">
+      <div className="bg-zinc-900/95 backdrop-blur-md border border-black rounded-xl p-4 shadow-2xl">
         <div className="flex items-start gap-3">
-          <div className="flex-shrink-0 w-8 h-8 bg-gradient-to-br from-blue-500/20 to-purple-500/20 rounded-lg flex items-center justify-center border border-white/10">
+          <div className="flex-shrink-0 w-8 h-8 bg-gradient-to-br from-blue-500/20 to-purple-500/20 rounded-lg flex items-center justify-center border border-black">
             <span className="text-sm">Beta</span>
           </div>
           <div className="flex-1 min-w-0">
@@ -359,7 +359,7 @@ export default function Index() {
 
       {/* Navigation Header */}
       <nav 
-        className="fixed top-0 w-full z-50 bg-zinc-900/80 backdrop-blur-xl border-b border-white/5 transition-all duration-300"
+        className="fixed top-0 w-full z-50 bg-zinc-900/80 backdrop-blur-xl border-b border-black transition-all duration-300"
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
@@ -511,8 +511,8 @@ export default function Index() {
           </div>
           
           {/* Video Preview Card */}
-          <div className="bg-white/5 backdrop-blur-xl rounded-3xl border-2 border-white/20 shadow-2xl overflow-hidden">
-            <div className="bg-black/40 border-b border-white/20 p-4 md:p-6">
+          <div className="bg-white/5 backdrop-blur-xl rounded-3xl border-2 border-black shadow-2xl overflow-hidden">
+            <div className="bg-black/40 border-b border-black p-4 md:p-6">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <div className="flex gap-2">
@@ -544,7 +544,7 @@ export default function Index() {
                 
                 {/* Play Button Overlay */}
                 <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="w-20 h-20 md:w-24 md:h-24 bg-white/10 backdrop-blur-sm rounded-full flex items-center justify-center border-2 border-white/30 group-hover:bg-white/20 group-hover:border-white/50 group-hover:scale-110 transition-all duration-300 shadow-2xl">
+                  <div className="w-20 h-20 md:w-24 md:h-24 bg-white/10 backdrop-blur-sm rounded-full flex items-center justify-center border-2 border-black group-hover:bg-white/20 group-hover:border-black0 group-hover:scale-110 transition-all duration-300 shadow-2xl">
                     <svg className="w-8 h-8 md:w-10 md:h-10 text-white ml-1" fill="currentColor" viewBox="0 0 24 24">
                       <path d="M8 5v14l11-7z"/>
                     </svg>
@@ -553,7 +553,7 @@ export default function Index() {
               </div>
               
               {/* Bottom Info Bar */}
-              <div className="bg-black/40 border-t border-white/10 p-4 md:p-5 flex items-center justify-between">
+              <div className="bg-black/40 border-t border-black p-4 md:p-5 flex items-center justify-between">
                 <div className="flex items-center gap-4 text-sm text-zinc-400">
                   <span className="flex items-center gap-2">
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -585,9 +585,9 @@ export default function Index() {
           ></div>
           
           {/* Modal Content */}
-          <div className="relative w-full max-w-6xl max-h-[90vh] overflow-hidden bg-zinc-900 rounded-2xl border border-white/20 shadow-2xl animate-fade-in-blur">
+          <div className="relative w-full max-w-6xl max-h-[90vh] overflow-hidden bg-zinc-900 rounded-2xl border border-black shadow-2xl animate-fade-in-blur">
             {/* Modal Header */}
-            <div className="flex items-center justify-between p-4 border-b border-white/10 bg-black/40">
+            <div className="flex items-center justify-between p-4 border-b border-black bg-black/40">
               <div className="flex items-center gap-3">
                 <div className="flex gap-2">
                   <div className="w-3 h-3 bg-red-500 rounded-full"></div>
@@ -611,12 +611,12 @@ export default function Index() {
             </div>
             
             {/* Modal Footer */}
-            <div className="p-4 border-t border-white/10 bg-black/40 flex items-center justify-between">
+            <div className="p-4 border-t border-black bg-black/40 flex items-center justify-between">
               <div className="flex items-center gap-4 text-sm text-zinc-400">
                 <span>Use controls to pause, adjust speed, or seek</span>
               </div>
               <div className="flex items-center gap-2">
-                <kbd className="px-2 py-1 bg-black/50 rounded border border-white/10 font-mono text-xs text-zinc-400">Space</kbd>
+                <kbd className="px-2 py-1 bg-black/50 rounded border border-black font-mono text-xs text-zinc-400">Space</kbd>
                 <span className="text-xs text-zinc-500">to pause/play</span>
               </div>
             </div>
@@ -693,7 +693,7 @@ export default function Index() {
                 }`}
                 style={{ transitionDelay: `${(index * 150) + 400}ms` }}
               >
-                <div className="relative p-6 md:p-8 bg-gradient-to-br from-white/5 to-white/2 backdrop-blur-xl border-2 border-black rounded-2xl transition-all duration-300 ease-out hover:bg-gradient-to-br hover:from-white/8 hover:to-white/4 hover:border-white/20 min-h-[280px] sm:min-h-[320px] flex flex-col shadow-lg hover:shadow-2xl focus-within:ring-2 focus-within:ring-white/30 focus-within:ring-offset-2 focus-within:ring-offset-black">
+                <div className="relative p-6 md:p-8 bg-gradient-to-br from-white/5 to-white/2 backdrop-blur-xl border-2 border-black rounded-2xl transition-all duration-300 ease-out hover:bg-gradient-to-br hover:from-white/8 hover:to-white/4 hover:border-black min-h-[280px] sm:min-h-[320px] flex flex-col shadow-lg hover:shadow-2xl focus-within:ring-2 focus-within:ring-white/30 focus-within:ring-offset-2 focus-within:ring-offset-black">
                   <div className="text-4xl md:text-5xl font-black text-white mb-3 md:mb-4" aria-hidden="true">
                     {item.step}
                   </div>
@@ -769,7 +769,7 @@ export default function Index() {
             ].map((item, index) => (
               <div
                 key={index}
-                className={`bg-gradient-to-br from-white/5 to-white/2 backdrop-blur-xl p-6 md:p-8 rounded-2xl border-2 border-white/10 hover:border-white/20 hover:from-white/8 hover:to-white/4 transition-all duration-700 ease-out transform shadow-lg hover:shadow-2xl ${
+                className={`bg-gradient-to-br from-white/5 to-white/2 backdrop-blur-xl p-6 md:p-8 rounded-2xl border-2 border-black hover:border-black hover:from-white/8 hover:to-white/4 transition-all duration-700 ease-out transform shadow-lg hover:shadow-2xl ${
                   orchestrationSectionInView
                     ? 'opacity-100 translate-y-0 scale-100'
                     : 'opacity-0 translate-y-20 scale-95'
@@ -793,54 +793,54 @@ export default function Index() {
           }`} style={{ transitionDelay: '850ms' }}>
             
             {/* AI Tools vs NeuroLint Comparison */}
-            <div className="bg-white/5 backdrop-blur-xl rounded-3xl border-2 border-white/20 shadow-2xl overflow-hidden">
-              <div className="bg-black/40 border-b border-white/20 p-6 md:p-8">
+            <div className="bg-white/5 backdrop-blur-xl rounded-3xl border-2 border-black shadow-2xl overflow-hidden">
+              <div className="bg-black/40 border-b border-black p-6 md:p-8">
                 <h3 className="text-4xl sm:text-5xl md:text-6xl font-black text-white text-center tracking-tight">AI Tools vs NeuroLint</h3>
               </div>
               <div className="p-8 md:p-12">
                 <div className="grid md:grid-cols-2 gap-6 md:gap-8">
-                  <div className="bg-black/60 border-2 border-white/20 rounded-2xl p-6 md:p-8 backdrop-blur-xl hover:border-white/30 transition-all duration-300">
+                  <div className="bg-black/60 border-2 border-black rounded-2xl p-6 md:p-8 backdrop-blur-xl hover:border-black transition-all duration-300">
                     <h4 className="text-xl md:text-2xl font-black text-zinc-400 mb-6">
                       AI Code Tools
                     </h4>
                     <div className="space-y-4 text-zinc-400 text-sm md:text-base">
-                      <div className="flex items-start gap-4 p-3 rounded-xl bg-white/5 border border-white/10">
+                      <div className="flex items-start gap-4 p-3 rounded-xl bg-white/5 border border-black">
                         <span className="text-zinc-500 font-mono">01</span>
                         <span>Generate code without validation</span>
                       </div>
-                      <div className="flex items-start gap-4 p-3 rounded-xl bg-white/5 border border-white/10">
+                      <div className="flex items-start gap-4 p-3 rounded-xl bg-white/5 border border-black">
                         <span className="text-zinc-500 font-mono">02</span>
                         <span>Hallucinate invalid syntax</span>
                       </div>
-                      <div className="flex items-start gap-4 p-3 rounded-xl bg-white/5 border border-white/10">
+                      <div className="flex items-start gap-4 p-3 rounded-xl bg-white/5 border border-black">
                         <span className="text-zinc-500 font-mono">03</span>
                         <span>Break production deployments</span>
                       </div>
-                      <div className="flex items-start gap-4 p-3 rounded-xl bg-white/5 border border-white/10">
+                      <div className="flex items-start gap-4 p-3 rounded-xl bg-white/5 border border-black">
                         <span className="text-zinc-500 font-mono">04</span>
                         <span>Waste developer time debugging</span>
                       </div>
                     </div>
                   </div>
-                  <div className="bg-black/60 border-2 border-white/20 rounded-2xl p-6 md:p-8 backdrop-blur-xl hover:border-white/30 transition-all duration-300 relative overflow-hidden">
+                  <div className="bg-black/60 border-2 border-black rounded-2xl p-6 md:p-8 backdrop-blur-xl hover:border-black transition-all duration-300 relative overflow-hidden">
                     <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent pointer-events-none"></div>
                     <h4 className="text-xl md:text-2xl font-black text-white mb-6 relative">
                       NeuroLint
                     </h4>
                     <div className="space-y-4 text-gray-200 text-sm md:text-base relative">
-                      <div className="flex items-start gap-4 p-3 rounded-xl bg-white/10 border border-white/20">
+                      <div className="flex items-start gap-4 p-3 rounded-xl bg-white/10 border border-black">
                         <span className="text-white font-mono font-bold">01</span>
                         <span>Validate every transformation twice</span>
                       </div>
-                      <div className="flex items-start gap-4 p-3 rounded-xl bg-white/10 border border-white/20">
+                      <div className="flex items-start gap-4 p-3 rounded-xl bg-white/10 border border-black">
                         <span className="text-white font-mono font-bold">02</span>
                         <span>Deterministic, rule-based fixes</span>
                       </div>
-                      <div className="flex items-start gap-4 p-3 rounded-xl bg-white/10 border border-white/20">
+                      <div className="flex items-start gap-4 p-3 rounded-xl bg-white/10 border border-black">
                         <span className="text-white font-mono font-bold">03</span>
                         <span>Auto-revert on validation failure</span>
                       </div>
-                      <div className="flex items-start gap-4 p-3 rounded-xl bg-white/10 border border-white/20">
+                      <div className="flex items-start gap-4 p-3 rounded-xl bg-white/10 border border-black">
                         <span className="text-white font-mono font-bold">04</span>
                         <span>Guaranteed valid code output</span>
                       </div>
@@ -901,7 +901,7 @@ export default function Index() {
               </a>
               <a
                 href="#comprehensive-demo"
-                className="px-8 sm:px-10 py-4 sm:py-5 bg-black/60 text-white font-bold rounded-2xl border-2 border-white/20 hover:bg-black/80 hover:border-white/30 active:bg-black transition-all duration-300 ease-out text-base sm:text-lg backdrop-blur-xl hover:scale-[1.02] active:scale-[0.98] shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50 focus-visible:ring-offset-2 focus-visible:ring-offset-black min-h-[48px] touch-manipulation"
+                className="px-8 sm:px-10 py-4 sm:py-5 bg-black/60 text-white font-bold rounded-2xl border-2 border-black hover:bg-black/80 hover:border-black active:bg-black transition-all duration-300 ease-out text-base sm:text-lg backdrop-blur-xl hover:scale-[1.02] active:scale-[0.98] shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50 focus-visible:ring-offset-2 focus-visible:ring-offset-black min-h-[48px] touch-manipulation"
                 aria-label="Try interactive demo"
               >
                 Try Interactive Demo
