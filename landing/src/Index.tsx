@@ -501,7 +501,7 @@ export default function Index() {
       <section className="py-16 md:py-24 px-4 bg-gradient-to-b from-black via-zinc-900/50 to-black">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-5xl font-black mb-4 text-white">
+            <h2 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black mb-6 md:mb-8 tracking-tight text-white">
               See It In Action
             </h2>
             <p className="text-lg md:text-xl text-gray-300 max-w-2xl mx-auto mb-6">
