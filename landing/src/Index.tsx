@@ -737,53 +737,58 @@ export default function Index() {
           }`} style={{ transitionDelay: '850ms' }}>
             
             {/* AI Tools vs NeuroLint Comparison */}
-            <div className="bg-gradient-to-br from-zinc-900/80 to-zinc-900/40 backdrop-blur-xl border-2 border-white/10 rounded-3xl p-8 md:p-12 shadow-2xl">
-              <h3 className="text-3xl md:text-4xl font-black text-white mb-10 text-center">AI Tools vs NeuroLint</h3>
-              <div className="grid md:grid-cols-2 gap-6 md:gap-8">
-                <div className="bg-zinc-800/50 border-2 border-black rounded-2xl p-6 md:p-8 hover:border-white/20 transition-all duration-300">
-                  <h4 className="text-xl md:text-2xl font-bold text-zinc-300 mb-5">
-                    AI Code Tools
-                  </h4>
-                  <div className="space-y-3 text-zinc-400 text-sm md:text-base">
-                    <p className="flex items-start gap-3">
-                      <span className="mt-1">—</span>
-                      <span>Generate code without validation</span>
-                    </p>
-                    <p className="flex items-start gap-3">
-                      <span className="mt-1">—</span>
-                      <span>Hallucinate invalid syntax</span>
-                    </p>
-                    <p className="flex items-start gap-3">
-                      <span className="mt-1">—</span>
-                      <span>Break production deployments</span>
-                    </p>
-                    <p className="flex items-start gap-3">
-                      <span className="mt-1">—</span>
-                      <span>Waste developer time debugging</span>
-                    </p>
+            <div className="bg-white/5 backdrop-blur-xl rounded-3xl border-2 border-white/20 shadow-2xl overflow-hidden">
+              <div className="bg-black/40 border-b border-white/20 p-6 md:p-8">
+                <h3 className="text-4xl sm:text-5xl md:text-6xl font-black text-white text-center tracking-tight">AI Tools vs NeuroLint</h3>
+              </div>
+              <div className="p-8 md:p-12">
+                <div className="grid md:grid-cols-2 gap-6 md:gap-8">
+                  <div className="bg-black/60 border-2 border-white/20 rounded-2xl p-6 md:p-8 backdrop-blur-xl hover:border-white/30 transition-all duration-300">
+                    <h4 className="text-xl md:text-2xl font-black text-zinc-400 mb-6">
+                      AI Code Tools
+                    </h4>
+                    <div className="space-y-4 text-zinc-400 text-sm md:text-base">
+                      <div className="flex items-start gap-4 p-3 rounded-xl bg-white/5 border border-white/10">
+                        <span className="text-zinc-500 font-mono">01</span>
+                        <span>Generate code without validation</span>
+                      </div>
+                      <div className="flex items-start gap-4 p-3 rounded-xl bg-white/5 border border-white/10">
+                        <span className="text-zinc-500 font-mono">02</span>
+                        <span>Hallucinate invalid syntax</span>
+                      </div>
+                      <div className="flex items-start gap-4 p-3 rounded-xl bg-white/5 border border-white/10">
+                        <span className="text-zinc-500 font-mono">03</span>
+                        <span>Break production deployments</span>
+                      </div>
+                      <div className="flex items-start gap-4 p-3 rounded-xl bg-white/5 border border-white/10">
+                        <span className="text-zinc-500 font-mono">04</span>
+                        <span>Waste developer time debugging</span>
+                      </div>
+                    </div>
                   </div>
-                </div>
-                <div className="bg-gradient-to-br from-white/10 to-white/5 border-2 border-black rounded-2xl p-6 md:p-8 hover:border-white/20 transition-all duration-300">
-                  <h4 className="text-xl md:text-2xl font-bold text-white mb-5">
-                    NeuroLint
-                  </h4>
-                  <div className="space-y-3 text-gray-200 text-sm md:text-base">
-                    <p className="flex items-start gap-3">
-                      <span className="mt-1">—</span>
-                      <span>Validate every transformation twice</span>
-                    </p>
-                    <p className="flex items-start gap-3">
-                      <span className="mt-1">—</span>
-                      <span>Deterministic, rule-based fixes</span>
-                    </p>
-                    <p className="flex items-start gap-3">
-                      <span className="mt-1">—</span>
-                      <span>Auto-revert on validation failure</span>
-                    </p>
-                    <p className="flex items-start gap-3">
-                      <span className="mt-1">—</span>
-                      <span>Guaranteed valid code output</span>
-                    </p>
+                  <div className="bg-black/60 border-2 border-white/20 rounded-2xl p-6 md:p-8 backdrop-blur-xl hover:border-white/30 transition-all duration-300 relative overflow-hidden">
+                    <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent pointer-events-none"></div>
+                    <h4 className="text-xl md:text-2xl font-black text-white mb-6 relative">
+                      NeuroLint
+                    </h4>
+                    <div className="space-y-4 text-gray-200 text-sm md:text-base relative">
+                      <div className="flex items-start gap-4 p-3 rounded-xl bg-white/10 border border-white/20">
+                        <span className="text-white font-mono font-bold">01</span>
+                        <span>Validate every transformation twice</span>
+                      </div>
+                      <div className="flex items-start gap-4 p-3 rounded-xl bg-white/10 border border-white/20">
+                        <span className="text-white font-mono font-bold">02</span>
+                        <span>Deterministic, rule-based fixes</span>
+                      </div>
+                      <div className="flex items-start gap-4 p-3 rounded-xl bg-white/10 border border-white/20">
+                        <span className="text-white font-mono font-bold">03</span>
+                        <span>Auto-revert on validation failure</span>
+                      </div>
+                      <div className="flex items-start gap-4 p-3 rounded-xl bg-white/10 border border-white/20">
+                        <span className="text-white font-mono font-bold">04</span>
+                        <span>Guaranteed valid code output</span>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
