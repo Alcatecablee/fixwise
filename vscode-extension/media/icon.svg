@@ -1,0 +1,65 @@
+<svg width="128" height="128" viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#4f46e5;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#7c3aed;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="neural" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#ffffff;stop-opacity:0.9" />
+      <stop offset="100%" style="stop-color:#e5e7eb;stop-opacity:0.8" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background circle -->
+  <circle cx="64" cy="64" r="60" fill="url(#bg)" stroke="#1e1b4b" stroke-width="2"/>
+  
+  <!-- Neural network nodes -->
+  <circle cx="35" cy="40" r="4" fill="url(#neural)"/>
+  <circle cx="55" cy="30" r="4" fill="url(#neural)"/>
+  <circle cx="75" cy="35" r="4" fill="url(#neural)"/>
+  <circle cx="95" cy="45" r="4" fill="url(#neural)"/>
+  
+  <circle cx="25" cy="64" r="5" fill="url(#neural)"/>
+  <circle cx="50" cy="64" r="6" fill="url(#neural)"/>
+  <circle cx="78" cy="64" r="6" fill="url(#neural)"/>
+  <circle cx="103" cy="64" r="5" fill="url(#neural)"/>
+  
+  <circle cx="35" cy="88" r="4" fill="url(#neural)"/>
+  <circle cx="55" cy="98" r="4" fill="url(#neural)"/>
+  <circle cx="75" cy="93" r="4" fill="url(#neural)"/>
+  <circle cx="95" cy="83" r="4" fill="url(#neural)"/>
+  
+  <!-- Neural connections -->
+  <g stroke="url(#neural)" stroke-width="1.5" fill="none" opacity="0.6">
+    <!-- Layer 1 to Layer 2 connections -->
+    <line x1="35" y1="40" x2="25" y2="64"/>
+    <line x1="35" y1="40" x2="50" y2="64"/>
+    <line x1="55" y1="30" x2="50" y2="64"/>
+    <line x1="55" y1="30" x2="78" y2="64"/>
+    <line x1="75" y1="35" x2="78" y2="64"/>
+    <line x1="75" y1="35" x2="103" y2="64"/>
+    <line x1="95" y1="45" x2="103" y2="64"/>
+    
+    <!-- Layer 2 to Layer 3 connections -->
+    <line x1="25" y1="64" x2="35" y2="88"/>
+    <line x1="50" y1="64" x2="35" y2="88"/>
+    <line x1="50" y1="64" x2="55" y2="98"/>
+    <line x1="78" y1="64" x2="75" y2="93"/>
+    <line x1="78" y1="64" x2="95" y2="83"/>
+    <line x1="103" y1="64" x2="95" y2="83"/>
+  </g>
+  
+  <!-- Central processing unit -->
+  <rect x="45" y="59" width="38" height="10" rx="5" fill="url(#neural)" opacity="0.8"/>
+  
+  <!-- Code brackets -->
+  <g fill="url(#neural)" font-family="'Monaco', 'Consolas', monospace" font-size="16" font-weight="bold">
+    <text x="20" y="25" opacity="0.7">&lt;</text>
+    <text x="100" y="25" opacity="0.7">/&gt;</text>
+    <text x="15" y="110" opacity="0.7">{</text>
+    <text x="105" y="110" opacity="0.7">}</text>
+  </g>
+  
+  <!-- Center highlight -->
+  <circle cx="64" cy="64" r="2" fill="#ffffff" opacity="0.9"/>
+</svg>
