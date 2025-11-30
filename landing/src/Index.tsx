@@ -536,11 +536,12 @@ export default function Index() {
               <div className="relative bg-black/60 p-8 md:p-16 lg:p-24">
                 {/* Terminal Preview Lines */}
                 <div className="font-mono text-sm md:text-base space-y-2 text-left max-w-2xl mx-auto opacity-60 group-hover:opacity-40 transition-opacity">
-                  <div className="text-zinc-500">$ neurolint analyze ./src</div>
-                  <div className="text-zinc-400">Scanning 247 files...</div>
-                  <div className="text-zinc-400">Found 12 issues across 5 layers</div>
-                  <div className="text-zinc-500">$ neurolint fix --all-layers</div>
-                  <div className="text-white">Fixed 12 issues successfully</div>
+                  <div className="text-cyan-400">$ neurolint analyze demo-component.jsx --verbose</div>
+                  <div className="text-zinc-400">[ANALYZED] demo-component.jsx</div>
+                  <div className="text-zinc-400">  Issues Found: <span className="text-red-400">9</span></div>
+                  <div className="text-zinc-400">  Recommended Layers: <span className="text-cyan-400">3, 4, 5</span></div>
+                  <div className="text-cyan-400">$ neurolint fix demo-component.jsx --all-layers</div>
+                  <div className="text-green-400">[SUCCESS] 7 transformations in 0.18s</div>
                 </div>
                 
                 {/* Play Button Overlay */}
@@ -560,9 +561,9 @@ export default function Index() {
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
-                    2:30
+                    1:00
                   </span>
-                  <span className="hidden sm:block">Interactive Demo</span>
+                  <span className="hidden sm:block">Real CLI Demo</span>
                 </div>
                 <span className="text-sm text-white font-medium group-hover:underline">Watch Demo</span>
               </div>
