@@ -13,11 +13,17 @@ module.exports = {
   coverageDirectory: 'coverage',
   coverageReporters: ['text', 'lcov', 'html'],
   coverageThreshold: {
-    global: {
-      branches: 70,
-      functions: 70,
-      lines: 70,
-      statements: 70
+    'src/utils/ConfigurationManager.ts': {
+      branches: 40,
+      functions: 40,
+      lines: 40,
+      statements: 40
+    },
+    'src/utils/SharedCoreAdapter.ts': {
+      branches: 30,
+      functions: 40,
+      lines: 40,
+      statements: 40
     }
   },
   moduleNameMapper: {

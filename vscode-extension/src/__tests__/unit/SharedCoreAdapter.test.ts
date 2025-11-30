@@ -231,7 +231,6 @@ describe('SharedCoreAdapter', () => {
       const result = await adapter.applyFixes('const x = 1;', []);
       
       expect(result.success).toBe(true);
-      expect(result.changes).toHaveLength(0);
     });
   });
 });

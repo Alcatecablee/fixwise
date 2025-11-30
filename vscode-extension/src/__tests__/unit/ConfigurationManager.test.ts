@@ -10,6 +10,13 @@ describe('ConfigurationManager', () => {
   let configManager: ConfigurationManager;
 
   beforeEach(() => {
+    const mockConfig = (vscode.workspace as any)._mockConfig;
+    mockConfig.setForTesting('apiUrl', 'https://app.neurolint.dev/api');
+    mockConfig.setForTesting('apiKey', '');
+    mockConfig.setForTesting('enabledLayers', [1, 2, 3, 4, 5, 6, 7]);
+    mockConfig.setForTesting('timeout', 30000);
+    mockConfig.setForTesting('workspace.maxFiles', 1000);
+    mockConfig.setForTesting('workspace.maxFileSize', 10485760);
     configManager = new ConfigurationManager();
   });
 
